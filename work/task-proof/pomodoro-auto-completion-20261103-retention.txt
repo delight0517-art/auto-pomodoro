@@ -1,0 +1,5 @@
+Task: pomodoro-auto-completion-20261103
+Retained final verified local build: /Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app
+The earlier pre-fix candidate was overwritten at the same build output path by the final verified build; it was not installed and no duplicate candidate remains from this task.
+Installed copy: /Applications/Auto Pomodoro.app; required for user runtime and retained.
+Source checkout and uncommitted work preserved. No source/worktree/user data removed. No separate task-created verification directory remains.

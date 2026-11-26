@@ -1,0 +1,10 @@
+Task: pomodoro-auto-completion-20261103
+Installed app: /Applications/Auto Pomodoro.app
+Bundle ID/version/build: com.rogan.pomodorocage / 1.0.40 / 1.0.39
+Installed app.asar SHA-256 matches final build: 82c60956ac07a87ee960e87b0ee1b104d4e15266e2fd6e48c7d54be0797ff02e
+Post-install codesign --verify --deep --strict: passed; workflow-control verify-mac: verified, launchAllowed=true, local_dev; quarantine absent.
+Runtime: installed app process observed; supported pomodoroctl status returned ok=true.
+Persisted settings readback: widgetSkin=vintage, widgetFont=editorial, autoMode.enabled=true, autoMode.pauseWhenAway=true, pomodoroCommitmentLevel=1, autoLaunch=true, soundEnabled=false.
+Active timer preserved: mode=focus, running=true at readback; no timer control was invoked. Existing signed-in account and synced data retained.
+Pending user-created schedules: none. Automatic mode is presence-based; it does not imply a custom scheduled start time.
+UI appearance had shown Vintage paper/editorial serif before app-supported settings readback; stale dashboard form was not saved over the verified store.

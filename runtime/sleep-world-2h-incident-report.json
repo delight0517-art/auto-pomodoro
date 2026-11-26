@@ -1,0 +1,273 @@
+{
+  "scenario": "기기 관측만으로 위치·상태 추론: 침대와 같은 방에서 Mac 60분 + Windows 60분 독립 Pomodoro → 두 세션 종료 → 재수면",
+  "seed": 20261019,
+  "virtualOnly": true,
+  "informationBoundary": {
+    "truthPositionAndModeAreOnlyEvaluationLabels": true,
+    "inferenceReceivesOnlyDeviceObservations": true,
+    "devices": [
+      "iPhone GPS",
+      "Wi-Fi AP",
+      "accelerometer",
+      "screen state",
+      "HealthKit-like sleep fusion",
+      "Mac keyboard/pointer",
+      "Windows keyboard/pointer",
+      "Mac/Windows power and independent Pomodoro snapshots"
+    ],
+    "ignoredAsHumanEvidence": [
+      "computer power",
+      "Pomodoro timer mode/running",
+      "cloud timer mirroring",
+      "Wi-Fi alone"
+    ]
+  },
+  "actualTimeline": {
+    "workStartMinute": 0,
+    "workDurationMinutes": 120,
+    "macWorkMinutes": 60,
+    "windowsWorkMinutes": 60,
+    "sleepStartEstimatedMinute": 120,
+    "sleepSignalDeliveredMinute": 163,
+    "routeToMac": {
+      "steps": 41,
+      "x": 103,
+      "y": 162
+    },
+    "routeToWindows": {
+      "steps": 37,
+      "x": 247,
+      "y": 158
+    },
+    "routeToBed": {
+      "steps": 18,
+      "x": 251,
+      "y": 218
+    },
+    "groundTruthForEvaluationOnly": {
+      "position": {
+        "x": 251,
+        "y": 218
+      },
+      "mode": "sleep"
+    }
+  },
+  "devices": {
+    "mac": {
+      "timer": {
+        "mode": "break",
+        "running": false,
+        "startedAt": 0,
+        "endsAt": 120,
+        "transitions": 7
+      },
+      "physicalInputObservations": 60
+    },
+    "windows": {
+      "timer": {
+        "mode": "break",
+        "running": false,
+        "startedAt": 59,
+        "endsAt": 119,
+        "transitions": 3
+      },
+      "physicalInputObservations": 60
+    },
+    "phone": {
+      "carried": true,
+      "powered": true
+    },
+    "timerMirrorCount": 0
+  },
+  "inferences": {
+    "relapse15": {
+      "firstWakeObservedAtMinute": 0,
+      "reducerWakeCycleAnchorAtMinute": null,
+      "resleepAt": 1792361700000,
+      "confirmedSleepMinutes": 360,
+      "remainingSleepMinutes": 90,
+      "wakeAlarmAt": 105
+    },
+    "atMac": {
+      "zone": "bedroom",
+      "activityArea": "Mac workstation",
+      "confidence": 0.96,
+      "reason": "최근 실제 키보드/포인터 입력으로 같은 방의 PC 위치 추론",
+      "sources": [
+        "mac-primary 실제 입력"
+      ],
+      "phoneLocationMayDiffer": false
+    },
+    "atWindows": {
+      "zone": "bedroom",
+      "activityArea": "Windows workstation",
+      "confidence": 0.96,
+      "reason": "최근 실제 키보드/포인터 입력으로 같은 방의 PC 위치 추론",
+      "sources": [
+        "windows-desktop 실제 입력"
+      ],
+      "phoneLocationMayDiffer": false
+    },
+    "afterSleepFusion": {
+      "napVerdict": "asleep",
+      "napAlarmScheduled": true,
+      "confidence": 1,
+      "reasons": [
+        "휴식 장소",
+        "정지 신뢰도 100%"
+      ]
+    },
+    "nap60": {
+      "state": "sleepSuspected",
+      "remainingSleepMinutes": 90,
+      "alarmMinute": null
+    },
+    "nap90": {
+      "state": "sleepSuspected",
+      "remainingSleepMinutes": 90,
+      "alarmMinute": null
+    },
+    "weakSensors": {
+      "state": "unknown",
+      "remainingSleepMinutes": 90,
+      "alarmMinute": null,
+      "reason": "겹침을 제외한 확인 수면 기록만 합산 · 중간 각성 제외"
+    },
+    "phoneLeftBehind": {
+      "truthZone": "bedroom",
+      "inferred": {
+        "zone": "bedroom",
+        "activityArea": "Mac workstation",
+        "confidence": 0.96,
+        "reason": "최근 실제 키보드/포인터 입력으로 같은 방의 PC 위치 추론",
+        "sources": [
+          "mac-primary 실제 입력"
+        ],
+        "phoneLocationMayDiffer": true
+      }
+    }
+  },
+  "checks": {
+    "bothPCsAndBedShareBedroom": true,
+    "macAndWindowsHaveIndependentTimers": true,
+    "macInputAttributedToMac": true,
+    "windowsInputAttributedToWindows": true,
+    "noAutomaticTimerMirroring": true,
+    "timerNeverPassedAsWakeActivity": true,
+    "locationMismatchDetectedWhenPhoneLeftBehind": true,
+    "napDetectedWithRiseSyncEvidence": true,
+    "runningSessionsStillSuppressNap": true,
+    "priorSixHourSleepCountsOnce": true,
+    "15MinuteWakeThenResleepKeeps90MinuteAlarm": true,
+    "missingCoreMotionCannotScheduleAlarm": true,
+    "weakSensorDoesNotFabricateConfirmedSleep": true
+  },
+  "sensorObservationSummary": [
+    {
+      "device": "healthkit",
+      "sensor": "health-sleep",
+      "count": 1,
+      "firstMinute": -360,
+      "lastMinute": -360
+    },
+    {
+      "device": "iphone",
+      "sensor": "gps",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "iphone",
+      "sensor": "wifi-association",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "iphone",
+      "sensor": "accelerometer",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "iphone",
+      "sensor": "screen",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "iphone",
+      "sensor": "bluetooth-proximity",
+      "count": 336,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "mac-primary",
+      "sensor": "power",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "mac-primary",
+      "sensor": "pomodoro-snapshot",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "windows-desktop",
+      "sensor": "power",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "windows-desktop",
+      "sensor": "pomodoro-snapshot",
+      "count": 168,
+      "firstMinute": 0,
+      "lastMinute": 163
+    },
+    {
+      "device": "mac-primary",
+      "sensor": "keyboard-pointer",
+      "count": 60,
+      "firstMinute": 0,
+      "lastMinute": 59
+    },
+    {
+      "device": "windows-desktop",
+      "sensor": "keyboard-pointer",
+      "count": 60,
+      "firstMinute": 59,
+      "lastMinute": 118
+    },
+    {
+      "device": "iphone",
+      "sensor": "sleep-inactivity-candidate",
+      "count": 1,
+      "firstMinute": 128,
+      "lastMinute": 128
+    }
+  ],
+  "reducerInputs": {
+    "healthkit": 1,
+    "iphone-motion": 3,
+    "iphone-screen": 1,
+    "human-input": 120,
+    "device-inactivity": 1
+  },
+  "knownGap": "이는 RiseSync NapEvidence 판정 결과만 모델링한다. OS가 실제로 AlarmKit/알림을 예약하고 소리를 재생하는지는 별도 기기 검증이 필요하다.",
+  "limitations": [
+    "재수면 경로는 두 작업 세션을 명시적으로 종료한다; 자동 자리비움 정지나 실제 기기 정지를 실행한 증거가 아니다. 별도 실행 중 세션 대조군은 낮잠 억제를 검증한다.",
+    "위치·상태 입력은 가상 기기 센서가 만든 표본이며 실제 iPhone GPS 정확도, Wi-Fi 권한, HealthKit 전달, Mac/Windows 입력 API를 검증한 것이 아님.",
+    "낮잠 판정은 소스의 NapEvidence 입력 계약을 합성 센서 값으로 평가한다; HealthKit 수면 간격을 만들어내지 않는다.",
+    "Windows는 가상 장치이며 원격 PC에 접속하지 않음. OS 알람 소리/실제 앱 스케줄러는 이번 NPC 추론 시뮬레이션 범위 밖."
+  ],
+  "reportFile": "/Users/rogan/appDev/schedule/pomodoro/runtime/sleep-world-2h-incident-report.json"
+}

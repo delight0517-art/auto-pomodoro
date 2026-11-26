@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "capability": "wake-reliability-100",
+  "createdAt": "2026-10-24T07:32:08.353601+00:00",
+  "catalog": "tools/sleep-sandbox/wake-reliability-100.json",
+  "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf",
+  "platformReports": {
+    "mac-before": {
+      "passed": 93,
+      "failed": 7,
+      "total": 100,
+      "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf"
+    },
+    "mac-after": {
+      "passed": 100,
+      "failed": 0,
+      "total": 100,
+      "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf",
+      "sourceSha256": {
+        "main/userSleepState.js": "0e4b91bd65f59d85c845a922931f8bd7681c33b93b7021b16ebd7be0ed390ea1",
+        "main/userSleepJournal.js": "659eba8388ca671eea8baeff2b7d16cc7a395b3ccf8a73e9d675d559174befe4",
+        "main/wakeProtection.js": "f801da77c8b7411fd71cbd2c4b2b2e8a273c7b84d836d23e04b51c1b197c7c7b"
+      }
+    },
+    "windows-before": {
+      "passed": 92,
+      "failed": 8,
+      "total": 100,
+      "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf"
+    },
+    "windows-after": {
+      "passed": 100,
+      "failed": 0,
+      "total": 100,
+      "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf",
+      "sourceSha256": {
+        "lib/services/wake_lock_policy.dart": "47925b720da34782265fb9f987ce8c686e7857efe2a5e25b45f44dbb1b02613e",
+        "lib/services/wake_lock_service.dart": "ebb752aa47834700d3f8a616b681dd9340da63a7098c87ae5524766399d52c45"
+      }
+    }
+  },
+  "macCandidateVersion": "1.0.37",
+  "macInstalledVersion": "1.0.36",
+  "sourceSha256": {
+    "main/userSleepState.js": "0e4b91bd65f59d85c845a922931f8bd7681c33b93b7021b16ebd7be0ed390ea1",
+    "main/userSleepJournal.js": "659eba8388ca671eea8baeff2b7d16cc7a395b3ccf8a73e9d675d559174befe4",
+    "main/wakeProtection.js": "f801da77c8b7411fd71cbd2c4b2b2e8a273c7b84d836d23e04b51c1b197c7c7b",
+    "scripts/timer-recovery-smoke.js": "6c2a5deb609bf5bd36297a5a9866f4ef6018eef67806cdcafda08b940c59f3e3",
+    "scripts/sleep-world-50.js": "f9d695159690935596a28f68349389606154924af14394851ea52e3f0e43eedf"
+  },
+  "proofLimits": [
+    "Synthetic production controller and isolated SQLite replay only; no device/real cloud/sensor/ringing proof.",
+    "Windows timer-context invariants preserve persisted settings, not a complete native TimerEngine/UI run.",
+    "Mac full mandatory source gate still rejects ten pre-existing unintegrated RiseSync adapter fingerprints; no gate bypass or signed app install.",
+    "Windows source113 activation still subject to prior denied cleanup and2GiB installer guard."
+  ],
+  "additionalNpc50": {
+    "passed": 50,
+    "failed": 0,
+    "total": 50,
+    "productionPolicyParity": {
+      "cases": 50,
+      "matched": 50,
+      "sourceRevision": "06b081e0886cfb12",
+      "reasonTextMatches": 50
+    },
+    "groups": {
+      "phoneCarried": 44,
+      "missingCoreMotion": 4,
+      "phoneUnavailable": 6,
+      "delayedDelivery": 10,
+      "unobservedBackgroundSleep": 50,
+      "falseSleepInferences": 0,
+      "independentTimers": 50,
+      "alarmCandidateScheduled": 50
+    },
+    "fixtureCorrection": "Explicit desktop observation outage, as required by the original scenario caption; unchanged uncertain verdict/assertions. No inferred stop from leaving PC; no production policy changed."
+  },
+  "windowsCandidateVersion": "0.2.9+113",
+  "windowsInstalledVersion": "0.2.9+108"
+}

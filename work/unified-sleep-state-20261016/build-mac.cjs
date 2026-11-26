@@ -1,0 +1,34 @@
+const fs=require('fs'),path=require('path'),os=require('os'),crypto=require('crypto'),{execFileSync}=require('child_process');
+const asar=require('/Users/rogan/.npm/_npx/4b0e2640fe917ac8/node_modules/@electron/asar/lib/asar.js');
+const installed='/Applications/Auto Pomodoro.app',target=path.resolve('dist/unified-sleep-state/Auto Pomodoro.app');
+const canonical=fs.readFileSync('main/main.js','utf8');
+function part(s,a,b){const start=s.indexOf(a),end=s.indexOf(b,start);if(start<0||end<0)throw Error('Missing boundary '+a);return s.slice(start,end);}
+(async()=>{const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pomodoro-sleep-state-'));try{
+ if(fs.existsSync(target))throw Error('Target exists');
+ asar.extractAll(installed+'/Contents/Resources/app.asar',tmp);
+ const mainPath=tmp+'/main/main.js';let main=fs.readFileSync(mainPath,'utf8');
+ main=main.replace('let remoteHumanActivityAt = 0;','let localPhysicalActivityAt = 0;\nlet remoteHumanActivityAt = 0;');
+ main=main.replace('store, settings: getSettings, account: () => cloudAccount.getUsername(), cloud: cloudAccount,','store, settings: getSettings, account: () => cloudAccount.getUsername(), deviceId: ensureDeviceId, cloud: cloudAccount,');
+ main=main.replace(part(main,'async function detectComputerWake()', '// Keep action execution separate'),part(canonical,'async function detectComputerWake()', '// Keep action execution separate'));
+ main=main.replace(part(main,'function syncPhysicalInputGuard()', '// AI process activity never'),part(canonical,'function syncPhysicalInputGuard()', '// AI process activity never'));
+ main=main.replace('    classScheduleLockSettingAvailable: pomodoroLockSettingAvailable(),','    userSleepState: getWakeProtectionController().summary(),\n    classScheduleLockSettingAvailable: pomodoroLockSettingAvailable(),');
+ main=main.replace("ipcMain.handle('timer:getState', () => publicState());",part(canonical,"ipcMain.handle('timer:getState', () => publicState());","ipcMain.on('timer:start'"));
+ main=main.replace("  if (type === 'wake.sleep') {",part(canonical,"  if (type === 'sleep-state.correct') {","  if (type === 'wake.sleep') {")+"  if (type === 'wake.sleep') {");
+ main=main.replace(part(main,"  if (type === 'wake.confirm') {","  if (type === 'timer.start') {"),part(canonical,"  if (type === 'wake.confirm') {","  if (type === 'timer.start') {"));
+ main=main.replace('    wakeProtectionCloudPending: getWakeProtectionController().pending(),','    wakeProtectionCloudPending: getWakeProtectionController().pending(),\n    userSleepState: getWakeProtectionController().summary(),');
+ main=main.replace("  const stopAgentControl = isIsolatedTest ? () => {} : startAgentControl((request) => dispatchAgentCommand(request));", "  const stopAgentControl = isIsolatedTest ? () => {} : startAgentControl((request) => dispatchAgentCommand(request));\n  if (!isIsolatedTest) syncPhysicalInputGuard();");
+ new(require('vm').Script)(main);fs.writeFileSync(mainPath,main);
+ for(const file of ['wakeProtection.js','userSleepState.js','userSleepJournal.js'])fs.copyFileSync('main/'+file,tmp+'/main/'+file);
+ const preloadPath=tmp+'/main/preload.js';let preload=fs.readFileSync(preloadPath,'utf8');preload=preload.replace("  getState: () => ipcRenderer.invoke('timer:getState'),","  getState: () => ipcRenderer.invoke('timer:getState'),\n  correctSleepState: (request) => ipcRenderer.invoke('sleep-state:correct', request),");fs.writeFileSync(preloadPath,preload);
+ const htmlPath=tmp+'/renderer/dashboard/index.html';let html=fs.readFileSync(htmlPath,'utf8');const htmlCanonical=fs.readFileSync('renderer/dashboard/index.html','utf8');
+ html=html.replace('        <label><input id="setWakeLockEnabled"',part(htmlCanonical,'        <section aria-labelledby="sleepStateHeading">','        <label><input id="setWakeLockEnabled"')+'        <label><input id="setWakeLockEnabled"');fs.writeFileSync(htmlPath,html);
+ const rendererPath=tmp+'/renderer/dashboard/renderer.js';fs.appendFileSync(rendererPath,'\n'+fs.readFileSync('renderer/dashboard/renderer.js','utf8').split('// One shared sleep state controls the summary;')[1].replace(/^/,'// One shared sleep state controls the summary;'));
+ fs.mkdirSync(path.dirname(target),{recursive:true});execFileSync('ditto',[installed,target]);
+ const archive=target+'/Contents/Resources/app.asar';await asar.createPackage(tmp,archive);
+ const hash=crypto.createHash('sha256').update(asar.getRawHeader(archive).headerString).digest('hex');
+ execFileSync('/usr/libexec/PlistBuddy',['-c','Set :ElectronAsarIntegrity:Resources/app.asar:hash '+hash,target+'/Contents/Info.plist']);
+ const helper=target+'/Contents/Resources/mac-physical-input-guard';fs.copyFileSync('work/unified-sleep-state-20261016/mac-physical-input-guard',helper);
+ execFileSync('codesign',['--force','--sign','Developer ID Application: GeunHu Kim (V3J8MR637G)','--options','runtime','--timestamp',helper]);
+ execFileSync('codesign',['--force','--sign','Developer ID Application: GeunHu Kim (V3J8MR637G)','--preserve-metadata=entitlements,requirements,flags,runtime','--timestamp',target]);
+ execFileSync('codesign',['--verify','--deep','--strict',target]);console.log(target);
+}finally{fs.rmSync(tmp,{recursive:true,force:true});}})().catch(e=>{console.error(e);process.exitCode=1;});

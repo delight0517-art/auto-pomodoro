@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusFense AI Overlay</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="overlayCard" class="overlay-card">
+    <!-- Matrix Mini Bar Mode View -->
+    <div id="matrixMiniView" class="matrix-mini-view" style="display: none;">
+      <span class="matrix-indicator">●</span>
+      <span id="matrixApp" class="matrix-app">AI</span>
+      <span class="matrix-divider">|</span>
+      <div class="matrix-center">
+        <span id="matrixTime" class="matrix-time">--</span>
+        <!-- Dual Thin Progress Bars: Top=Daily Total, Bottom=2-Hour Typing Window -->
+        <div id="matrixBarsContainer" class="matrix-bars-container">
+          <div class="matrix-bar-track track-daily" title="하루 총량">
+            <div id="matrixDailyBar" class="matrix-bar-fill fill-daily"></div>
+          </div>
+          <div class="matrix-bar-track track-window" title="2시간 개입량">
+            <div id="matrixWindowBar" class="matrix-bar-fill fill-window"></div>
+          </div>
+        </div>
+      </div>
+      <button id="btnMatrixExpand" class="matrix-btn" data-i18n-title="aiOverlay.expandTitle" type="button">⤢</button>
+    </div>
+
+    <!-- Normal Dune Basalt Card View -->
+    <div id="normalView" class="normal-view">
+      <div class="ring-col">
+        <svg class="ring-svg" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="23" class="ring-track" />
+          <circle id="ringArc" cx="28" cy="28" r="23" class="ring-progress" />
+        </svg>
+        <div id="ringPercent" class="ring-percent">100%</div>
+      </div>
+
+      <div class="content-col">
+        <div class="header-line">
+          <span id="appName" class="app-title">AI</span>
+          <div class="header-right">
+            <span id="statusBadge" class="status-badge" data-i18n="aiOverlay.active">AI Active</span>
+            <button id="btnMiniToggle" class="mini-toggle-btn" data-i18n-title="aiOverlay.minimizeTitle" type="button">_</button>
+          </div>
+        </div>
+        <div id="timeMain" class="time-line">--:--:--</div>
+        <div class="bar-line">
+          <div id="hourlyBar" class="bar-fill"></div>
+        </div>
+        <div id="timeSub" class="sub-line">--</div>
+      </div>
+    </div>
+  </div>
+  <script src="../shared/i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

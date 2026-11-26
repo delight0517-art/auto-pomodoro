@@ -1,0 +1,58 @@
+{
+  "state": "unchanged",
+  "file": "/Users/rogan/Library/CloudStorage/GoogleDrive-rogan2534@gmail.com/My Drive/For AI Mac Handoff/GPT-Shared-Work/snapshots/rogan-mac/2026-10-17T13-30-18.721805+00-00-26043388.json",
+  "cloudReceipt": "not-checked",
+  "exportState": "complete",
+  "sourceStatus": {
+    "accounts": {
+      "database": "accounts.sqlite3",
+      "table": "accounts",
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "context": {
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "admob": {
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "backlog": {
+      "database": "integration-backlog.sqlite3",
+      "table": "items",
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "stages": {
+      "database": "operations.sqlite3",
+      "table": "evidence",
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "waits": {
+      "database": "pending.sqlite3",
+      "table": "waits",
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "checkpoints": {
+      "database": "pending.sqlite3",
+      "table": "subscribers",
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    },
+    "threads": {
+      "state": "ok",
+      "phase": "complete",
+      "sqliteCode": null
+    }
+  }
+}

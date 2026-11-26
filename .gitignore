@@ -1,0 +1,34 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+main/mac-physical-input-guard
+
+# Xcode products and indexes are generated; keep local artifacts outside source tracking.
+/ios/build/DeleteFixNativeDerivedData/
+/ios/build/WidgetSimulator/
+/ios/build/risesync-sync-derived/
+/ios/build/*.xcresult/
+/.local_build/*/Build/
+/.local_build/*/Index.noindex/
+/.local_build/*/ModuleCache.noindex/
+/.local_build/*/CompilationCache.noindex/
+/.local_build/*/SDKStatCaches.noindex/
+/.local_build/*/SDKExplicitPrecompiledModules/
+/.local_build/*/Logs/
+
+# build artifacts / local worktrees (auto-added: never track)
+.local_build/
+**/.local_build/
+.worktrees/
+ios/build_local_release/
+ios/build/
+**/DeleteFixNativeDerivedData/
+*.xcuserstate
+*.previous.app/
+/work/pomodoro-settings-redesign/
+
+*.before-*
+*.bak
+*.bak-*
+*.orig

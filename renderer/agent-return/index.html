@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto Pomodoro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button id="restoreAgentOverlayBtn" type="button" data-i18n-attr="aria-label:break.agentReturn,title:break.agentReturn">
+    <span class="lock" aria-hidden="true">🔒</span>
+    <span id="remaining" aria-live="off">--:--</span>
+    <span class="return" aria-hidden="true">↩</span>
+  </button>
+  <script src="../shared/i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

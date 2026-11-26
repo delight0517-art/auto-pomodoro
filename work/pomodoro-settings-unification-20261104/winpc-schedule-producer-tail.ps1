@@ -1,0 +1,1 @@
+$ErrorActionPreference='Stop';$repo='C:\Users\delig\Documents\Codex\2026-11-01\new-chat-5\work\ff-full-delta-candidate';$f=Join-Path $repo 'lib\services\mac_sync_service.dart';$l=Get-Content -LiteralPath $f;for($i=2258;$i -lt [Math]::Min($l.Count,2350);$i++){Write-Output (($i+1).ToString()+':'+$l[$i])}

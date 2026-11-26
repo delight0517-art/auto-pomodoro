@@ -1,0 +1,76 @@
+{
+  "states": [
+    {
+      "availability": "online",
+      "access": "available",
+      "reportedAt": "2026-10-15T12:02:03.708404+09:00",
+      "validUntil": "2026-10-16T00:00:00+09:00",
+      "source": "direct_user_statement",
+      "evidence": "User selected Resume for the alert asking them to reply when the Windows PC is available; Resume instructs to treat the requested action as performed.",
+      "interpretation": "Do not probe or request access while unavailable; continue independent work.",
+      "scope": "winpc",
+      "freshness": "expired",
+      "effectiveAvailability": "unknown",
+      "effectiveAccess": "unknown",
+      "remoteActionAllowed": false
+    },
+    {
+      "availability": "online",
+      "access": "available",
+      "reportedAt": "2026-10-15T12:02:03.859046+09:00",
+      "validUntil": "2026-10-16T00:00:00+09:00",
+      "source": "direct_user_statement",
+      "evidence": "User selected Resume for the alert asking them to reply when the Windows PC is available; Resume instructs to treat the requested action as performed.",
+      "interpretation": "Do not probe or request access while unavailable; continue independent work.",
+      "scope": "windows-desktop",
+      "freshness": "expired",
+      "effectiveAvailability": "unknown",
+      "effectiveAccess": "unknown",
+      "remoteActionAllowed": false
+    },
+    {
+      "availability": "online",
+      "access": "available",
+      "reportedAt": "2026-10-07T11:09:05.095567+09:00",
+      "validUntil": "2026-10-08T00:00:00+09:00",
+      "source": "direct_user_statement",
+      "evidence": "2026-10-07 user: Windows computer is currently working on this feature; make the post-wake 2-hour Pomodoro behavior work on Windows.",
+      "interpretation": "Do not probe or request access while unavailable; continue independent work.",
+      "scope": "windows",
+      "freshness": "expired",
+      "effectiveAvailability": "unknown",
+      "effectiveAccess": "unknown",
+      "remoteActionAllowed": false
+    },
+    {
+      "availability": "online",
+      "access": "available",
+      "reportedAt": "2026-10-17T21:24:15.698615+09:00",
+      "validUntil": "2026-10-18T00:00:00+09:00",
+      "source": "direct_user_statement",
+      "evidence": "2026-10-17 user: iPhone Mirroring 연결해 놨으니 Selah 앱을 직접 열어 본문 읽기를 점검해 달라.",
+      "interpretation": "Do not probe or request access while unavailable; continue independent work.",
+      "scope": "physical-iphone",
+      "freshness": "expired",
+      "effectiveAvailability": "unknown",
+      "effectiveAccess": "unknown",
+      "remoteActionAllowed": false
+    },
+    {
+      "availability": "online",
+      "access": "available",
+      "reportedAt": "2026-10-10T15:34:06.000256+09:00",
+      "validUntil": "2026-10-11T00:00:00+09:00",
+      "source": "direct_user_statement",
+      "evidence": "2026-10-10 user: mac 잠금 해제 ㄱㄱ; current Selah CUA session visibly usable.",
+      "interpretation": "Do not probe or request access while unavailable; continue independent work.",
+      "scope": "rogan-mac",
+      "freshness": "expired",
+      "effectiveAvailability": "unknown",
+      "effectiveAccess": "unknown",
+      "remoteActionAllowed": false
+    }
+  ],
+  "missingScopeIs": "unknown",
+  "expiryDoesNotMean": "online_or_authorized"
+}

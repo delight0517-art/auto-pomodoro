@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=EB+Garamond:wght@400;600&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--skin-body-font, 'EB Garamond'), Georgia, 'Nanum Myeongjo', serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.widget {
+  width: 100%;
+  height: 100%;
+  -webkit-app-region: drag;
+}
+
+.frame {
+  width: 100%;
+  height: 100%;
+  padding: 10px 12px 8px;
+  background:
+    radial-gradient(ellipse at 30% 20%, var(--skin-surface-light), var(--skin-surface) 60%),
+    linear-gradient(160deg, var(--skin-surface-light), var(--skin-surface) 45%, var(--skin-surface-deep));
+  border: 2px solid var(--skin-border);
+  outline: 1px solid color-mix(in srgb, var(--skin-border), transparent 65%);
+  outline-offset: -4px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(50, 35, 10, 0.45), inset 0 0 18px rgba(120, 90, 40, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.top-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  -webkit-app-region: no-drag;
+}
+
+.mode-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--skin-muted);
+  font-weight: 600;
+}
+.widget.agent-lock-active .mode-label { color: var(--skin-break); }
+.widget.agent-lock-active .controls,
+.widget.agent-lock-active #menuBtn { display: none; }
+.restore-overlay-btn { display: none; }
+.widget.agent-lock-active .restore-overlay-btn { display: inline-grid; place-items: center; }
+
+.icon-btn {
+  -webkit-app-region: no-drag;
+  background: color-mix(in srgb, var(--skin-button), transparent 82%);
+  border: 1px solid var(--skin-border);
+  color: var(--skin-ink);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  cursor: pointer;
+  font-size: 12px;
+}
+.icon-btn:hover { background: color-mix(in srgb, var(--skin-button), transparent 65%); }
+.expand-btn {
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.dial-wrap {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin: 2px 0 0;
+}
+
+.dial { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dial-bg {
+  fill: none;
+  stroke: var(--skin-track);
+  stroke-width: 6;
+}
+.dial-progress {
+  fill: none;
+  stroke: var(--skin-focus);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.4s linear;
+}
+.dial-grace {
+  fill: none;
+  stroke: var(--skin-grace);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 46.67 280.03;
+  pointer-events: none;
+}
+.grace-lock { filter: grayscale(1); opacity: .55; cursor: not-allowed !important; }
+.widget.mode-break .dial-progress, .widget.mode-longBreak .dial-progress { stroke: var(--skin-break); }
+.dial-inner {
+  fill: var(--skin-inner);
+  stroke: var(--skin-border);
+  stroke-width: 1;
+}
+
+.dial-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.time-text {
+  font-family: var(--skin-display-font, 'Playfair Display'), Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--skin-ink);
+}
+
+.tag-text {
+  font-size: 9px;
+  color: var(--skin-muted);
+  max-width: 70px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+  margin-top: 2px;
+}
+
+.ornate-btn {
+  -webkit-app-region: no-drag;
+  font-family: var(--skin-display-font, 'Playfair Display'), Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--skin-button-ink);
+  background: linear-gradient(180deg, var(--skin-button), var(--skin-button-deep));
+  border: 1px solid var(--skin-border);
+  border-radius: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.controls .ornate-btn { flex: 1; min-width: 0; padding: 5px 6px; font-size: 10px; white-space: nowrap; }
+.ornate-btn:hover { filter: brightness(1.08); }
+.ornate-btn.small { padding: 4px 8px; font-size: 11px; }
+
+.today-total {
+  font-size: 10px;
+  color: var(--skin-muted);
+  margin-top: 1px;
+}
+.today-total span { font-weight: 600; }
+
+.ai-total {
+  font-size: 10px;
+  color: var(--skin-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+}
+.ai-total span { font-weight: 600; }

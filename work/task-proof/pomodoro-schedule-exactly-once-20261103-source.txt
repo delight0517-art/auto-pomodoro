@@ -1,0 +1,12 @@
+Syntax and focused/full validation: node --check + node --test passed; npm run check exit 0; npm test exit 0.
+Execution semantics: durable claim precedes command; result-write failure keeps pending marker and disables/re-times occurrence to prevent replay.
+SHA-256 main/agentSchedules.js: 3ac619a98d677c825012ae665a22d30e3c37ca778306511fda9ef370be8ae4c8
+SHA-256 test/agentSchedules.test.js: e093ce4fbcd4240bfbf0fc7f19c57b42a3fce3a29b402b1a940dad38c5a164eb
+Full validation logs: work/task-proof/pomodoro-schedule-exactly-once-20261103-check.log and -test.log; both guarded commands exit 0.
+Localization cleanup: check reported 0 missing translations after replacing the 13 reported hardcoded UI strings with existing keys/new four-language catalog entries.
+SHA-256 renderer/dashboard/renderer.js: eb1e40cf400f9045e3e0172a88185d44786507830e75ec54fed5b990c3697c31
+SHA-256 renderer/agent-return/index.html: 62b625ed196f11c9dd8846f01fca20d86d1eff775212ad711c31938dff35c1d5
+SHA-256 locales/ko.json: a6b46d45b5b4a598ee21113d4311fc8490d82e65cddcb0189b171ffff7705d79
+SHA-256 locales/en.json: 15fe58d48e1a57d427bde24f70282ef2bd2697dcaecc8798a69de6c9dc5d9a66
+SHA-256 locales/ja.json: ee3a6e7ccdc9d040c4f7ae68c1bc0d8654cbaccaab705c3674c8b7a0d396a577
+SHA-256 locales/zh.json: bbb4ae7c647de46a1db0e3fd10849cf34cac196bd91c724a68a7b980ff0fb981

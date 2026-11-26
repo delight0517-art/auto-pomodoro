@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-15T22:49:53.170890+00:00",
+  "ios": {
+    "bundleId": "com.rogan.pomodorocage",
+    "version": "1.0",
+    "build": "15",
+    "signedBuild": "pass",
+    "binarySha256": "366b1372e09cfb5dac562ceede8930ede488de63b876b03745376a3abf29820f",
+    "physicalInstallation": "not performed; user asleep",
+    "twoDeviceUI": "pending",
+    "note": "Reconcile live device build floor before installing; last known installed build was 14."
+  },
+  "mac": {
+    "installedModuleMatchesSource": true,
+    "runtimePhase": "sleeping",
+    "remainingMs": 7200000,
+    "cloudWriteAndReadback": "pass",
+    "nextNaturalWakePhysicalEnforcement": "unverified"
+  },
+  "backend": {
+    "v2PushPolicyRegression": "pass",
+    "providerDeployment": "pending"
+  },
+  "risesyncFixture": "signal compile fails on existing missing AppSettings.wakeSyncBlockMinutes and RiseLog.trace fixture members",
+  "iosEvidenceTool": "unavailable at ~/.codex/bin/ios-evidence; manual journal retained"
+}

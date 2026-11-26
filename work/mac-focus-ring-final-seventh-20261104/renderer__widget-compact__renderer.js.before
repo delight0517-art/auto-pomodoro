@@ -1,0 +1,222 @@
+const DIAL_CIRCUMFERENCE = 2 * Math.PI * 24; // r=24
+
+const cardEl = document.getElementById('card');
+const modeLabelEl = document.getElementById('modeLabel');
+const timeTextEl = document.getElementById('timeText');
+const dialProgressEl = document.getElementById('dialProgress');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const openBtn = document.getElementById('openBtn');
+const todayTotalEl = document.getElementById('todayTotal');
+const ringToggle = document.getElementById('ringToggle');
+const drawerEl = document.getElementById('drawer');
+
+let lastState = null;
+let agentLockActive = false;
+let expandedBeforeAgentLock = false;
+
+function fmtClock(ms) {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+const T = (k, v) => (typeof window.t === 'function' ? window.t(k, v) : k);
+window.addEventListener('i18n:changed', () => { if (lastState) render(lastState); });
+
+function fmtMinutes(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h > 0) return T('time.hoursMinutes', { h, m });
+  return T('minutes', { n: m });
+}
+
+function totalMsForMode(state) {
+  const s = state.settings;
+  if (state.mode === 'focus') return Number(state.focusDurationMs) > 0 ? Number(state.focusDurationMs) : s.focusMin * 60 * 1000;
+  if (state.mode === 'longBreak') return s.longBreakMin * 60 * 1000;
+  if (state.mode === 'break') return s.breakMin * 60 * 1000;
+  return s.focusMin * 60 * 1000;
+}
+
+function render(state) {
+  lastState = state;
+  window.PomodoroWidgetSkins?.apply(document.documentElement, state.settings || {});
+  const modeNames = { idle: T('mode.idle'), focus: T('mode.focus'), break: T('mode.break'), longBreak: T('mode.longBreak') };
+
+  const remaining = state.mode === 'idle' ? totalMsForMode(state) : state.remainingMs;
+  timeTextEl.textContent = fmtClock(remaining);
+
+  const total = totalMsForMode(state);
+  const ratio = total > 0 ? Math.min(1, Math.max(0, remaining / total)) : 0;
+  dialProgressEl.style.strokeDasharray = `${DIAL_CIRCUMFERENCE}`;
+  dialProgressEl.style.strokeDashoffset = `${DIAL_CIRCUMFERENCE * (1 - ratio)}`;
+
+  cardEl.classList.toggle('mode-break', state.mode === 'break');
+  cardEl.classList.toggle('mode-longBreak', state.mode === 'longBreak');
+
+  todayTotalEl.textContent = T('widget.today', { value: fmtMinutes(state.todayStudySec) });
+
+  const forcedFocusLocked = !!(state.settings?.forcedModeEnabled && state.mode === 'focus');
+  const nextAgentLock = state.agentOverlayHiddenForAgents === true;
+  if (nextAgentLock !== agentLockActive) setAgentLockIndicator(nextAgentLock);
+  modeLabelEl.textContent = agentLockActive
+    ? `🔒 ${T('break.lockState.blocked')}`
+    : (forcedFocusLocked ? `🔒 ${modeNames[state.mode] || ''}` : (modeNames[state.mode] || T('mode.idle')));
+
+  if (state.mode === 'idle') {
+    playPauseBtn.textContent = '▶';
+    playPauseBtn.style.display = '';
+  } else if (forcedFocusLocked) {
+    playPauseBtn.style.display = 'none';
+  } else {
+    playPauseBtn.style.display = '';
+    if (!state.running && state.pausedReason === 'auto-away') {
+      playPauseBtn.textContent = '⏸';
+    } else {
+      playPauseBtn.textContent = state.running ? '⏸' : '▶';
+    }
+  }
+}
+
+window.api.getState().then(render);
+window.api.onState(render);
+
+// The compact ring is a no-drag button: preserve clicks, move the window
+// only after a pointer gesture crosses the drag threshold.
+let ringDrag = null;
+let suppressRingClick = false;
+ringToggle.addEventListener('pointerdown', (event) => {
+  if (event.button !== 0 || !event.isPrimary || ringToggle.disabled) return;
+  suppressRingClick = false;
+  ringDrag = { id: event.pointerId, x: event.screenX, y: event.screenY, moved: false };
+  ringToggle.setPointerCapture(event.pointerId);
+  window.api.dragCompactWidget('begin', event.screenX, event.screenY);
+});
+ringToggle.addEventListener('pointermove', (event) => {
+  if (!ringDrag || event.pointerId !== ringDrag.id) return;
+  if (!ringDrag.moved && Math.hypot(event.screenX - ringDrag.x, event.screenY - ringDrag.y) < 5) return;
+  ringDrag.moved = true;
+  suppressRingClick = true;
+  window.api.dragCompactWidget('move', event.screenX, event.screenY);
+});
+function finishRingDrag(event) {
+  if (!ringDrag || (event?.pointerId != null && event.pointerId !== ringDrag.id)) return;
+  const id = ringDrag.id;
+  ringDrag = null;
+  window.api.dragCompactWidget('end');
+  if (ringToggle.hasPointerCapture(id)) ringToggle.releasePointerCapture(id);
+}
+ringToggle.addEventListener('pointerup', finishRingDrag);
+ringToggle.addEventListener('pointercancel', finishRingDrag);
+ringToggle.addEventListener('lostpointercapture', finishRingDrag);
+window.addEventListener('blur', () => finishRingDrag());
+
+const COMPACT_IDLE_MS = 3000;
+let compactIdleTimer = null;
+let compactPointerDown = false;
+
+function setAgentLockIndicator(active) {
+  agentLockActive = active;
+  clearTimeout(compactIdleTimer);
+  if (active) {
+    expandedBeforeAgentLock = cardEl.classList.contains('expanded');
+    cardEl.classList.add('agent-lock-active', 'expanded');
+    ringToggle.disabled = true;
+    openBtn.disabled = true;
+    playPauseBtn.disabled = true;
+    ringToggle.setAttribute('aria-expanded', 'true');
+    drawerEl.setAttribute('aria-hidden', 'false');
+    drawerEl.inert = false;
+    void window.api.resizeCompactWidget(true);
+    return;
+  }
+  cardEl.classList.remove('agent-lock-active');
+  ringToggle.disabled = false;
+  openBtn.disabled = false;
+  playPauseBtn.disabled = false;
+  void window.api.resizeCompactWidget(expandedBeforeAgentLock).then((resized) => {
+    if (agentLockActive || !resized) return;
+    cardEl.classList.toggle('expanded', expandedBeforeAgentLock);
+    ringToggle.setAttribute('aria-expanded', String(expandedBeforeAgentLock));
+    drawerEl.setAttribute('aria-hidden', String(!expandedBeforeAgentLock));
+    drawerEl.inert = !expandedBeforeAgentLock;
+    if (expandedBeforeAgentLock) scheduleCompactCollapse();
+  });
+}
+
+async function setCompactExpanded(expanded) {
+  if (ringToggle.disabled) return;
+  clearTimeout(compactIdleTimer);
+  ringToggle.disabled = true;
+  try {
+    if (!(await window.api.resizeCompactWidget(expanded))) return;
+    cardEl.classList.toggle('expanded', expanded);
+    ringToggle.setAttribute('aria-expanded', String(expanded));
+    drawerEl.setAttribute('aria-hidden', String(!expanded));
+    drawerEl.inert = !expanded;
+  } finally {
+    ringToggle.disabled = false;
+    if (cardEl.classList.contains('expanded')) scheduleCompactCollapse();
+  }
+}
+
+function scheduleCompactCollapse() {
+  clearTimeout(compactIdleTimer);
+  if (!cardEl.classList.contains('expanded') || compactPointerDown || ringDrag) return;
+  compactIdleTimer = setTimeout(() => setCompactExpanded(false), COMPACT_IDLE_MS);
+}
+
+// State broadcasts do not count as user activity. Shrink both the DOM and
+// native window after inactivity, even when the pointer remains over the card.
+for (const type of ['pointermove', 'pointerenter', 'pointerleave', 'keydown', 'click']) {
+  cardEl.addEventListener(type, scheduleCompactCollapse);
+}
+cardEl.addEventListener('pointerdown', () => {
+  compactPointerDown = true;
+  clearTimeout(compactIdleTimer);
+});
+window.addEventListener('pointerup', () => {
+  compactPointerDown = false;
+  scheduleCompactCollapse();
+});
+window.addEventListener('pointercancel', () => {
+  compactPointerDown = false;
+  scheduleCompactCollapse();
+});
+window.addEventListener('blur', () => {
+  compactPointerDown = false;
+  scheduleCompactCollapse();
+});
+drawerEl.inert = true;
+ringToggle.addEventListener('click', (event) => {
+  if (suppressRingClick && event.detail !== 0) { suppressRingClick = false; return; }
+  setCompactExpanded(!cardEl.classList.contains('expanded'));
+});
+
+playPauseBtn.addEventListener('click', () => {
+  if (!lastState) return;
+  if (lastState.mode === 'idle') {
+    window.api.start('');
+    return;
+  }
+  if (lastState.running) {
+    window.api.pause();
+  } else {
+    window.api.resume();
+  }
+});
+
+openBtn.addEventListener('click', () => {
+  window.api.openDashboard();
+});
+
+cardEl.addEventListener('dblclick', (event) => {
+  if (agentLockActive) return;
+  if (!ringToggle.contains(event.target)) window.api.openDashboard();
+});
+
+cardEl.addEventListener('contextmenu', (event) => {
+  if (agentLockActive) { event.preventDefault(); return; }
+  window.api.openContextMenu();
+});

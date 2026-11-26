@@ -1,0 +1,40 @@
+--- a/renderer/widget/renderer.js
++++ b/renderer/widget/renderer.js
+@@ -42,6 +42,8 @@
+ 
+ function render(state) {
+   lastState = state;
++  document.body.style.setProperty("--widget-idle-opacity", Math.min(1, Math.max(0.1, Number(state.settings.widgetOpacityIdle) || 0.2)));
++  document.body.style.setProperty("--widget-hover-opacity", Math.min(1, Math.max(0.1, Number(state.settings.widgetOpacityHover) || 0.92)));
+   const modeNames = { idle: T('mode.idle'), focus: T('mode.focus'), break: T('mode.break'), longBreak: T('mode.longBreak') };
+   tagTextEl.textContent = state.mode === 'focus' ? state.currentTag || '' : '';
+ 
+--- a/renderer/widget/style.css
++++ b/renderer/widget/style.css
+@@ -177,3 +177,6 @@
+   margin-top: 1px;
+ }
+ .today-total span { font-weight: 600; }
++
++body { opacity: var(--widget-idle-opacity, 0.2); }
++body:hover, body:focus-within { opacity: var(--widget-hover-opacity, 0.92); }
+--- a/renderer/widget-compact/renderer.js
++++ b/renderer/widget-compact/renderer.js
+@@ -37,6 +37,8 @@
+ 
+ function render(state) {
+   lastState = state;
++  document.body.style.setProperty("--widget-idle-opacity", Math.min(1, Math.max(0.1, Number(state.settings.widgetOpacityIdle) || 0.2)));
++  document.body.style.setProperty("--widget-hover-opacity", Math.min(1, Math.max(0.1, Number(state.settings.widgetOpacityHover) || 0.92)));
+   const modeNames = { idle: T('mode.idle'), focus: T('mode.focus'), break: T('mode.break'), longBreak: T('mode.longBreak') };
+ 
+   const remaining = state.mode === 'idle' ? totalMsForMode(state) : state.remainingMs;
+--- a/renderer/widget-compact/style.css
++++ b/renderer/widget-compact/style.css
+@@ -156,3 +156,6 @@
+   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+ }
+ .mini-btn:hover { filter: brightness(1.08); }
++
++body { opacity: var(--widget-idle-opacity, 0.2); }
++body:hover, body:focus-within { opacity: var(--widget-hover-opacity, 0.92); }

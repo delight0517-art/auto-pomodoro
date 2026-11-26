@@ -1,0 +1,33 @@
+  async function sync() {
+    if (syncing || !cloud?.isLoggedIn()) return;
+    syncing = true;
+    const user = owner();
+    try {
+      const url = cloud.API_BASE + '/api/cloud-state/pomodoroWake';
+      const headers = cloud.authHeaders();
+      const response = await cloud.fetchWithTimeout(url, { headers }, 45000);
+      if (!response.ok || owner() !== user) return;
+      const document = await response.json();
+      history([...(Array.isArray(document.state?.wakeHistory) ? document.state.wakeHistory : []), document.state?.wakeEvent]);
+      handle(document.state?.wakeEvent);
+      const state = read();
+      const pending = store.get(pendingKey(), 0);
+      if (!state || !pending || owner() !== user) return;
+      const sleeping = state.phase === 'sleeping';
+      const event = { id: `${state.cycleId}-${state.revision}`, source: sleeping ? 'risesync-sleep-confirmed' : SOURCE,
+        wakeAt: state.wakeAt, ...(sleeping ? { sleepAt: state.sleepAt } : {}), protection: state };
+      const result = await cloud.fetchWithTimeout(url, { method: 'PUT',
+        headers: { ...headers, 'content-type': 'application/json' },
+        body: JSON.stringify({ ...(document.state || {}), wakeEvent: event }) }, 45000);
+      if (result.ok && owner() === user && read()?.revision === state.revision) {
+        const check = await cloud.fetchWithTimeout(url, { headers }, 45000);
+        if (check.ok && owner() === user) {
+          const received = (await check.json()).state?.wakeEvent;
+          if (received?.id === event.id && received.protection?.revision === state.revision
+              && received.protection?.phase === state.phase && received.protection?.remainingMs === state.remainingMs) {
+            store.set(pendingKey(), 0);
+          }
+        }
+      }
+    } finally { syncing = false; }
+  }

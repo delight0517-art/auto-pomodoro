@@ -1,0 +1,167 @@
+const DIAL_CIRCUMFERENCE = 2 * Math.PI * 52; // r=52
+
+const modeLabelEl = document.getElementById('modeLabel');
+const timeTextEl = document.getElementById('timeText');
+const tagTextEl = document.getElementById('tagText');
+const dialProgressEl = document.getElementById('dialProgress');
+const dialGraceEl = document.getElementById('dialGrace');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const stopBtn = document.getElementById('stopBtn');
+const menuBtn = document.getElementById('menuBtn');
+const restoreOverlayBtn = document.getElementById('restoreOverlayBtn');
+const todayTotalEl = document.getElementById('todayTotal');
+const aiTotalEl = document.getElementById('aiTotal');
+const widgetEl = document.getElementById('widget');
+
+let lastState = null;
+
+function fmtClock(ms) {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+const T = (k, v) => (typeof window.t === 'function' ? window.t(k, v) : k);
+window.addEventListener('i18n:changed', () => { if (lastState) render(lastState); });
+
+function fmtMinutes(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h > 0) return T('time.hoursMinutes', { h, m });
+  return T('minutes', { n: m });
+}
+
+function totalMsForMode(state) {
+  const s = state.settings;
+  if (state.mode === 'focus') return Number(state.focusDurationMs) > 0 ? Number(state.focusDurationMs) : s.focusMin * 60 * 1000;
+  if (state.mode === 'longBreak') return s.longBreakMin * 60 * 1000;
+  if (state.mode === 'break') return s.breakMin * 60 * 1000;
+  return s.focusMin * 60 * 1000;
+}
+
+function render(state) {
+  lastState = state;
+  window.PomodoroWidgetSkins?.apply(document.documentElement, state.settings || {});
+  widgetEl.classList.toggle('mode-break', state.mode === 'break');
+  widgetEl.classList.toggle('mode-longBreak', state.mode === 'longBreak');
+  const modeNames = { idle: T('mode.idle'), focus: T('mode.focus'), break: T('mode.break'), longBreak: T('mode.longBreak') };
+  tagTextEl.textContent = state.mode === 'focus' ? state.currentTag || '' : '';
+
+  const remaining = state.mode === 'idle' ? totalMsForMode(state) : state.remainingMs;
+  timeTextEl.textContent = fmtClock(remaining);
+
+  const total = totalMsForMode(state);
+  const ratio = total > 0 ? Math.min(1, Math.max(0, remaining / total)) : 0;
+  dialProgressEl.style.strokeDasharray = `${DIAL_CIRCUMFERENCE}`;
+  dialProgressEl.style.strokeDashoffset = `${DIAL_CIRCUMFERENCE * (1 - ratio)}`;
+  const level = Number(state.settings?.pomodoroCommitmentLevel) || 0;
+  const graceLocked = state.mode === 'focus' && (window.PomodoroFocusRingPolicy.isFinalFocusWindow(state, total) || !!state.focusPauseLocked);
+  dialGraceEl.style.display = state.mode === 'focus' && level === 2 ? '' : 'none';
+  const finalFocus = window.PomodoroFocusRingPolicy.isFinalFocusWindow(state, total);
+  dialProgressEl.style.stroke = finalFocus ? window.PomodoroFocusRingPolicy.finalColor : (state.mode === 'focus' ? window.PomodoroFocusRingPolicy.normalFocusColor(state.settings, window.matchMedia?.('(prefers-color-scheme: dark)').matches, window.PomodoroWidgetSkins?.paletteFor(state.settings).focus) : '');
+  dialProgressEl.dataset.focusRingContract = window.PomodoroFocusRingPolicy.contractId;
+  dialProgressEl.classList.toggle('grace-lock', graceLocked);
+  playPauseBtn.disabled = graceLocked;
+  stopBtn.disabled = graceLocked;
+  playPauseBtn.classList.toggle('grace-lock', graceLocked);
+  stopBtn.classList.toggle('grace-lock', graceLocked);
+  modeLabelEl.title = graceLocked ? '마지막 1/7 구간입니다. 일시정지와 중지가 잠겼습니다.' : '';
+
+  todayTotalEl.textContent = T('widget.todayStudy', { value: fmtMinutes(state.todayStudySec) });
+
+  if (aiTotalEl) {
+    const ai = state.aiWorkTotal;
+    if (ai && state.settings?.aiScreenTime?.enabled !== false) {
+      const combinedMin = ai.combinedMinutes || 0;
+      const limitMin = ai.dailyLimitMin || 120;
+      const typingMin = ai.windowInterventionMinutes || 0;
+      const typingLimitMin = ai.typingLimitMin || 20;
+      aiTotalEl.textContent = T('widget.aiUsage', {
+        combined: `${combinedMin}분`,
+        limit: `${limitMin}분`,
+        typing: `${typingMin}분`,
+        typingLimit: `${typingLimitMin}분`
+      });
+      aiTotalEl.style.display = '';
+    } else {
+      aiTotalEl.style.display = 'none';
+    }
+  }
+
+  // 강제 모드에서 집중 세션이 도는 동안은 일시정지/정지 버튼 자체를 없앤다 — 버튼이 있으면
+  // "눌러서 끌 수 있다"는 신호가 되고, 그게 정확히 이 모드가 막으려는 행동이다
+  // (2026-[REDACTED] 요청: "정말 포모도로를 매번 끄는 사람을 대비해서").
+  const forcedFocusLocked = (level === 3 || !!state.settings?.forcedModeEnabled) && state.mode === 'focus';
+  const agentLockActive = state.agentOverlayHiddenForAgents === true;
+  widgetEl.classList.toggle('agent-lock-active', agentLockActive);
+  restoreOverlayBtn.hidden = !agentLockActive;
+  restoreOverlayBtn.disabled = !agentLockActive;
+  modeLabelEl.textContent = agentLockActive
+    ? `🔒 ${T('break.lockState.blocked')}`
+    : (forcedFocusLocked ? `🔒 ${modeNames[state.mode] || ''}` : (modeNames[state.mode] || T('mode.idle')));
+
+  if (state.mode === 'idle') {
+    playPauseBtn.textContent = T('widget.playPause.start');
+    playPauseBtn.style.display = '';
+    stopBtn.style.visibility = 'hidden';
+  } else if (state.mode === 'focus' || state.mode === 'break' || state.mode === 'longBreak') {
+    if (forcedFocusLocked) {
+      playPauseBtn.style.display = 'none';
+      stopBtn.style.visibility = 'hidden';
+    } else {
+      playPauseBtn.style.display = '';
+      if (!state.running && state.pausedReason === 'auto-away') {
+        playPauseBtn.textContent = T('widget.playPause.away');
+      } else {
+        playPauseBtn.textContent = state.running ? T('widget.playPause.pause') : T('widget.playPause.resume');
+      }
+      stopBtn.style.visibility = 'visible';
+    }
+  }
+  menuBtn.disabled = agentLockActive;
+  playPauseBtn.disabled = agentLockActive || graceLocked;
+  stopBtn.disabled = agentLockActive || graceLocked;
+}
+
+window.api.getState().then(render);
+window.api.onState(render);
+
+playPauseBtn.addEventListener('click', () => {
+  if (!lastState) return;
+  if (lastState.mode === 'idle') {
+    window.api.start();
+    return;
+  }
+  if (lastState.running) {
+    window.api.pause();
+  } else {
+    window.api.resume();
+  }
+});
+
+stopBtn.addEventListener('click', () => {
+  window.api.stop();
+});
+
+menuBtn.addEventListener('click', () => {
+  window.api.openDashboard();
+});
+
+restoreOverlayBtn.addEventListener('click', () => {
+  if (lastState?.agentOverlayHiddenForAgents === true) window.api.restoreAgentBreakOverlay();
+});
+
+menuBtn.addEventListener('contextmenu', (event) => {
+  if (lastState?.agentOverlayHiddenForAgents === true) { event.preventDefault(); return; }
+  window.api.openContextMenu();
+});
+
+widgetEl.addEventListener('dblclick', () => {
+  if (lastState?.agentOverlayHiddenForAgents === true) return;
+  window.api.openDashboard();
+});
+
+// 위젯에서의 휠 입력은 실사용 중 오조작이 너무 잦아서 일단 비활성화한다.
+// 이전에는 트랙패드 플릭 한 번만으로 focusMin이 1분까지 떨어져서
+// 1분짜리 세션이 반복 시작되는 것처럼 보이는 문제가 있었다.

@@ -1,0 +1,27 @@
+Task: pomodoro-log-retention-install-20261111
+Owner thread: 01a1bbac-f665-7a32-907c-19605c80f921
+
+Source
+- Canonical repository: /Users/rogan/appDev/schedule/pomodoro
+- Branch/head: main / fd024300bf202042921fe0f1505334b505b1243d
+- Relevant commits: 5232bff (7-day debug/trace retention); fd02430 (register temporary settings restoration module and complete module manifest).
+- Tracked working-diff SHA-256 at build: 40b2960c63875682dd5baded2847b05b36c523b0a9d7a1acc48ad6f93df9e029
+- Packaged untracked-source inventory: 37 files; aggregate SHA-256 0c86b91e5b4b73d164ca2a26296ca19554c519b3b999497c99d859e418cfa048
+
+Build and install
+- Command: storage-guard run --task pomodoro-log-retention-install-20261111 --peak-gib 3 --target /Users/rogan/appDev/schedule/pomodoro -- /bin/bash scripts/local_build_update.sh --storage-guarded
+- npm run check passed; evolution manifest accounted for 47 main imports and 5 renderer surfaces.
+- Build output reused: /Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app
+- Installed app: /Applications/Auto Pomodoro.app, version/build 1.0.42, bundle com.rogan.pomodorocage.
+- Installed app.asar SHA-256: 955b786299d877e0347e92e7a2d69c2e319953a67c2f82e3de93dfef273270ae
+- codesign --verify --deep --strict passed; workflow-control verify-mac returned launchAllowed=true, mode=local_dev.
+- Runtime log: /Users/rogan/Library/Application Support/Auto Pomodoro/logs/debug-2026-11-11.log, 2026-11-11T11:12:40.701Z reports retentionDays=7.
+
+Retention and capacity
+- Before: 45.75 GiB free; 3 GiB peak budget; 20 GiB reserve.
+- After: 45.94 GiB free; required reserve preserved.
+- Build output path reused; cleanup reported removed=[] and skipped=[].
+- One rollback preserved at /Users/rogan/appDev/schedule/pomodoro/.local_build/Auto Pomodoro.previous.app (the prior installed app). No process held files in the rollback or dist app at receipt time. No older timestamped rollback copies remain.
+
+Scope
+- Mac source/build/install only. Timer is idle after authorized restart. No settings or server configuration, payment, deployment, Windows source/install, Windows receiver ACK, or cross-device behavior was changed or proven.

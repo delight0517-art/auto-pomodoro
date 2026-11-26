@@ -1,0 +1,1310 @@
+{
+  "version": 2,
+  "world": {
+    "x": 219,
+    "y": 215,
+    "mode": "sleep",
+    "minute": 130,
+    "since": 120,
+    "sleepReported": true,
+    "network": "wifi",
+    "computers": {
+      "mac": {
+        "online": true,
+        "timer": {
+          "mode": "focus",
+          "running": true,
+          "startedAt": 0,
+          "endsAt": 145,
+          "transitions": 8
+        },
+        "lastInputAt": null
+      },
+      "windows": {
+        "online": true,
+        "timer": {
+          "mode": "focus",
+          "running": true,
+          "startedAt": 0,
+          "endsAt": 145,
+          "transitions": 8,
+          "mirroredFrom": "mac"
+        },
+        "lastInputAt": null
+      }
+    },
+    "activeComputer": "mac",
+    "timerMirrors": [
+      {
+        "at": 0,
+        "from": "mac",
+        "to": "windows",
+        "mode": "focus",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 25,
+        "from": "mac",
+        "to": "windows",
+        "mode": "break",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 30,
+        "from": "mac",
+        "to": "windows",
+        "mode": "focus",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 55,
+        "from": "mac",
+        "to": "windows",
+        "mode": "break",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 60,
+        "from": "mac",
+        "to": "windows",
+        "mode": "focus",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 85,
+        "from": "mac",
+        "to": "windows",
+        "mode": "break",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 90,
+        "from": "mac",
+        "to": "windows",
+        "mode": "focus",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 115,
+        "from": "mac",
+        "to": "windows",
+        "mode": "break",
+        "running": true,
+        "reason": "snapshot-sync"
+      },
+      {
+        "at": 120,
+        "from": "mac",
+        "to": "windows",
+        "mode": "focus",
+        "running": true,
+        "reason": "snapshot-sync"
+      }
+    ]
+  },
+  "observe": true,
+  "sleepSensor": true,
+  "known": true,
+  "events": [
+    {
+      "id": "night",
+      "at": -360,
+      "action": "sleep",
+      "source": "manual",
+      "label": "known prior sleep"
+    },
+    {
+      "id": "cli-wake-1",
+      "at": 0,
+      "action": "wake",
+      "source": "manual",
+      "label": "NPC 실제 기상 동작",
+      "observed": true
+    },
+    {
+      "at": 1,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-2-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 2,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-3-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 3,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-4-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 4,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-5-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 5,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-6-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 6,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-7-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 7,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-8-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 8,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-9-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 9,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-10-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 10,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-11-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 11,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-12-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 12,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-13-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 13,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-14-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 14,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-15-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 15,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-16-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 16,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-17-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 17,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-18-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 18,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-19-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 19,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-20-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 20,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-21-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 21,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-22-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 22,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-23-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 23,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-24-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 24,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-25-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 25,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → break",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-26-0"
+    },
+    {
+      "at": 25,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-26-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 26,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-28-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 27,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-29-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 28,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-30-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 29,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-31-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 30,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → focus",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-32-0"
+    },
+    {
+      "at": 30,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-32-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 31,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-34-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 32,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-35-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 33,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-36-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 34,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-37-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 35,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-38-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 36,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-39-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 37,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-40-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 38,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-41-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 39,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-42-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 40,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-43-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 41,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-44-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 42,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-45-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 43,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-46-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 44,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-47-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 45,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-48-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 46,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-49-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 47,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-50-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 48,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-51-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 49,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-52-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 50,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-53-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 51,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-54-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 52,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-55-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 53,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-56-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 54,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-57-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 55,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → break",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-58-0"
+    },
+    {
+      "at": 55,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-58-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 56,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-60-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 57,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-61-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 58,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-62-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 59,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-63-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 60,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → focus",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-64-0"
+    },
+    {
+      "at": 60,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-64-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 61,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-66-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 62,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-67-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 63,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-68-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 64,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-69-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 65,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-70-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 66,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-71-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 67,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-72-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 68,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-73-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 69,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-74-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 70,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-75-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 71,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-76-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 72,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-77-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 73,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-78-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 74,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-79-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 75,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-80-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 76,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-81-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 77,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-82-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 78,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-83-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 79,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-84-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 80,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-85-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 81,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-86-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 82,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-87-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 83,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-88-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 84,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-89-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 85,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → break",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-90-0"
+    },
+    {
+      "at": 85,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-90-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 86,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-92-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 87,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-93-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 88,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-94-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 89,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-95-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 90,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → focus",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-96-0"
+    },
+    {
+      "at": 90,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-96-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 91,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-98-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 92,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-99-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 93,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-100-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 94,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-101-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 95,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-102-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 96,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-103-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 97,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-104-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 98,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-105-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 99,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-106-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 100,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-107-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 101,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-108-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 102,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-109-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 103,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-110-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 104,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-111-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 105,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-112-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 106,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-113-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 107,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-114-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 108,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-115-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 109,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-116-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 110,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-117-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 111,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-118-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 112,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-119-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 113,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-120-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 114,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-121-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 115,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → break",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-122-0"
+    },
+    {
+      "at": 115,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-122-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 116,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-124-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 117,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-125-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 118,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-126-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 119,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-127-0",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 120,
+      "action": "timer-transition",
+      "label": "Mac Pomodoro 자동 전환 → focus",
+      "observed": true,
+      "source": "pomodoro-engine",
+      "deviceId": "mac-primary",
+      "wakeEvidence": false,
+      "id": "cli-128-0"
+    },
+    {
+      "at": 120,
+      "action": "pc",
+      "label": "공간 관측 · pc",
+      "observed": true,
+      "id": "cli-128-1",
+      "source": "human-input",
+      "deviceId": "mac-primary"
+    },
+    {
+      "at": 120,
+      "action": "suspect",
+      "label": "침대 체류5분 · 수면 추정",
+      "observed": true,
+      "deliver": 125,
+      "source": "healthkit-candidate",
+      "id": "cli-130-0"
+    },
+    {
+      "at": 120,
+      "action": "sleep",
+      "label": "가상 침대/정지 센서10분 · 수면 확정",
+      "observed": true,
+      "deliver": 130,
+      "source": "risesync-fusion",
+      "id": "cli-131-0"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Auto Pomodoro safe replacement checkpoint — 2026-11-04
+
+Source: /Users/rogan/appDev/schedule/pomodoro, main@898b3c9a929e3df548dd483c10135e438cab1282. Existing mixed dirty source preserved.
+Changed: scripts/local_build_update.sh now refuses before build when the installed app process is live, rechecks immediately before replacing the bundle, and no longer sends TERM/KILL to the running app.
+Validation: bash -n and git diff --check passed; no force-kill command remains; invoking the script against the active app exited 2 before build/install and left the installed app untouched.
+Timer-recovery/sync source checks: scripts/timer-recovery-smoke.js, scripts/sync-contract-test.js, scripts/windows-logical-clock-parity-test.js passed.
+Runtime: installed 1.0.40 remains active. Current settings form draft differs from saved state (25/5 minutes vs 50/10, sound off vs on, Auto Mode off vs on). Candidate 1.0.40 app.asar SHA-256 973f881ee803f09db308266960082cf0b717377ef1a867ed1ce89fabdd25a193 remains uninstalled. Login/server readback and Windows receiver/runtime ACK remain unverified.

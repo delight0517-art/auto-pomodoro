@@ -1,0 +1,17 @@
+{
+  "manifest": "2026-10-24/manifest.json",
+  "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf",
+  "mac": {
+    "passed": 100,
+    "failed": 0,
+    "total": 100,
+    "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf"
+  },
+  "windows": {
+    "passed": 100,
+    "failed": 0,
+    "total": 100,
+    "catalogSha256": "19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf"
+  },
+  "activation": "pending; see canonical TODO"
+}

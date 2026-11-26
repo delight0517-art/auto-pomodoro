@@ -1,0 +1,17 @@
+set -euo pipefail
+ROOT="/Users/rogan/appDev/schedule/pomodoro"
+source "$HOME/appDev/tools/apple-signing.env"
+APP="$ROOT/dist/mac-arm64/Auto Pomodoro.app"
+ZIP="$ROOT/dist/release/Auto-Pomodoro-mac-arm64.zip"
+test -d "$APP"
+python3 "$HOME/appDev/tools/check-apple-signing.py" "$APP"
+mkdir -p "$(dirname "$ZIP")"
+rm -f "$ZIP"
+ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+xcrun notarytool submit "$ZIP" --keychain-profile "$NOTARYTOOL_PROFILE" --keychain "$CSC_KEYCHAIN" --wait
+xcrun stapler staple "$APP"
+xcrun stapler validate "$APP"
+spctl --assess --type execute --verbose=2 "$APP"
+rm -f "$ZIP"
+ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+echo "Notarized release ready: $ZIP"

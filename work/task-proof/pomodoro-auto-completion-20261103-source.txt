@@ -1,0 +1,6 @@
+Task: pomodoro-auto-completion-20261103
+Canonical repository: /Users/rogan/appDev/schedule/pomodoro
+Branch/HEAD: main / 898b3c9a929e3df548dd483c10135e438cab1282
+Source state: mixed pre-existing dirty tree preserved; no blanket staging or reset.
+Checks: npm run check exit 0; npm test exit 0. storage-guard operation history records npm test exitCode 0 at 2026-11-03 13:54 UTC; npm run check exitCode 0 at 13:54 UTC.
+Relevant source changes include existing dirty candidate scheduler/runtime wiring and this task's startup applyLoginItemSettings() reconciliation. Local edits remain uncommitted pending isolated integration review.

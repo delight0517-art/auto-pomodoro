@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "product": "M-Oasis",
+  "updatedAt": "2026-11-05T05:50:53.326222+00:00",
+  "policy": "MOASIS_FEATURE_PARITY-20261014",
+  "latest": {
+    "taskKey": "pomodoro-final-seventh-windows-stop-guard-20261105",
+    "featureId": "focus-ring-final-seventh/v3-stop-guard",
+    "status": "windows-handoff-delivered-awaiting-receiver-ack",
+    "baseCommit": "261b6d919a18cb6430c4e6d2d5da056bd2a95d1e",
+    "macCanonicalHeadAtPublish": "261b6d919a18cb6430c4e6d2d5da056bd2a95d1e",
+    "contractFileId": "1PhnymWh2KvrywQDf9eiSZBe0P8MLikLD",
+    "packetFileId": "1i5EiFqfsmKi9gOJ_wkHWBMWksqwqYwjF",
+    "patchFileId": null,
+    "patchSha256": null,
+    "manifestFileId": "1g_UQyTVUeWel8zd7D2_jTeQRbJ4MI0jU",
+    "windowsStartFileId": "1llLdEXWoF8Mkt2EjDV2f8-HkUqJXRrY9",
+    "relatedBacklogId": "61c3c32d7dfb",
+    "platforms": {
+      "macos": "existing-v3-policy-source-recorded-no-source-change-in-this-task",
+      "windows": "pending-receiver-inspection"
+    },
+    "macEvidence": "CROSS_PLATFORM_PARITY.md records the v3 #242424 ring policy and Windows candidate 0.2.9+159; Mac source contains the common final-focus manual-action guard. No Mac app source was changed in this task. Read-only ssh winpc returned Host is down, so Windows source/runtime are not freshly verified.",
+    "next": "Windows Codex: inspect its current canonical checkout, active leases, running timer and installed version; implement the shared final-seventh manual action guard, run focused tests and return an ACK/receipt. Build, install and real ring/action runtime proof remain separate.",
+    "handoffFolderId": "1vtdD7W96YycNFEKGOCe_xvwNSYcHX-pk"
+  },
+  "previousLatest": {
+    "taskKey": "moasis-visible-copy-audit-20261101",
+    "featureId": "moasis-visible-copy-audit-20261101",
+    "status": "mac-source-integrated-windows-handoff-delivered",
+    "baseCommit": "52e6425465f5d4cebea8d7f250f9d160ff7a16b6",
+    "macCommit": "4754ecdb593524b02e0d5d402e5ee44c809f4361",
+    "macCanonicalHeadAtPublish": "4754ecdb593524b02e0d5d402e5ee44c809f4361",
+    "contractFileId": "1h9dJo72wgLoA4gJ85xZd0xsf03kuwlIq",
+    "packetFileId": "14EmFtljH_iKG2OBCxWNfzaBmMfI098zH",
+    "patchFileId": "1c4PF5DhBGO5M0gL4uKpRqPasXWlR9QMV",
+    "patchSha256": "a612189590030bf51d23a0c81376533bd39282d9551f703e11e91f4e1a56ce7f",
+    "manifestFileId": "1GN3aRvTNeElGRH_f_Y_dP0iPiFIQIu5G",
+    "windowsStartFileId": "1FonGu_nzimCiKc30LY-1ueA_d6uZRjhP",
+    "platforms": {
+      "macos": "source-integrated",
+      "windows": "pending"
+    },
+    "macEvidence": "Visible-copy source corrections plus native build-guard M-Oasis error wording integrated at 4754ecdb593524b02e0d5d402e5ee44c809f4361. Version stop unchanged; source/install metadata 0.13.31 matches. No build/install/restart; Windows receiver and credential-store runtime pending.",
+    "next": "Windows availability unknown. When available, inspect its checkout, dirty work and leases; verify this patch and selectively adapt because canonical source differs from the patch base; return receiver source/build/install/runtime evidence separately."
+  },
+  "previousLatestHistory": [
+    {
+      "taskKey": "moasis-visible-copy-audit-20261101",
+      "featureId": "moasis-visible-copy-audit-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "52e6425465f5d4cebea8d7f250f9d160ff7a16b6",
+      "macCommit": "4754ecdb593524b02e0d5d402e5ee44c809f4361",
+      "macCanonicalHeadAtPublish": "4754ecdb593524b02e0d5d402e5ee44c809f4361",
+      "contractFileId": "1h9dJo72wgLoA4gJ85xZd0xsf03kuwlIq",
+      "packetFileId": "14EmFtljH_iKG2OBCxWNfzaBmMfI098zH",
+      "patchFileId": "1c4PF5DhBGO5M0gL4uKpRqPasXWlR9QMV",
+      "patchSha256": "a612189590030bf51d23a0c81376533bd39282d9551f703e11e91f4e1a56ce7f",
+      "manifestFileId": "1GN3aRvTNeElGRH_f_Y_dP0iPiFIQIu5G",
+      "windowsStartFileId": "1FonGu_nzimCiKc30LY-1ueA_d6uZRjhP",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Visible-copy source corrections plus native build-guard M-Oasis error wording integrated at 4754ecdb593524b02e0d5d402e5ee44c809f4361. Version stop unchanged; source/install metadata 0.13.31 matches. No build/install/restart; Windows receiver and credential-store runtime pending.",
+      "next": "Windows availability unknown. When available, inspect its checkout, dirty work and leases; verify this patch and selectively adapt because canonical source differs from the patch base; return receiver source/build/install/runtime evidence separately."
+    },
+    {
+      "taskKey": "moasis-awakening-birth-story-20261101",
+      "featureId": "moasis-awakening-birth-story-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "aa5e6fbe8af1f154770a16bcc5173d7a4118d101",
+      "macCommit": "96e54965422a9f668cd11b3060cb9a89c326ef3b",
+      "macCanonicalHeadAtPublish": "2ee2d8acc694d7c1b7ad32a2c5f4e9fdb25b1e7c",
+      "contractFileId": "18WoIexH8ALkG5pmrCRDcOf8LT6MlGh_6",
+      "packetFileId": "16XR2J2NEmPTPx_A_dJLt1AFYLKWr2dnL",
+      "patchFileId": "10g9LvtC5jwDD_whhLRnVZL7HLeSANm9a",
+      "patchSha256": "80c054e239cfe0be987cb9358ceb00ad3ff3ba1cd0a66f14ab76f4a4febc80cb",
+      "windowsStartFileId": "11mbr8K985ykTJOG9TxBkDgIH3EihyG0C",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "The generated Awakening now frames activation in Commander Rogan's M-Oasis workspace and asks for a concrete goal without assuming project data. Source 96e549654 integrated at b2a9b2c4e; wakemind 128 assertions and onboarding 73 pass. Exact-base zero-context patch apply/result-byte/reverse passed with --unidiff-zero. Four handoff artifacts uploaded; Windows ACK pending. No Mac build/install/restart while NOVA review is open.",
+      "next": "Windows receiver inspects exact checkout and lease, verifies patch digest, applies/adapts selectively, runs focused checks and reports build/install/runtime separately."
+    },
+    {
+      "taskKey": "moasis-runtime-error-branding-20261101",
+      "featureId": "moasis-runtime-error-branding-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "6ee0078ce08307235b47a5d7f234edaa2a397bbb",
+      "macCommit": "7ff25122ff940abf6319abe9929edaf767917176",
+      "macCanonicalHeadAtPublish": "aa5e6fbe8af1f154770a16bcc5173d7a4118d101",
+      "contractFileId": "1wBB6_k0tarmvQj7Pmuk4HlBJ9JasMoj6",
+      "packetFileId": "1reEs7fnKA11mIypJ5--mpY37inqfXVZe",
+      "patchFileId": "1FpTJSJNHHQF_oUFOUgD-ndJsvnCQkGsd",
+      "patchSha256": "ba671ed6d7978ba89da197bb4aab193d3471595cec39626ab2f32400075a0461",
+      "windowsStartFileId": "1uuNrAgGIQ_0-5s_mRR2r0IKVo7m2gRoY",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Three user-facing refusal return sites now use M-Oasis; HTTP/status/control semantics are unchanged. schema-stamp 15, cloudsave-refusal 26, workshop E2E 93 assertions pass. Exact-base zero-context patch apply/result-byte/reverse passed with --unidiff-zero. Four handoff artifacts and contract are delivered; Windows remains pending. Mac app restart/install deferred while NOVA review open.",
+      "next": "Windows receiver: inspect exact checkout and lease; verify patch SHA, selectively apply/adapt, run focused checks and report source/build/install/runtime separately."
+    },
+    {
+      "taskKey": "moasis-prompt-on-demand-provider-cascade-20261101",
+      "featureId": "moasis-prompt-on-demand-provider-cascade-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "7de91afe05b1b291e22d11daf36d5791ecbd23a2",
+      "macCommit": "fa385621c0b2d2a2a27f4fe527cfbb4f45ecbd56",
+      "macCanonicalHeadAtPublish": "d133fba8e54a5f03f20b3224e60d82e15664929b",
+      "contractFileId": "1Qy6sG0atYj5ZYapXXXto-eFX_w-HO_t1",
+      "packetFileId": "17ppZpxftnT-E2s_rPypMYsQT2YWgIynH",
+      "patchFileId": "1K4-rlq1yZ9y8wnrwFlia9HbmX6sLCych",
+      "patchSha256": "ffc8f4ac586a4b5f3ce056c0a31f9b87ce483a764818fdc6276a2ba3418ad1e1",
+      "windowsStartFileId": "1JTrCUi0X1P7kEis8xaKuu5Ok13lMoo1P",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Explicit provider requests outside saved priority tiers remain primary; configured tiers remain fallbacks. Integrated fix fa385621c at canonical merge d133fba8e. Priority tests 7/7 and prompt-on-demand E2E 27 assertions pass. Exact-base patch apply/result-byte comparison/reverse verified. No app build/install/restart; preserve open NOVA review. Windows receiver pending.",
+      "next": "Windows receiver: when available, inspect canonical checkout and lease, verify patch digest and apply/adapt selectively; run focused tests and report source/build/install/runtime separately."
+    },
+    {
+      "taskKey": "moasis-awakening-copy-branding-20261101",
+      "featureId": "moasis-awakening-copy-branding-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "07099c767277ef89a4d8911dbc235571373c1ae5",
+      "macCommit": "8d083f7b675d6c1652f282f7a12298d5954bc646",
+      "macCanonicalHeadAtPublish": "7de91afe05b1b291e22d11daf36d5791ecbd23a2",
+      "contractFileId": "1JUlhYSuDX9km3MpKthaypqdvxG8tG2_U",
+      "packetFileId": "1Vp-NO_O3j99ddiUjlXcjMv6yfzFAWTKv",
+      "patchFileId": "1Q8bXs9SH7uZpCzE6KK2Bkp84WZHWhjuh",
+      "patchSha256": "60a32dcfbab19f712cb96053d23e6977fb3352ad2e4cd25b479208cf716e1539",
+      "windowsStartFileId": "1n92ov5-JS5vgoIyHeqyu3DXtf0lGwX_Y",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Lead Awakening opening, mission acknowledgement, and preset acknowledgement use M-Oasis workspace copy. Source commit 8d083f7b6 is integrated at canonical head 7de91afe0. onboarding.test.js passed 73 assertions; JS syntax/diff and platform manifest 4/4 pass. Exact-base zero-context patch apply/reverse passed with --unidiff-zero and SHA-256 60a32dcf…1539. No app build/install/restart; NOVA review preserved. Windows remains pending.",
+      "next": "Windows receiver: when available inspect canonical checkout, branch, dirty paths and active lease; verify patch SHA-256 and use git apply --unidiff-zero only at exact base, otherwise adapt selectively. Run onboarding.test.js; report source/build/install/runtime separately. Do not probe remotely while availability is unknown."
+    },
+    {
+      "taskKey": "moasis-telegram-persona-branding-20261101",
+      "featureId": "moasis-telegram-persona-branding-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "3d47750eecbc4d3fb4a04c52bc4331e9ac7a2421",
+      "macCommit": "4aae8475e55bf2088d8624aa0d5c9881fa98c9a5",
+      "macCanonicalHeadAtPublish": "07099c767277ef89a4d8911dbc235571373c1ae5",
+      "contractFileId": "15q6ztrf28aD9P94JXLia9n-tCwZq1PRo",
+      "packetFileId": "1_XXoJuFNS-PDCzAHF5__qmeMk4toL--2",
+      "patchFileId": "1n7nX5GbISL6N__nHJKJ269wNZRvO7rNh",
+      "patchSha256": "9fa0b0d9ab36de641f91536d0bc9e39cbc4c7332f7d8050d6658ce8a98c534a0",
+      "windowsStartFileId": "1dUuw-VKBpbXoxct5MMmlkmzv4qKgQiDo",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Source commit 4aae8475e is integrated at canonical merge 14af08752; handoff metadata is integrated at canonical head 07099c767. Shared Telegram persona now identifies M-Oasis and Commander Rogan for station and per-agent bots. Focused test passes 20 assertions; syntax, diff, work:finish and work:check pass. Contract, packet, exact-base patch and Windows start guide uploaded and read back byte-for-byte. Patch SHA-256 9fa0b0d9ab36de641f91536d0bc9e39cbc4c7332f7d8050d6658ce8a98c534a0. No app restart/build/install; preserve NOVA review. Windows remains pending.",
+      "next": "Windows receiver: when available inspect canonical checkout, branch, dirty paths and active lease; verify patch SHA-256 and apply only at exact base, otherwise adapt selectively. Run the focused Telegram persona test; report source/build/install/runtime separately. Do not probe remotely while availability is unknown."
+    },
+    {
+      "taskKey": "moasis-ultron-skin-display-names-20261101",
+      "featureId": "moasis-ultron-skin-display-names-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "c8e9b4dc9fc6a27722433341eec8250c9aad8f78",
+      "macCommit": "12b778a64e1cf7bf4da70531c02851f4310b0464",
+      "macCanonicalHeadAtPublish": "8a9da0d92ec8eb185ed36e2e913dce914bacacaa",
+      "contractFileId": "1J_E9aox3eu3uyzoj04dSP8gDJczjlH09",
+      "packetFileId": "1ahrE-Ras1bLCKcmMAqm5inz0e8l5PQx1",
+      "patchFileId": "1cjoFZj1sgnQycE7dvO6bz4novBzYh2jg",
+      "patchSha256": "d5c16934fb42ad91af55a7aadc845af799902e8759d71ff70cc65886cca36b26",
+      "windowsStartFileId": "1ItKtIqYEgh7JKbYA-isr7rBS7pqboQj_",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Source commit c4b0b4b82 integrated at 12b778a64; handoff metadata integrated at 8a9da0d92. Focused skin test passed 191 assertions; packet tests 4/4; demo JavaScript syntax and diff checks passed. Mac installed app was not rebuilt or restarted; preserve the open NOVA review. Windows source/build/install/runtime remain pending.",
+      "next": "Windows receiver: when available, inspect canonical checkout, branch, dirty paths and active lease; verify patch SHA-256 and apply only at the exact base, otherwise adapt selectively. Run focused skin test; report source/build/install/runtime independently. Do not probe remotely while availability is unknown."
+    },
+    {
+      "taskKey": "moasis-low-storage-webview2-cache-20261101",
+      "featureId": "moasis-low-storage-webview2-cache-20261101",
+      "status": "mac-source-integrated-windows-handoff-delivered",
+      "baseCommit": "463537d64461d5682b682dc7a3251263a66d7bad",
+      "macCommit": "803f399df1feb98bf56761c3e9fc1c5ec89fbd84",
+      "macCanonicalHeadAtPublish": "7cfd9e6bd4c136298d599fe7f97cc330153a8ead",
+      "packetFileId": "1U7OqMKqrZbRlLMtZFMt7zGTHwSwO_L0u",
+      "contractFileId": "1KfGoQxiqL3dwgrpzEugdUrafQtNdbQ9T",
+      "patchFileId": "1A6GjgGqSdQzwvdQUe2LDNbhDC7Id4W_Z",
+      "patchSha256": "5336b8ae2e6f0e08a6399b254f0e505a529bd027e0c50a20701592429f635f5c",
+      "windowsStartFileId": "1xIC9BAr2k8YVvWPFtLWYO5ISeF0fEtaG",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Source commits 622d5e45f and 803f399df integrated at canonical head 7cfd9e6bd. Focused Rust tests pass 8/8: strict 10 GB trigger, unknown-capacity fail closed, five allowlisted cache deletions, protected state preserved and missing directory soft-fail. Packet tests pass 4/4. Mac WebKit cleanup remains disabled. No Windows API compile/runtime or bytes-reclaimed result. No Mac cache deletion, app install or restart.",
+      "next": "Windows receiver: when available, inspect canonical checkout, branch, dirty paths and active task/edit lease; apply the digest-verified zero-context patch only at exact base (git apply --unidiff-zero), otherwise adapt and record the actual base. Run focused Rust tests and native build. Report source/build/install/runtime and actual before/after available-byte readback separately; do not probe remotely while availability is unknown."
+    },
+    {
+      "taskKey": "moasis-native-notification-context-20261101",
+      "featureId": "moasis-native-notification-context-20261101",
+      "status": "mac-source-integrated-runtime-and-windows-pending",
+      "baseCommit": "0d05872ff23f928ff0b2dace403640d47f627305",
+      "macCommit": "12b4cdbe3ad30e1ccb8623f8d6802b138f09cd97",
+      "macCanonicalHeadAtPublish": "70aac48ad134c63cab77b33510d916d97c965d33",
+      "packetFileId": "1Y94LWNE-AcOFKE2oFKZ-PFraUASsAdNl",
+      "patchFileId": "1ETKzYhrjEquseRvo7lLOMDDJrALnAe4b",
+      "patchSha256": "5ac03eabb2d82969e41094355aca48f2731af768b083d077e0a603df295e2138",
+      "windowsStartFileId": "1Mps9gPqyZTLCheuGGyi6E3hQv0FjAyqy",
+      "platforms": {
+        "macos": "source-integrated-runtime-pending",
+        "windows": "pending"
+      },
+      "macEvidence": "Source integrated at 70aac48ad. Focused system-notification test passes; syntax and diff checks pass. The fresh installed-app CUA still shows a user-owned NOVA patch-review card open; app not restarted and native delivery/permission unchanged.",
+      "next": "Mac: verify installed native delivery when the open review card is safely clear; do not change OS notification permission implicitly. Windows: inspect checkout and lease, selectively apply/adapt the patch, then report focused checks and source/build/install/runtime separately."
+    },
+    {
+      "taskKey": "moasis-data-cap-20261030",
+      "featureId": "moasis-data-limits-20261101",
+      "status": "mac-source-integrated-windows-pending-runtime-pending",
+      "baseCommit": "ca7d75f4fab325e274b9063b856f65f071fc9413",
+      "macCommit": "5396dc54888edc3e2336624e5852edc118ede9be",
+      "macCanonicalHeadAtPublish": "0d05872ff23f928ff0b2dace403640d47f627305",
+      "packetFileId": "1EhLq1pUffldaX4f9DPNH6ueK2Fi80pPW",
+      "patchFileId": "17wu7xe3jze2yPns-CKBG_eqdijHqCoPO",
+      "patchSha256": "0b01ef4ac7f409fd0924134867f515874f62b1a1e1d41befdbca2e56ef1f59f2",
+      "windowsStartFileId": "1FIQF3IRiL0CyWdpYW5tsoZL8BG9UGqkD",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "macEvidence": "Source integrated at 2405ec831. Memory-only checks, two native storage-quota suites, and nine transcript/run-journal/log regression files passed (253 assertions). No app restart or consumer readback: the running user-owned app has an open NOVA patch-review card.",
+      "next": "Mac: perform consumer/runtime readback only after safely preserving the open review card. Windows: inspect the receiver checkout and lease; selectively apply/adapt the exact-base patch, then report source, build, install, runtime and durability separately."
+    },
+    {
+      "taskKey": "moasis-run-status-clarity-20261028",
+      "featureId": "moasis-run-status-notification-clarity-20261028",
+      "status": "mac-runtime-verified-windows-pending",
+      "baseCommit": "eea8f64fee74f4a4201c0fcfc9a37948e58e0c94",
+      "macCommit": "080276153ea9d01fee066299f0887a4c3d3e8730",
+      "macCanonicalHeadAtPublish": "b84d47eec7de044d8c1f136fab72ea5c56d72c1b",
+      "packetFileId": "1Lj5y2OApx_zySGt3j9xVbMmEXqRiLHYh",
+      "patchFileId": "1YXRbqKYI5Cli3eidRymHQ8vZWkgyXwzM",
+      "patchSha256": "4bcc46137c5a31a1215f3cda1385d5e509d6ac88f82e42e02a8100bfc86efe34",
+      "windowsStartFileId": "112DqzytwYrmyIKIhvHVp1afLuaESY9T3",
+      "platforms": {
+        "macos": "runtime-verified",
+        "windows": "pending"
+      },
+      "macEvidence": "Focused tests 26/26; installed 0.13.31 live-source notification center corrected the saved Detox run notice while preserving read/task state. Native macOS Notification Center delivery not verified.",
+      "next": "Windows receiver: inspect its checkout, dirty state and edit lease; adapt this Mac-base patch only if needed; run focused checks and report source, build, install and visible runtime independently."
+    },
+    {
+      "taskKey": "moasis-user-visible-status-notifications-20261028",
+      "featureId": "moasis-status-notification-center-20261028",
+      "status": "installed",
+      "baseCommit": "019a68b3900a05d9c10faf1c0bc1e510557bc4e9",
+      "macCommit": "e52d1e2e1629af7d9b4b52397d02a95ce20b30e7",
+      "macCanonicalHeadAtPublish": "2afb1739e58612be50e8d5323b493524c2c35112",
+      "packetFileId": "1LJharQKBzX3yH61bRE9AWtb94aUIA5kL",
+      "patchFileId": "1FnRbGYeSx0BGc8p38H857nXdMVCmfhH6",
+      "patchSha256": "5797edebefb797efc0dd9eedb73787f818cd59168e7a3e21a37f4960898db77d",
+      "windowsStartFileId": "1iEBY5oR4AfBgI53WhdMe5njgAXwUVxJs",
+      "platforms": {
+        "macos": "installed",
+        "windows": "pending"
+      },
+      "next": "Mac M-Oasis 0.13.31 is installed and restarted. Native Notification Center delivery remains unverified because M-Oasis is absent from macOS Notifications settings. Windows must inspect its checkout and lease, apply/adapt the patch, and return separate source/build/install/runtime evidence.",
+      "followupPatchSha256": "c590edaa15378fd68c85a5bd741957f4bdaaa497e8adbd5c5df1d700865f5360",
+      "followupPatchFileId": "1xg2JFVYv7pYPHqampR7V0H7zhHLDIO70"
+    },
+    {
+      "taskKey": "moasis-human-stepin-resume-20261028",
+      "featureId": "moasis-stepin-login-resume-20261028",
+      "status": "source-integrated",
+      "baseCommit": "6922881b17801d50c2f349176bd8398137f70966",
+      "macCommit": "b67806098761729ea8836685fc4d651fc6ec28ed",
+      "macCanonicalHeadAtPublish": "91d99ea56",
+      "packetFileId": "1Qj-gWeS0TVgnGZ_1OEGWfye8s4HdoFDu",
+      "patchFileId": "1LQCSbCaXMES_v3bagGniqu0FMzh1QC_T",
+      "patchSha256": "71391f5f2befb8e014ca78aaf17b65293f36b8b8824dd27cf3c8353cf373d28e",
+      "windowsStartFileId": "1MXpKXHUtNwCtcTV15bC9PKYK0s0Z15kE",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "next": "Mac Step-In screen verification remains pending until the current Android Play Console team run ends safely. Windows has the exact-base patch and start instructions; receiver source/build/install/runtime are not verified."
+    },
+    {
+      "taskKey": "moasis-live-team-chat-20261028",
+      "featureId": "moasis-live-team-work-chat-20261028",
+      "status": "source-integrated",
+      "baseCommit": "fe4e64f64c5209f2e60ec849d85bb1fde4a1c0f9",
+      "macCommit": "08725ad93b0f4a70d074d99fd9790644164538d1",
+      "macCanonicalHeadAtPublish": "a55306565",
+      "packetFileId": "1mhXvz8aTBFt0PVEKJ1gDAozajIH5i7A4",
+      "patchFileId": "15NVzqkQOQBgJ4FJjNwHgIlbMxHcdnc_a",
+      "patchSha256": "85e45daed1055b3714d5b3854db4abe2f99d215f3c9b03654707bedf1cce6ede",
+      "windowsStartFileId": "1VffCRqRwyJx1bJek-6gtYR_MEi4RzVv8",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "next": "Windows patch and start instructions are available. Inspect the receiver checkout and lease before applying; Mac runtime showed the Step-In button, while the team-chat masthead still needs visual confirmation."
+    },
+    {
+      "taskKey": "moasis-request-details-20261028",
+      "featureId": "moasis-request-details-20261028",
+      "status": "source-integrated",
+      "baseCommit": "e46a82410dd9c3a02436c7dae2c08661fa6cbc10",
+      "macCommit": "fe4e64f64c5209f2e60ec849d85bb1fde4a1c0f9",
+      "packetFileId": "12q6r0a6OlB7elR1PtbZhZMRHUAGJGv-7",
+      "patchFileId": "1ffwjqkTzSnYvJXUQe_6EW5GDI4y6eOfk",
+      "patchSha256": "84285c408e25f8bc5bdc4e955326eb35d1e619513e8c0ce550cb5b9bdb07b63d",
+      "windowsStartFileId": "1LNGGyXbOvLuiZDzrU9iPEM0fcY0f3tSA",
+      "platforms": {
+        "macos": "runtime-verified",
+        "windows": "source-integrated"
+      },
+      "next": "Windows source integrated; build, install and runtime remain pending. Read windowsReceiptFileId for focused checks and commit.",
+      "windowsReceiptFileId": "19l9TWRDUsZ7hhDo7vDcppmNUzCDjgXLD"
+    },
+    {
+      "taskKey": "moasis-nova-priority-startup-20261028",
+      "featureId": "moasis-nova-priority-startup-20261028",
+      "status": "source-integrated",
+      "baseCommit": "3a29d12050cdd13a8a5b8a6798fa78ed5991f757",
+      "macCommit": "54a8df634",
+      "macCanonicalHeadAtPublish": "e46a82410dd9c3a02436c7dae2c08661fa6cbc10",
+      "packetFileId": "1QjrqKPqlzAuZ2Lh1VDNejF2VonZ_ALT3",
+      "patchFileId": "1wt2iYqELg4qjCgAkJhRyefolRe8MwJBi",
+      "patchSha256": "98b8acc1c68e049fe314c06e97e626d5342f76c82ed348b9159c85885c358799",
+      "windowsStartFileId": "1WPg_OLXIPw5QhFsGGdK2RTo2sleE0Fqi",
+      "platforms": {
+        "macos": "runtime-verified",
+        "windows": "source-integrated"
+      },
+      "next": "Windows source integrated; build, install and runtime remain pending. Read windowsReceiptFileId for focused checks and commit.",
+      "windowsReceiptFileId": "1P2oILcxK_KDqZ6CLtgAtq6-U1TXNj-NM"
+    },
+    {
+      "taskKey": "moasis-task-status-reporting-20261028",
+      "featureId": "moasis-task-status-reporting-20261028",
+      "status": "source-integrated",
+      "baseCommit": "0c46b6eaa930ca75efb9dce6ebc7dbccdf651831a",
+      "macCommit": "86d3a9d19",
+      "macCanonicalHeadAtPublish": "86d3a9d190e84e83593a258c7fb2eecf6827a634",
+      "packetFileId": "1zwaZZGAb9UGzBW7fsQTc2lvQ0lHLVwJS",
+      "patchFileId": "1AmMPR5PPTr6bzMHpfoXNPpxAPBOnD8Bg",
+      "patchSha256": "b47ff0467ad0ad401020bcd33cf8b842cf00d87c0ca12583e9d137bd38aeacd9",
+      "windowsStartFileId": "1QouQLqGGvaYtSiGoxXqqD_PeMooMQULs",
+      "platforms": {
+        "macos": "runtime-verified",
+        "windows": "source-integrated"
+      },
+      "next": "Windows source integrated; build, install and runtime remain pending. Read windowsReceiptFileId for focused checks and commit.",
+      "windowsReceiptFileId": "1-uy4dJVK8zwKcKU6T37_BNAXaYIRPtTC"
+    },
+    {
+      "taskKey": "moasis-evolution-standard-20261028",
+      "featureId": "moasis-feature-evolution-standard-20261028",
+      "status": "source-integrated",
+      "baseCommit": "a553065653ac8870ec16a01b5054efc62596c63a",
+      "macCommit": "80a0461e5591255416c38f49e7569cd8c0267810",
+      "macCanonicalHeadAtPublish": "50c6630574f78be8b0c5130b091d00a511f4e500",
+      "packetFileId": "1S-JpEwy3en718RVOHcHfHutX6CWou0OB",
+      "patchFileId": "1btaTYhvqWXiauF12Pu9iTRbBGplWAZ1Z",
+      "patchSha256": "47d78821318c643a015c166d74dbb8bf9526e7d15e27f4a66adb2364442ec09d",
+      "windowsStartFileId": "1sZLbAu_40C6Ve6YA7PaTvhFRhcSVdc3u",
+      "platforms": {
+        "macos": "source-integrated",
+        "windows": "pending"
+      },
+      "next": "Windows receiver must read this packet, inspect its source checkout/lease, selectively apply the contract, then return its own source/build/install/runtime receipt. Current Mac SSH probe returned Connection refused; no Windows application is confirmed.",
+      "macAppDelivery": {
+        "taskKey": "moasis-evolution-build-install-20261028",
+        "bundleId": "com.rogan.moasis",
+        "version": "0.13.31",
+        "sourceCommit": "50c6630574f78be8b0c5130b091d00a511f4e500",
+        "installedExecutableSha256": "dc0d417ea6abfa19eec6c9562b1d210fd6d1f3d4601b6002942cedcbdd966308",
+        "dmgSha256": "29e1aa1af94e4ba4e418fbe3778c9534d5fb9385b674658383ffd8424994108c",
+        "state": "installed-and-restarted-runtime-verified",
+        "runtime": "Saved sessions and home progress cards visible after restart; team roster 0 working, 15 idle."
+      }
+    }
+  ]
+}

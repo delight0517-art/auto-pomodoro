@@ -1,0 +1,7 @@
+{
+  "main/main.js": "9f59bc8d55d2839e13a7aec47256ab1b3b59d5d4edf2e27f411f768b372ae6c4",
+  "renderer/shared/focusRingPolicy.js": "030cc22ac61772d0932a72ded6e7659fb60d28d7e7ec4c897beb31923fbcfc36",
+  "renderer/widget/renderer.js": "57e3a99f8e12182755079edbaeaf70a2006d4ee7ce9ea03bcccededac9189a34",
+  "renderer/widget-compact/renderer.js": "e025a200c3a5dbec459c75f286bfa809e28a4832930cceb0b57015bd678c5837",
+  "renderer/dashboard/renderer.js": "cbf6c071be47c032d74eb107704dbda2bca9b4181255813aa0fbff298cd9979d"
+}

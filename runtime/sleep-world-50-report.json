@@ -1,0 +1,2184 @@
+{
+  "model": "main/userSleepState.js via main/sleepSandbox.js and tools/sleep-sandbox/world.js",
+  "seed": 20261019,
+  "coverage": {
+    "repetitions": 50,
+    "observedPhoneUse": 42,
+    "unobservedPhoneUse": 8,
+    "delayedDelivery": 10,
+    "workMinutes": [
+      1,
+      29
+    ],
+    "resleepMinutes": [
+      60,
+      150
+    ],
+    "assertionsPerCase": 8
+  },
+  "findings": [
+    {
+      "severity": "known-observation-gap",
+      "cases": "phoneObserved=false (8 cases)",
+      "detail": "NPC wakes and uses its phone, but the test withholds every phone-use event. Reducer retains last confirmed sleeping state; it cannot infer the unseen wake. Real background HealthKit/companion reports must arrive to resolve it. Late PC input only proves activity at its own observed time."
+    },
+    {
+      "severity": "fixed",
+      "detail": "Open confirmed sleep no longer inflates confirmedSleepMs; active sleep elapsed is exposed separately and used for projected alarm deadline."
+    }
+  ],
+  "cases": [
+    {
+      "case": 0,
+      "parameters": {
+        "workMinutes": 1,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 34,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 89,
+        "estimatedMinutes": 89,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 1,
+      "parameters": {
+        "workMinutes": 8,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 202,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 33,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 2,
+      "parameters": {
+        "workMinutes": 15,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 222,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 40,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 3,
+      "parameters": {
+        "workMinutes": 22,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 242,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 47,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 4,
+      "parameters": {
+        "workMinutes": 29,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 262,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 54,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 5,
+      "parameters": {
+        "workMinutes": 7,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 253,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 40,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 6,
+      "parameters": {
+        "workMinutes": 14,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 273,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 39,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 7,
+      "parameters": {
+        "workMinutes": 21,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 46,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 8,
+      "parameters": {
+        "workMinutes": 28,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 222,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 53,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 9,
+      "parameters": {
+        "workMinutes": 6,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 213,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 31,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 10,
+      "parameters": {
+        "workMinutes": 13,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 233,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 46,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 11,
+      "parameters": {
+        "workMinutes": 20,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 253,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 45,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 12,
+      "parameters": {
+        "workMinutes": 27,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 273,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 52,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 13,
+      "parameters": {
+        "workMinutes": 5,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 264,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 30,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 14,
+      "parameters": {
+        "workMinutes": 12,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 37,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 15,
+      "parameters": {
+        "workMinutes": 19,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 213,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 52,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 16,
+      "parameters": {
+        "workMinutes": 26,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 233,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 51,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 17,
+      "parameters": {
+        "workMinutes": 4,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 224,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 29,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 18,
+      "parameters": {
+        "workMinutes": 11,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 244,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 36,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 19,
+      "parameters": {
+        "workMinutes": 18,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 264,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 43,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 20,
+      "parameters": {
+        "workMinutes": 25,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 284,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 58,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 21,
+      "parameters": {
+        "workMinutes": 3,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 28,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 22,
+      "parameters": {
+        "workMinutes": 10,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 204,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 35,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 23,
+      "parameters": {
+        "workMinutes": 17,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 224,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 42,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 24,
+      "parameters": {
+        "workMinutes": 24,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 244,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 49,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 25,
+      "parameters": {
+        "workMinutes": 2,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 235,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 35,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 26,
+      "parameters": {
+        "workMinutes": 9,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 255,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 34,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 27,
+      "parameters": {
+        "workMinutes": 16,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 275,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 41,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 28,
+      "parameters": {
+        "workMinutes": 23,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 48,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 29,
+      "parameters": {
+        "workMinutes": 1,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 195,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 26,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 30,
+      "parameters": {
+        "workMinutes": 8,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 215,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 41,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 31,
+      "parameters": {
+        "workMinutes": 15,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 235,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 40,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 32,
+      "parameters": {
+        "workMinutes": 22,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 255,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 47,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 33,
+      "parameters": {
+        "workMinutes": 29,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 275,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 54,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 34,
+      "parameters": {
+        "workMinutes": 7,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 266,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 32,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 35,
+      "parameters": {
+        "workMinutes": 14,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 47,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 89,
+        "estimatedMinutes": 89,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 36,
+      "parameters": {
+        "workMinutes": 21,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 215,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 46,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 37,
+      "parameters": {
+        "workMinutes": 28,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 235,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 53,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 38,
+      "parameters": {
+        "workMinutes": 6,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 226,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 31,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 39,
+      "parameters": {
+        "workMinutes": 13,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 246,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 38,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 40,
+      "parameters": {
+        "workMinutes": 20,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 266,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 53,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 41,
+      "parameters": {
+        "workMinutes": 27,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 286,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 52,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 42,
+      "parameters": {
+        "workMinutes": 5,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 30,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    },
+    {
+      "case": 43,
+      "parameters": {
+        "workMinutes": 12,
+        "resleepMinutes": 73,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 206,
+          "sleepMinutes": 434
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 37,
+      "observedSleep": {
+        "confirmedMinutes": 434,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 44,
+      "parameters": {
+        "workMinutes": 19,
+        "resleepMinutes": 86,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 226,
+          "sleepMinutes": 447
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 44,
+      "observedSleep": {
+        "confirmedMinutes": 447,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 45,
+      "parameters": {
+        "workMinutes": 26,
+        "resleepMinutes": 99,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 8
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 92,
+          "deadlineMinute": 246,
+          "sleepMinutes": 460
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 59,
+      "observedSleep": {
+        "confirmedMinutes": 460,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 46,
+      "parameters": {
+        "workMinutes": 4,
+        "resleepMinutes": 112,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 237,
+          "sleepMinutes": 473
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 29,
+      "observedSleep": {
+        "confirmedMinutes": 473,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 47,
+      "parameters": {
+        "workMinutes": 11,
+        "resleepMinutes": 125,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 257,
+          "sleepMinutes": 486
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 36,
+      "observedSleep": {
+        "confirmedMinutes": 486,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 48,
+      "parameters": {
+        "workMinutes": 18,
+        "resleepMinutes": 138,
+        "phoneObserved": true,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "awake",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "awake",
+          "remainingMinutes": 100,
+          "deadlineMinute": 277,
+          "sleepMinutes": 499
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 43,
+      "observedSleep": {
+        "confirmedMinutes": 499,
+        "activeEstimateMinutes": 0,
+        "estimatedMinutes": 0,
+        "sleepBudgetQuality": "recorded-intervals"
+      }
+    },
+    {
+      "case": 49,
+      "parameters": {
+        "workMinutes": 25,
+        "resleepMinutes": 60,
+        "phoneObserved": false,
+        "deliveryDelayMinutes": 0
+      },
+      "outcomes": {
+        "afterResleep": {
+          "state": "sleepSuspected",
+          "sleepMinutes": 360
+        },
+        "afterSleep": {
+          "state": "sleeping",
+          "reason": "RiseSync 복합 수면 근거"
+        },
+        "rewake": {
+          "state": "sleeping",
+          "remainingMinutes": 120,
+          "deadlineMinute": null,
+          "sleepMinutes": 360
+        }
+      },
+      "checks": {
+        "notPrematurelyConfirmed": true,
+        "confirmedResleep": true,
+        "rewakeObserved": true,
+        "newFullRestriction": true,
+        "sleepTargetIncludesNap": true,
+        "noAwakeWorkAdded": true,
+        "actualSleepingNotLocked": true,
+        "networkNotEvidence": true
+      },
+      "failed": [],
+      "eventCount": 50,
+      "observedSleep": {
+        "confirmedMinutes": 360,
+        "activeEstimateMinutes": 81,
+        "estimatedMinutes": 81,
+        "sleepBudgetQuality": "recorded-intervals-plus-active-estimate"
+      }
+    }
+  ],
+  "passed": 50,
+  "failed": 0
+}

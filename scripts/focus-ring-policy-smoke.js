@@ -1,0 +1,57 @@
+const assert = require('assert/strict');
+const fs = require('fs');
+const path = require('path');
+const policy = require('../renderer/shared/focusRingPolicy');
+assert.equal(policy.contractId, 'focus-ring-final-seventh/v3');
+assert.equal(policy.finalColor, '#242424');
+for (const commitment of [0, 1, 2, 3]) {
+  const state = { mode: 'focus', remainingMs: 515000, settings: { pomodoroCommitmentLevel: commitment } };
+  assert.equal(policy.isFinalFocusWindow(state, 3600000), false);
+  state.remainingMs = 514000;
+  assert.equal(policy.isFinalFocusWindow(state, 3600000), true);
+  state.remainingMs = 514001;
+  assert.equal(policy.isFinalFocusWindow(state, 3600000), false, 'matches displayed seconds');
+}
+assert.equal(policy.isFinalFocusWindow({mode:'focus',remainingMs:214000},1500000),true);
+assert.equal(policy.isFinalFocusWindow({mode:'focus',remainingMs:215000},1500000),false);
+for (const mode of ['idle','break','longBreak']) assert.equal(policy.isFinalFocusWindow({mode,remainingMs:1000},3600000),false);
+for (const remainingMs of [0,-1,NaN,Infinity]) assert.equal(policy.isFinalFocusWindow({mode:'focus',remainingMs},3600000),false);
+assert.equal(policy.isFinalFocusWindow({mode:'focus',remainingMs:1000},0),false);
+for (const layout of ['widget','widget-compact','dashboard']) {
+  const dir = path.join(__dirname,'../renderer',layout);
+  const html = fs.readFileSync(path.join(dir,'index.html'),'utf8');
+  assert(html.indexOf('../shared/focusRingPolicy.js') < html.indexOf('src="renderer.js"'));
+  assert(fs.readFileSync(path.join(dir,'renderer.js'),'utf8').includes('PomodoroFocusRingPolicy.isFinalFocusWindow'));
+}
+assert.equal(policy.normalFocusColor({}), '#4F6350');
+assert.equal(policy.normalFocusColor({themeMode:'dark'}), '#869E82');
+assert.equal(policy.normalFocusColor({themeMode:'system'}, true), '#869E82');
+assert.equal(policy.normalFocusColor({widgetColors:{focus:'#123456'}}), '#123456');
+assert.equal(policy.normalFocusColor({widgetSkin:'forest'}, false, '#39734B'), '#39734B');
+console.log('focus-ring-final-seventh/v3 boundary and all-consumer integration passed');
+
+// Execute the actual production render functions with isolated DOM adapters.
+const vm = require('vm');
+for (const layout of ['widget', 'widget-compact', 'dashboard']) {
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) elements.set(id, {style:{setProperty(k,v){this[k]=v;}},dataset:{},classList:{toggle(){}},setAttribute(){},textContent:'',disabled:false});
+    return elements.get(id);
+  };
+  const window = {PomodoroFocusRingPolicy:policy, PomodoroWidgetSkins:{apply(){},paletteFor(){return {focus:'#4F6350'};}},addEventListener(){},matchMedia(){return {matches:false};}};
+  const context = vm.createContext({window,document:{getElementById:element,documentElement:element('root')},console,agentLockActive:false,setAgentLockIndicator(){},T:key=>key,fmtHM:value=>value,updateHeroActions(){},renderAutoRhythm(){},latestTimerState:null});
+  const source = fs.readFileSync(path.join(__dirname,'../renderer',layout,'renderer.js'),'utf8');
+  const renderer = layout === 'dashboard'
+    ? source.slice(source.indexOf('function renderTimerHero(state)'),source.indexOf('function renderAutoRhythm(state)'))
+    : source.slice(0,source.indexOf('window.api.getState().then(render);'));
+  vm.runInContext(renderer,context,{filename:layout+'/renderer.js'});
+  for (const [seconds,expected] of [[540,'#4F6350'],[515,'#4F6350'],[514,'#242424'],[480,'#242424'],[515,'#4F6350']]) {
+    const state={mode:'focus',running:true,remainingMs:seconds*1000,focusDurationMs:3600000,todayStudySec:0,settings:{focusMin:60,breakMin:10,longBreakMin:15,pomodoroCommitmentLevel:0,strictLockMode:false},sync:{},lockMode:{}};
+    context.sample=state;
+    vm.runInContext(layout==='dashboard'?'renderTimerHero(sample)':'render(sample)',context);
+    const ids=layout==='dashboard'?['timerRingVisual','miniTimerRing']:['dialProgress'];
+    for (const id of ids) assert.equal(layout==='dashboard'?element(id).style['--focus-ring-color']:element(id).style.stroke,expected,layout+' '+id+' at '+seconds);
+    if(layout==='widget') assert.equal(element('stopBtn').disabled,seconds<=514,'final-focus manual protection is independent of strict lock');
+  }
+}
+console.log('production renderer main/header/widget/compact boundary transitions passed without lock side effects');

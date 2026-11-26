@@ -1,0 +1,180 @@
+{
+  "mutationChecks": 2,
+  "at": "2026-10-19T01:46:43.370Z",
+  "scope": "production JS reducer + virtual sensors/network/OS; no device enforcement proof",
+  "scenarios": 9,
+  "checks": [
+    {
+      "at": 15,
+      "field": "alarmMinute",
+      "value": 105,
+      "label": "중간 작업 15분을 수면에서 제외 → 08:45 알람",
+      "actual": 105,
+      "pass": true,
+      "scenario": "resleep"
+    },
+    {
+      "at": 105,
+      "field": "remainingMinute",
+      "value": 120,
+      "label": "재기상부터 새 제한 120분",
+      "actual": 120,
+      "pass": true,
+      "scenario": "resleep"
+    },
+    {
+      "at": 105,
+      "field": "sleepMinute",
+      "value": 450,
+      "label": "총 수면 450분",
+      "actual": 450,
+      "pass": true,
+      "scenario": "resleep"
+    },
+    {
+      "at": 150,
+      "field": "shouldLock",
+      "value": false,
+      "label": "PC를 켠 시각에 새 제한을 시작하지 않음",
+      "actual": false,
+      "pass": true,
+      "scenario": "gym"
+    },
+    {
+      "at": 150,
+      "field": "deadlineMinute",
+      "value": 120,
+      "label": "기존 09:00 종료 시각 유지",
+      "actual": 120,
+      "pass": true,
+      "scenario": "gym"
+    },
+    {
+      "at": 150,
+      "field": "shouldLock",
+      "value": false,
+      "label": "기기 이동으로 기상 제한 리셋 안 됨",
+      "actual": false,
+      "pass": true,
+      "scenario": "phone"
+    },
+    {
+      "at": 149,
+      "field": "state",
+      "value": "unknown",
+      "label": "모르는 기상 시각을 만들어내지 않음",
+      "actual": "unknown",
+      "pass": true,
+      "scenario": "unobserved"
+    },
+    {
+      "at": 150,
+      "field": "state",
+      "value": "wakeCandidate",
+      "label": "첫 PC 입력은 기상 후보이며 확정 기상 아님",
+      "actual": "wakeCandidate",
+      "pass": true,
+      "scenario": "unobserved"
+    },
+    {
+      "at": 149,
+      "field": "alarmMinute",
+      "value": null,
+      "label": "수면량을 모르면 새 7.5시간 알람을 만들지 않음",
+      "actual": null,
+      "pass": true,
+      "scenario": "unobserved"
+    },
+    {
+      "at": 155,
+      "field": "shouldLock",
+      "value": false,
+      "label": "늦게 도착한 07시 근거로 09시 종료 복원",
+      "actual": false,
+      "pass": true,
+      "scenario": "late"
+    },
+    {
+      "at": 155,
+      "field": "deadlineMinute",
+      "value": 120,
+      "label": "수신 시각이 아닌 발생 시각으로 계산",
+      "actual": 120,
+      "pass": true,
+      "scenario": "late"
+    },
+    {
+      "at": 60,
+      "field": "state",
+      "value": "sleeping",
+      "label": "자동 타이머가 수면 상태를 깨지 않음",
+      "actual": "sleeping",
+      "pass": true,
+      "scenario": "timer"
+    },
+    {
+      "at": 60,
+      "field": "alarmMinute",
+      "value": 105,
+      "label": "자동 전환으로 깨우기 예약이 미뤄지지 않음",
+      "actual": 105,
+      "pass": true,
+      "scenario": "timer"
+    },
+    {
+      "at": 31,
+      "field": "state",
+      "value": "awake",
+      "label": "다른 기기 입력으로 수면 추정 취소",
+      "actual": "awake",
+      "pass": true,
+      "scenario": "other-device"
+    },
+    {
+      "at": 130,
+      "field": "shouldLock",
+      "value": false,
+      "label": "약한 수면 후보로 기존 기상 주기를 지우지 않음",
+      "actual": false,
+      "pass": true,
+      "scenario": "other-device"
+    },
+    {
+      "at": 45,
+      "field": "shouldLock",
+      "value": false,
+      "label": "수업 예외 중 잠금 해제",
+      "actual": false,
+      "pass": true,
+      "scenario": "class"
+    },
+    {
+      "at": 45,
+      "field": "deadlineMinute",
+      "value": 120,
+      "label": "수업 예외로 제한 시간을 늦추지 않음",
+      "actual": 120,
+      "pass": true,
+      "scenario": "class"
+    },
+    {
+      "at": 150,
+      "field": "shouldLock",
+      "value": false,
+      "label": "수업 종료 뒤 새 2시간 시작 안 함",
+      "actual": false,
+      "pass": true,
+      "scenario": "class"
+    },
+    {
+      "at": 105,
+      "field": "remainingMinute",
+      "value": 30,
+      "label": "120분으로 잘못 바뀌지 않음",
+      "actual": 30,
+      "pass": true,
+      "scenario": "nap30"
+    }
+  ],
+  "pass": true
+}

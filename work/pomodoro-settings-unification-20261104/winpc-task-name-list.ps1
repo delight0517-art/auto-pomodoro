@@ -1,0 +1,1 @@
+$ErrorActionPreference='Stop';$repo='C:\Users\delig\Documents\Codex\2026-11-01\new-chat-5\work\ff-full-delta-candidate';Get-ChildItem -LiteralPath (Join-Path $repo '.codex\tasks') -File -Force | Select-Object -ExpandProperty Name

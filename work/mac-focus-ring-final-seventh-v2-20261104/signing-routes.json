@@ -1,0 +1,20 @@
+[
+  {
+    "route": "explicit-existing-keychain:login",
+    "exitCode": 1,
+    "stderr": "/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-v2-20261104/sign-probe: replacing existing signature\n/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-v2-20261104/sign-probe: errSecInternalComponent\n",
+    "seconds": 0.06
+  },
+  {
+    "route": "explicit-existing-keychain:app-signing-2026",
+    "exitCode": 1,
+    "stderr": "/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-v2-20261104/sign-probe: replacing existing signature\n/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-v2-20261104/sign-probe: errSecInternalComponent\n",
+    "seconds": 0.04
+  },
+  {
+    "route": "normal-codesign-in-same-user-gui-bootstrap",
+    "exitCode": 1,
+    "stderr": "Could not switch to audit session 0x186b3: 1: Operation not permitted\n",
+    "seconds": 0.01
+  }
+]

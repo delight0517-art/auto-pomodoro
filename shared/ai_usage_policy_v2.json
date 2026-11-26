@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 2,
+  "policyVersion": 2,
+  "accountingVersion": 3,
+  "policyId": "ai-unified-rolling-20-of-120-v2",
+  "dailyLimitMinutes": 120,
+  "burstLimitMinutes": 20,
+  "windowDurationMinutes": 120,
+  "windowMode": "sliding_minute_buckets",
+  "idleCutoffSeconds": 180,
+  "activeInputThresholdSeconds": 30,
+  "awayBridgeGraceSeconds": 0,
+  "forAiSlowdown": {
+    "enabled": true,
+    "rate": 0.2,
+    "typingIdleThresholdSeconds": 30,
+    "franticSwitchThresholdSeconds": 180
+  },
+  "classExemption": {
+    "enabled": true,
+    "bypassAllLimits": true,
+    "respectDynamicClassSchedule": true,
+    "source": {
+      "type": "cloudIntervals",
+      "document": "/api/state",
+      "key": "everytimeReminderFullPack",
+      "field": "classCalendarIntervals",
+      "updatedAtField": "updatedAt",
+      "staleAfterHours": 48,
+      "onMissingOrStale": "enforceLimits",
+      "fixedWindowFallback": false,
+      "pollMinutes": 10
+    }
+  },
+  "selfExclude": {
+    "macNames": [
+      "auto pomodoro",
+      "focus fence"
+    ],
+    "macBundleIds": [
+      "com.rogan.pomodorocage",
+      "com.rogan.velimac",
+      "com.sixcleanroom.sixcleanroom"
+    ],
+    "windowsExes": [
+      "focusfense.exe",
+      "focusfence.exe",
+      "vintage_pomodoro.exe"
+    ]
+  },
+  "desktopApps": {
+    "chatgpt": {
+      "label": "ChatGPT",
+      "macNames": [
+        "ChatGPT"
+      ],
+      "macBundleIds": [
+        "com.openai.chat",
+        "com.openai.codex"
+      ],
+      "windowsExes": [
+        "chatgpt.exe"
+      ],
+      "isForAi": false
+    },
+    "claude": {
+      "label": "Claude",
+      "macNames": [
+        "Claude"
+      ],
+      "macBundleIds": [
+        "com.anthropic.claudefordesktop"
+      ],
+      "windowsExes": [
+        "claude.exe"
+      ],
+      "isForAi": false
+    },
+    "antigravity": {
+      "label": "Antigravity",
+      "macNames": [
+        "Antigravity"
+      ],
+      "macBundleIds": [
+        "com.google.antigravity"
+      ],
+      "windowsExes": [
+        "antigravity.exe"
+      ],
+      "isForAi": false
+    },
+    "cursor": {
+      "label": "Cursor",
+      "macNames": [
+        "Cursor"
+      ],
+      "macBundleIds": [
+        "com.todesktop.230313mzl4wfeai"
+      ],
+      "windowsExes": [
+        "cursor.exe"
+      ],
+      "isForAi": false
+    },
+    "windsurf": {
+      "label": "Windsurf",
+      "macNames": [
+        "Windsurf"
+      ],
+      "macBundleIds": [
+        "com.exafunction.windsurf"
+      ],
+      "windowsExes": [
+        "windsurf.exe"
+      ],
+      "isForAi": false
+    },
+    "codex": {
+      "label": "Codex",
+      "macNames": [
+        "Codex"
+      ],
+      "macBundleIds": [
+        "com.openai.codex"
+      ],
+      "windowsExes": [
+        "codex.exe",
+        "codex-code-mode-host.exe"
+      ],
+      "isForAi": false
+    },
+    "onlychat": {
+      "label": "Only Chat",
+      "macNames": [
+        "Only Chat",
+        "OnlyChat",
+        "only-chat"
+      ],
+      "macBundleIds": [
+        "com.rogan.onlychat"
+      ],
+      "windowsExes": [
+        "onlychat.exe",
+        "only chat.exe"
+      ],
+      "pathTokens": [
+        "onlychat",
+        "only chat",
+        "only-chat"
+      ],
+      "isForAi": false
+    },
+    "aside": {
+      "label": "Aside",
+      "macNames": [
+        "Aside"
+      ],
+      "macBundleIds": [
+        "at.studio.AsideBrowser"
+      ],
+      "windowsExes": [
+        "aside.exe",
+        "asidebrowser.exe"
+      ],
+      "isForAi": false
+    },
+    "for_ai": {
+      "label": "For AI",
+      "macNames": [
+        "For AI",
+        "1 for AI",
+        "for_ai",
+        "Delete Fix"
+      ],
+      "macBundleIds": [
+        "dev.rogan.deletefix",
+        "com.example.appDeleteAssistant"
+      ],
+      "windowsExes": [
+        "for_ai.exe",
+        "for ai.exe"
+      ],
+      "pathTokens": [
+        "for_ai",
+        "for ai",
+        "1 for ai"
+      ],
+      "isForAi": true
+    }
+  },
+  "browserApps": {
+    "macNames": [
+      "Safari",
+      "Google Chrome",
+      "3F Browser",
+      "3F Chromium Browser",
+      "Microsoft Edge",
+      "Brave Browser",
+      "Arc",
+      "Firefox",
+      "Opera",
+      "Vivaldi",
+      "Comet"
+    ],
+    "macBundleIds": [
+      "com.apple.Safari",
+      "com.google.Chrome",
+      "com.rogan.threef.browser",
+      "org.cef.cefclient",
+      "com.microsoft.edgemac",
+      "com.brave.Browser",
+      "company.thebrowser.Browser",
+      "org.mozilla.firefox",
+      "com.operasoftware.Opera",
+      "com.vivaldi.Vivaldi"
+    ],
+    "windowsExes": [
+      "3f.browser.exe",
+      "chrome.exe",
+      "msedge.exe",
+      "brave.exe",
+      "firefox.exe",
+      "opera.exe",
+      "vivaldi.exe"
+    ]
+  },
+  "browserAiDomains": [
+    "chatgpt.com",
+    "chat.openai.com",
+    "claude.ai",
+    "gemini.google.com",
+    "aistudio.google.com",
+    "perplexity.ai",
+    "grok.com",
+    "poe.com",
+    "copilot.microsoft.com",
+    "chat.deepseek.com",
+    "deepseek.com"
+  ],
+  "browserAiTitleApps": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "google gemini",
+    "google ai studio",
+    "perplexity",
+    "grok",
+    "poe",
+    "microsoft copilot",
+    "deepseek",
+    "only chat",
+    "onlychat"
+  ],
+  "browserTitleExcludeContexts": [
+    "youtube",
+    "netflix",
+    "twitch",
+    "wikipedia",
+    "reddit",
+    "github",
+    "velog",
+    "tistory",
+    "naver blog",
+    "medium"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "pomodoro-final-seventh-windows-stop-guard-20261105",
+  "featureId": "focus-ring-final-seventh/v3-stop-guard",
+  "artifacts": [
+    {
+      "name": "POMODORO_FINAL_SEVENTH_WINDOWS_STOP_GUARD_20261105.md",
+      "role": "contract",
+      "driveFileId": "1PhnymWh2KvrywQDf9eiSZBe0P8MLikLD",
+      "sha256": "daa0f82b05525d0543360c3130476fd5930e373e2c5e06e72f2ec45771a82727",
+      "bytes": 2943
+    },
+    {
+      "name": "POMODORO_FINAL_SEVENTH_WINDOWS_PACKET_20261105.md",
+      "role": "packet",
+      "driveFileId": "1i5EiFqfsmKi9gOJ_wkHWBMWksqwqYwjF",
+      "sha256": "d915c3305ff553b748b64972ed6a26433781067c0ee29afcae44c1def6a3ad0a",
+      "bytes": 2236
+    },
+    {
+      "name": "WINDOWS_START_POMODORO_FINAL_SEVENTH_STOP_GUARD_20261105.md",
+      "role": "windows-start",
+      "driveFileId": "1llLdEXWoF8Mkt2EjDV2f8-HkUqJXRrY9",
+      "sha256": "fc26dbbd1bdbf44157d7f6d349d68953d29a8e9c62dfb396740c255093566513",
+      "bytes": 1278
+    }
+  ],
+  "sourcePatch": null,
+  "sourcePatchReason": "Windows canonical source was unavailable from the Mac; no patch was guessed against a separate staging tree."
+}

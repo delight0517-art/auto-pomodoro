@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Auto Pomodoro</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="widget" class="widget">
+    <div class="frame">
+      <div class="top-row">
+        <span id="modeLabel" class="mode-label" role="status" aria-live="polite" data-i18n="mode.idle">대기중</span>
+        <button id="restoreOverlayBtn" class="icon-btn restore-overlay-btn" type="button" data-i18n-attr="title:widget.restoreBreakOverlay,aria-label:widget.restoreBreakOverlay" title="휴식 화면 다시 열기" aria-label="휴식 화면 다시 열기">↩</button>
+        <button id="menuBtn" class="icon-btn expand-btn" data-i18n-attr="title:widget.expand" title="확장">⤢</button>
+      </div>
+
+      <div class="dial-wrap">
+        <svg id="dial" viewBox="0 0 120 120" class="dial">
+          <circle cx="60" cy="60" r="52" class="dial-bg" />
+          <circle id="dialProgress" cx="60" cy="60" r="52" class="dial-progress" />
+          <circle id="dialGrace" cx="60" cy="60" r="52" class="dial-grace" />
+          <circle cx="60" cy="60" r="44" class="dial-inner" />
+        </svg>
+        <div class="dial-center">
+          <div id="timeText" class="time-text">25:00</div>
+          <div id="tagText" class="tag-text"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="playPauseBtn" class="ornate-btn" data-i18n="widget.start">▶ 시작</button>
+        <button id="stopBtn" class="icon-btn" data-i18n-attr="title:widget.stop" title="정지">■</button>
+      </div>
+
+      <div class="today-total" id="todayTotal"></div>
+      <div class="ai-total" id="aiTotal"></div>
+    </div>
+  </div>
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/widgetSkins.js"></script>
+  <script src="../shared/focusRingPolicy.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

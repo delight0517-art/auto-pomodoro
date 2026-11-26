@@ -1,0 +1,30 @@
+{
+  "run": "c8f4fff8-41c2-44eb-ad86-0bc1d0c7aa4f",
+  "app": {
+    "CFBundleIdentifier": "com.rogan.pomodorocage",
+    "CFBundleShortVersionString": "1.0",
+    "CFBundleVersion": "10"
+  },
+  "artifact": "/Users/rogan/appDev/schedule/pomodoro/.local_build/ios-usage-budgets-final-20261018.xcarchive/Products/Applications/PomodoroCage.app",
+  "binarySHA256": "ab861d4835088a95091c5750715af0d8539a4b0df2f1a88e9a2843a10f6902b5",
+  "stages": {
+    "simulatorBuild": "pass",
+    "signedArchive": "pass",
+    "swiftLedgerRegression": "pass",
+    "desktopLedgerRegression": "pass",
+    "macInstalledReceiverAndServerReadback": "pass",
+    "physicalInstall": "blocked: CoreDevice 4000 device disconnected immediately after connecting; installed version floor unknown",
+    "physicalUI": "unverified",
+    "twoDeviceScreenTime": "unverified",
+    "windows": "unverified",
+    "focusFenceMeasurementProducer": "not implemented"
+  },
+  "journey": [
+    "Confirm installed bundle/version before updating same bundle",
+    "Open Block tab; verify device-local wake app picker independent from break picker",
+    "Select one app; add daily limit; attach group sns",
+    "Observe threshold receipt and real app shield",
+    "Open sync status; confirm server receipt and desktop usage total without adding duplicates",
+    "Repeat on second iPhone; verify same wake deadline and independent app choices"
+  ]
+}

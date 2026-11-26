@@ -1,0 +1,12 @@
+{
+  "capturedAt": "2026-10-02T02:48:35.170Z",
+  "before": {
+    "ok": true,
+    "settings": {}
+  },
+  "restorePatch": {
+    "aiScreenTime": {
+      "enabled": true
+    }
+  }
+}

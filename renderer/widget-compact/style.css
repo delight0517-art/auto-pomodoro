@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=EB+Garamond:wght@400;600&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--skin-body-font, 'EB Garamond'), Georgia, 'Nanum Myeongjo', serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Windows의 컴팩트 위젯 디자인 이식(2026-07-29, PomodoroSync/requests/
+   2026-07-29_widget-design-mac-port.md) — 고정 200x88 카드. 색상 토큰은 Windows
+   lib/theme/vintage_theme.dart 원본 hex 그대로
+   (요청 파일의 답변으로 받은 정확한 표, 2026-08-03 반영 — 처음엔 Mac classic 위젯
+   팔레트에서 추정했다가 이걸로 교체). */
+:root {
+  --bg: #EEEAE0;
+  --paper: #FAF9F4;
+  --ink: #332A20;
+  --ink-soft: #6F6759;
+  --rule: #DCD6C4;
+  --brass: #9C7A45;
+  --focus-green: #4F6350;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #221D16;
+    --paper: #282219;
+    --ink: #E9E2D0;
+    --ink-soft: #AFA692;
+    --rule: #453D2E;
+    --brass: #C79A5E;
+    --focus-green: #869E82;
+  }
+}
+
+.card {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2px;
+  gap: 0;
+  -webkit-app-region: drag;
+  background: radial-gradient(ellipse at 30% 20%, var(--skin-surface-light), var(--skin-surface) 70%);
+  border: 2px solid var(--skin-border);
+  outline: 1px solid var(--skin-track);
+  outline-offset: -4px;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: width 0.22s ease, height 0.22s ease, padding 0.22s ease, gap 0.22s ease, border-radius 0.22s ease;
+}
+.card.expanded {
+  width: 220px;
+  height: 96px;
+  padding: 0 10px;
+  gap: 10px;
+  border-radius: 16px;
+}
+.card.agent-lock-active .today-total,
+.card.agent-lock-active .ai-total { display: none; }
+.card.agent-lock-active .drawer-actions { display: flex; }
+.card.agent-lock-active .drawer-actions .mini-btn:not(.restore-overlay-btn) { display: none; }
+.restore-overlay-btn { display: none; }
+.card.agent-lock-active .restore-overlay-btn { display: inline-grid; place-items: center; }
+.card.agent-lock-active .mode-label { color: var(--skin-break); font-size: 12px; }
+.ring-wrap {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  -webkit-app-region: drag;
+}
+.dial { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dial-bg {
+  fill: none;
+  stroke: var(--skin-track);
+  stroke-width: 5;
+}
+.dial-progress {
+  fill: none;
+  stroke: var(--skin-focus); /* 집중 중 링 */
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 150.8;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.4s linear, stroke 0.3s ease;
+}
+.card.mode-break .dial-progress,
+.card.mode-longBreak .dial-progress {
+  stroke: var(--skin-break);
+}
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.time-text {
+  font-family: var(--skin-display-font, 'Playfair Display'), Georgia, serif;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--skin-ink);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.16s ease, visibility 0s linear 0.16s;
+}
+.card.expanded .time-text {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* Keep the default window to one small ring; reveal controls on explicit click. */
+.drawer {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  -webkit-app-region: no-drag;
+}
+.card.expanded .drawer {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .time-text,
+  .drawer {
+    transition-duration: 0.01ms;
+  }
+}
+
+.mode-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--skin-muted);
+}
+.today-total {
+  font-size: 10px;
+  color: var(--skin-muted);
+}
+.today-total span { font-weight: 600; }
+
+.ai-total {
+  font-size: 10px;
+  color: var(--skin-muted);
+  white-space: nowrap;
+}
+.ai-total span { font-weight: 600; }
+
+.drawer-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+.mini-btn {
+  -webkit-app-region: no-drag;
+  background: linear-gradient(180deg, var(--skin-button), var(--skin-button-deep));
+  border: 1px solid var(--skin-border);
+  color: var(--skin-button-ink);
+  border-radius: 6px;
+  width: 24px;
+  height: 22px;
+  line-height: 1;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.mini-btn:hover { filter: brightness(1.08); }

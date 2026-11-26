@@ -1,0 +1,184 @@
+name: PomodoroCage
+schemes:
+  PomodoroCage:
+    build:
+      targets:
+        PomodoroCage: all
+        PomodoroCageTests: [test]
+    test:
+      targets:
+        - PomodoroCageTests
+options:
+  bundleIdPrefix: com.rogan
+  deploymentTarget:
+    iOS: "17.0"
+  # 2026-09-05 i18n: sourceLanguage(ko)와 맞춤. knownRegions는 xcodegen이 커스텀 목록을
+  # 지원하지 않아(Base/ko만 반영됨) 지정하지 않음 — en/ja/zh-Hans는 Localizable.xcstrings
+  # 안의 localizations로 관리되고, Xcode가 빌드 시 자동으로 인식한다.
+  developmentLanguage: ko
+
+targets:
+  PomodoroCage:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomodoroCage/Sources
+        excludes:
+          - "ScreenTimeExtension/**"
+          - "WidgetExtension/**"
+      - path: PomodoroCage/Assets.xcassets
+      - path: PomodoroCage/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      # 2026-09-05 i18n: String Catalog(sourceLanguage=ko) — ko/en/ja/zh-Hans.
+      - path: PomodoroCage/Resources/Localizable.xcstrings
+    preBuildScripts:
+      - name: Validate shared sleep-state source
+        basedOnDependencyAnalysis: false
+        script: node "$SRCROOT/../scripts/check-sleep-world-source-parity.js"
+      - name: Validate iOS localizations
+        basedOnDependencyAnalysis: false
+        script: python3 "$SRCROOT/../scripts/check-ios-localizations.py"
+    # 2026-09-07: 여기가 비어 있어서 DeviceActivityMonitor 확장이 앱 번들에
+    # 임베드되지 않았고(설치된 .app에 PlugIns 폴더 자체가 없었음), 그 결과
+    # 자동 시작 감지가 폰에서 아예 동작할 수 없었다.
+    dependencies:
+      - target: PomodoroScreenTimeExtension
+        embed: true
+      - target: PomodoroWidget
+        embed: true
+      - sdk: AppIntents.framework
+    info:
+      path: PomodoroCage/Info.plist
+      properties:
+        CFBundleDisplayName: Auto Pomodoro
+        CFBundleName: Auto Pomodoro
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleIconName: AppIcon
+        ITSAppUsesNonExemptEncryption: false
+        NSSupportsLiveActivities: true
+        LSRequiresIPhoneOS: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations: {}
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen: {}
+        UIRequiresFullScreen: false
+        UIStatusBarHidden: false
+        UIUserInterfaceStyle: Light
+        UIBackgroundModes:
+          - fetch
+          - processing
+          - remote-notification
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.rogan.pomodorocage.feedback-retry
+    settings:
+      base:
+        DEVELOPMENT_TEAM: V3J8MR637G
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: PomodoroCage/PomodoroCage.entitlements
+        APS_ENVIRONMENT:
+          Debug: development
+          Release: production
+        PRODUCT_BUNDLE_IDENTIFIER: com.rogan.pomodorocage
+        PRODUCT_NAME: PomodoroCage
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "22"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SDKROOT: iphoneos
+        ENABLE_PREVIEWS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleIconName: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/Frameworks"
+
+  # 화면을 눌러가며 타이밍/분기를 확인하지 않아도 되도록 만든 순수 로직 유닛 테스트.
+  # PomodoroAppModel.clock / ScreenTimeShield.decideShieldSource 같은 seam을 직접
+  # 호출해서, 실기기·시뮬레이터·스크린 타임 권한 없이도 몇 초 만에 검증한다.
+  # 실행: xcodebuild test -project PomodoroCage.xcodeproj -scheme PomodoroCage
+  #       -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+  PomodoroCageTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomodoroCageTests
+    dependencies:
+      - target: PomodoroCage
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rogan.pomodorocage.tests
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+
+  # §3 — DeviceActivityMonitor 확장. 전례: devtool/23AppdeveloperReleaser/ReportHubApp
+  # (project.yml의 ScreenTimeExtension 타겟 정의를 그대로 복제해 이 앱 이름으로 바꿈).
+  PomodoroScreenTimeExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomodoroCage/Sources/ScreenTimeExtension
+      - path: PomodoroCage/Sources/Shared
+      - path: PomodoroCage/Resources/Localizable.xcstrings
+    info:
+      path: PomodoroCage/Sources/ScreenTimeExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Auto Pomodoro Screen Time
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.deviceactivity.monitor-extension
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PomodoroScreenTimeExtension
+    settings:
+      base:
+        DEVELOPMENT_TEAM: V3J8MR637G
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: PomodoroCage/Sources/ScreenTimeExtension/PomodoroScreenTimeExtension.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.rogan.pomodorocage.screentime
+        PRODUCT_NAME: PomodoroScreenTimeExtension
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "22"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SDKROOT: iphoneos
+        GENERATE_INFOPLIST_FILE: NO
+        SKIP_INSTALL: YES
+
+  PomodoroWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomodoroCage/Sources/WidgetExtension/PomodoroWidget.swift
+      - path: PomodoroCage/Sources/Shared/PomodoroActivityAttributes.swift
+      - path: PomodoroCage/Sources/Shared/PomodoroWidgetSnapshot.swift
+      - path: PomodoroCage/Sources/Shared/Localization.swift
+      - path: PomodoroCage/Resources/Localizable.xcstrings
+    info:
+      path: PomodoroCage/Sources/WidgetExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Auto Pomodoro
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        DEVELOPMENT_TEAM: V3J8MR637G
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: PomodoroCage/Sources/WidgetExtension/PomodoroWidget.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.rogan.pomodorocage.widget
+        PRODUCT_NAME: PomodoroWidget
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "22"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SDKROOT: iphoneos
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES

@@ -1,0 +1,21 @@
+Task: ios-pomodoro-wake-resleep-20261114
+Canonical repo: /Users/rogan/appDev/schedule/pomodoro
+Source:
+- Auto Pomodoro npm run check passed after adding four-language block.wakeLock.remaining localization (650+ key/Swift-reference check; full package checks passed).
+- iOS init-order compile error was fixed; Release build 1.0 (22) was produced from the current checkout.
+- The physical test runner stopped at the iPhone lock screen; no physical sleep/resleep/wake journey is claimed.
+Build:
+- Bundle: ios/build/DeleteFixNativeDerivedData/active/Build/Products/Release-iphoneos/PomodoroCage.app
+- CFBundleShortVersionString=1.0; CFBundleVersion=22
+- Executable SHA-256=b1056836e0dadd932802508c89f609c0d8ab81a591c19e70971f9cbc7fb8e28d
+- codesign --verify --deep --strict passed.
+Install:
+- Fresh xcrun devicectl readback on iPhone UDID 00008120-000C0DA902D8C01E: Auto Pomodoro com.rogan.pomodorocage 1.0 (22).
+- This confirms installed version only, not UI behavior or physical sensor behavior.
+Retention:
+- Reused the existing active build output path. Kept it because physical QA is unfinished; no old output was retired.
+Capacity:
+- After operation, /Users/rogan/appDev had 24 GiB available (df).
+Remaining proof:
+- iPhone was locked at Xcode test preflight; physical screen session/Mirroir paused.
+- No server or other-device consumer readback was performed in this slice.

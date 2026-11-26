@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Auto Pomodoro</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="card" class="card">
+    <button id="ringToggle" class="ring-wrap" type="button" aria-controls="drawer" aria-expanded="false" data-i18n-attr="title:widgetc.toggleControls" title="타이머 조작부 펼치기">
+      <svg id="dial" viewBox="0 0 56 56" class="dial">
+        <defs>
+          <!-- Windows lib/theme/vintage_theme.dart의 breakRed/breakRed2 그라디언트를
+               그대로 재현(2026-[REDACTED], requests/open/2026-07-29_widget-design-mac-port.md
+               후속 응답 — 처음엔 옛 Windows 색을 잘못 짐작해서 넣었던 걸 정정). -->
+          <linearGradient id="breakGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E2503E" />
+            <stop offset="100%" stop-color="#C7392A" />
+          </linearGradient>
+          <linearGradient id="breakGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF7259" />
+            <stop offset="100%" stop-color="#E2503E" />
+          </linearGradient>
+        </defs>
+        <circle cx="28" cy="28" r="24" class="dial-bg" />
+        <circle id="dialProgress" cx="28" cy="28" r="24" class="dial-progress" />
+      </svg>
+      <div class="ring-center">
+        <div id="timeText" class="time-text">25:00</div>
+      </div>
+    </button>
+    <div id="drawer" class="drawer" aria-hidden="true">
+      <div id="modeLabel" class="mode-label" role="status" aria-live="polite" data-i18n="mode.idle">대기중</div>
+      <div class="today-total" id="todayTotal"></div>
+      <div class="drawer-actions">
+        <button id="openBtn" class="mini-btn" data-i18n-attr="title:widgetc.openFull" title="전체 창 열기">⤢</button>
+        <button id="playPauseBtn" class="mini-btn" data-i18n-attr="title:widgetc.startStop" title="시작/정지">▶</button>
+      </div>
+    </div>
+  </div>
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/widgetSkins.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

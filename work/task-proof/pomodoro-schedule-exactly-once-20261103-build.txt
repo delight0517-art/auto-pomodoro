@@ -1,0 +1,9 @@
+Task: pomodoro-schedule-exactly-once-20261103
+Command: storage-guard run --task pomodoro-schedule-exactly-once-20261103 --peak-gib 5 --target /Users/rogan/appDev/schedule/pomodoro -- npm run build:local
+Exit: 0; log: work/task-proof/pomodoro-schedule-exactly-once-20261103-build.log
+Artifact: /Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app
+Bundle/version/build: com.rogan.pomodorocage / 1.0.40 / 1.0.39, ARM64
+Signature: codesign --verify --deep --strict passed; workflow-control verify-mac state=verified, launchAllowed=true, mode=local_dev; quarantine absent.
+app.asar SHA-256: ff8156c55f4a6440cf51832fe36fc444c01d937b077f970e85d3e789b9bf3363
+Includes the durable schedule-claim/replay fix and four-language UI translation cleanup; post-build npm run check reports 0 missing translations.
+Current installed app is still 1.0.40 with prior app.asar hash 82c60956ac07a87ee960e87b0ee1b104d4e15266e2fd6e48c7d54be0797ff02e. Replacement/install proof is pending until active focus timer safely completes.

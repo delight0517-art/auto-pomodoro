@@ -1,0 +1,7 @@
+task=autopomodoro-ios-wake-local-screen-time-20261115
+repo=/Users/rogan/appDev/schedule/pomodoro
+branch=main
+base=5860705ad572ba7adcf89519e6ae8252dd372cd0
+owner=01a1d417-06c7-7eb3-a679-65de91da59c3
+paths=ios/PomodoroCage/Sources/DurationOverrides.swift ios/PomodoroCageTests/DurationOverridesTests.swift ios/PomodoroCage/Sources/ScreenTimeShield.swift ios/PomodoroCage/Sources/Shared/PomodoroBackgroundScheduler.swift ios/PomodoroCage/Sources/ScreenTimeExtension/PomodoroScreenTimeExtension.swift ios/PomodoroCage/Sources/PomodoroAppModel.swift ios/PomodoroCage/Sources/Shared/AppGroupStore.swift ios/PomodoroCage/Sources/BluecloudClient.swift
+authorization=user requested iPhone wake lock sync, local Screen Time start, 30-minute important-schedule exemption, selectable duration

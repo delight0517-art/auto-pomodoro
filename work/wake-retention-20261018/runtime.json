@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-10-17T23:27:03.891Z",
+  "app": {
+    "name": "Auto Pomodoro",
+    "version": "1.0.36",
+    "platform": "darwin"
+  },
+  "timer": {
+    "mode": "focus",
+    "running": true,
+    "currentTag": "",
+    "remainingMs": 1258813,
+    "endsAt": 1792280882577,
+    "pausedReason": ""
+  },
+  "wake": {
+    "version": 2,
+    "owner": "delight0517",
+    "cycleId": "sleep-state-1792277030897",
+    "phase": "provisional",
+    "remainingMs": 4607033,
+    "activityMs": 0,
+    "wakeAt": 1792277030897,
+    "sleepAt": 1792104261488,
+    "lastActivityAt": 1792279611712,
+    "lastEventAt": 1792279611712,
+    "revision": 1792279615033,
+    "countdownEndsAt": 1792284230897,
+    "enabled": true,
+    "scheduleExempt": false,
+    "sleepEvidenceConfirmed": false,
+    "userSleepState": {
+      "version": 1,
+      "owner": "delight0517",
+      "state": "wakeCandidate",
+      "label": "기상 후보",
+      "firstWakeAt": 1792277030897,
+      "wakeAt": 1792277030897,
+      "latestResleepAt": null,
+      "sleepAt": 1792104261488,
+      "lastActivityAt": 1792279611712,
+      "remainingMs": 4607033,
+      "countdownEndsAt": 1792284230897,
+      "confirmedSleepMs": 0,
+      "estimatedSleepMs": 1976136,
+      "shouldLock": true,
+      "automaticWakeAlarmAction": "retain",
+      "reason": "실제 기기 입력",
+      "lastEventId": "2dbe3e70-51c9-4359-818a-bf0cf3493e05",
+      "eventCount": 168
+    }
+  },
+  "physical": {
+    "hidden": false,
+    "physicalInputLocked": false,
+    "guardReady": false,
+    "registeredAgents": 0
+  },
+  "timerDeadlinePreserved": true,
+  "uiObserved": {
+    "screen": "Auto Pomodoro — 쉬는 시간",
+    "wakeDeadlineLocal": "09:43",
+    "observedRemaining": "1:19:32"
+  },
+  "blocker": "mac-physical-input-guard reports ACCESSIBILITY_PERMISSION_REQUIRED; System Settings privacy pane did not render requested access list"
+}

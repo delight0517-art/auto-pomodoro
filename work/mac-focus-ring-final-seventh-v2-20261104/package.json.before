@@ -1,0 +1,98 @@
+{
+  "name": "auto-pomodoro",
+  "productName": "Auto Pomodoro",
+  "version": "1.0.40",
+  "description": "Activity-aware focus and break cycles for Mac, with an optional automatic start and absence-aware session handling.",
+  "bin": {
+    "pomodoroctl": "bin/pomodoroctl.js",
+    "pomodoro-mcp": "bin/pomodoro-mcp.js"
+  },
+  "main": "main/main.js",
+  "private": true,
+  "scripts": {
+    "pomodoro:cli": "node bin/pomodoroctl.js",
+    "dev:hmr": "node scripts/start-hmr.js",
+  "check": "node scripts/evolution-manifest-smoke.js && node scripts/wake-reliability-100.js && node scripts/timer-recovery-smoke.js && node scripts/wake-authority-smoke.js && node scripts/preflight-source-check.js && node scripts/i18n-locale-smoke.js && python3 scripts/check-ios-localizations.py && node scripts/ai-screen-time-settings-smoke.js && node scripts/login-item-isolation-smoke.js && node scripts/no-lock-schedule-smoke.js && node scripts/scheduled-lock-warning-smoke.js && node scripts/save-unlock-counter-smoke.js && node scripts/windows-logical-clock-parity-test.js && node test/emergencyUnlockPollGate.test.js && node test/sessionStudyStats.test.js && node test/runtimeDiagnostics.test.js && node test/runtimeTimingWiring.test.js && node test/installLifecycleSafety.test.js && node test/agentSchedules.test.js",
+    "start": "node scripts/start-verified-electron.js .",
+    "prestart": "npm run check",
+    "server": "node server/pomodoro-api.js",
+    "test": "node scripts/feedback-ui-smoke.js && node scripts/feedback-outbox-smoke.js && node scripts/absence-policy-smoke.js && node scripts/schedule-skip-dates-smoke.js && node scripts/night-cli-smoke.js && node scripts/duration-override-smoke.js && node scripts/time-override-ui-smoke.js && node scripts/lock-safety-smoke.js && node scripts/agent-break-policy-smoke.js && node scripts/codex-timer-activity-smoke.js && node scripts/ad-gate-smoke.js && node scripts/creative-pool-smoke.js && node scripts/adfree-smoke.js && node scripts/ad-free-smoke.js && node scripts/sync-contract-test.js && node scripts/parity-features-smoke.js && node scripts/ai-schedule-smoke.js && node scripts/chatgpt-plan-oauth-smoke.js && node scripts/dev-hmr-smoke.js && node scripts/music-settings-smoke.js && node scripts/ai-screen-time-settings-smoke.js && node scripts/timer-recovery-smoke.js && node scripts/computer-wake-smoke.js && node scripts/selah-computer-reading-smoke.js && node scripts/wake-recovery-smoke.js && node scripts/morning-wake-smoke.js && node scripts/agent-control-epipe-smoke.js && node scripts/claude-activity-scan-smoke.js && node scripts/shared-usage-budgets-smoke.js && node scripts/shared-usage-ios-smoke.js && node scripts/single-instance-lock-smoke.js && node scripts/sleep-sandbox-test.js && node scripts/start-verified-electron-smoke.js && node scripts/store-read-cache-smoke.js && node scripts/user-sleep-journal-smoke.js && node scripts/wake-countdown-smoke.js && node scripts/wake-legacy-compat-smoke.js && node scripts/widget-opacity-smoke.js && node scripts/sleep-world-log-parity-test.js && node scripts/regression-coverage-smoke.js",
+    "pretest": "npm run check",
+    "pack:mac": "bash scripts/package-mac-release.sh",
+    "release:mac": "bash scripts/package-mac-release.sh",
+    "prepack:mac": "npm run check && npm run build:mac-input-guard",
+    "build:local": "electron-builder --mac --dir",
+    "prebuild:local": "npm run check && npm run build:mac-input-guard",
+    "build:mac-input-guard": "bash scripts/build-mac-physical-input-guard.sh",
+    "build:mas": "electron-builder --mac mas",
+    "prebuild:mas": "npm run check",
+    "test:wake-reliability100": "node scripts/wake-reliability-100.js"
+  },
+  "build": {
+    "afterSign": "scripts/after-sign-mac-guard.js",
+    "appId": "com.rogan.pomodorocage",
+    "productName": "Auto Pomodoro",
+    "buildVersion": "1.0.39",
+    "protocols": {
+      "name": "Auto Pomodoro Auth Callback",
+      "schemes": [
+        "autopomodoro"
+      ]
+    },
+    "files": [
+      "main/**/*",
+      "renderer/**/*",
+      "server/**/*",
+      "bin/**/*",
+      "locales/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "main/mac-physical-input-guard",
+        "to": "mac-physical-input-guard"
+      },
+      {
+        "from": "main/mac-user-presence",
+        "to": "mac-user-presence"
+      }
+    ],
+    "mac": {
+      "icon": "assets/icon.icns",
+      "extendInfo": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "identity": "Developer ID Application",
+      "minimumSystemVersion": "12.0.0"
+    },
+    "mas": {
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "identity": "3rd Party Mac Developer",
+      "provisioningProfile": "build/AutoPomodoro_MAS.provisionprofile"
+    }
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "allowScripts": {
+    "electron@31.7.7": true
+  }
+}

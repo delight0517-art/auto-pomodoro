@@ -1,0 +1,19 @@
+{
+  "timer": {
+    "updatedAt": 1792279082578,
+    "updatedBy": "0338d820-6f42-44c6-ab0e-b3c112ec2eb8",
+    "completedFocusCount": 396,
+    "remainingMsWhenPaused": null,
+    "pausedReason": "",
+    "currentTag": "",
+    "running": true,
+    "endsAt": 1792280882577,
+    "mode": "focus",
+    "focusStartedAt": 1792279082577,
+    "startsAt": 1792279082577,
+    "focusDurationMs": 1800000,
+    "stopReason": null,
+    "pauseReason": null
+  },
+  "savedAt": 1792279395.3151019
+}

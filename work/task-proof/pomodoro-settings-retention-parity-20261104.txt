@@ -1,0 +1,136 @@
+Task: pomodoro-settings-retention-parity-20261104
+Date: 2026-11-04 KST
+Scope: account snapshot 90-day inactivity expiry, anti-resurrection on old device login, Mac expiry handling, Mac corrected-time countdown UI.
+
+Source changes:
+- Brainwire canonical: /Users/rogan/appDev/brainwire/server/services/pomodoroSyncStore.js; /Users/rogan/appDev/brainwire/server/routes/pomodoroSync.js; /Users/rogan/appDev/brainwire/server/tests/pomodoro_sync_store.test.js
+- Pomodoro canonical: /Users/rogan/appDev/schedule/pomodoro/main/cloudAccount.js; /Users/rogan/appDev/schedule/pomodoro/main/main.js; /Users/rogan/appDev/schedule/pomodoro/renderer/break/renderer.js
+- Brainwire store expires the account snapshot at 90 days from the last recorded Pomodoro use, retains a tombstone, rejects old/missing-use snapshots, and accepts a new snapshot after a later use.
+- Mac login sync recognizes an expired tombstone, skips legacy stale fallback, and declines to re-upload a local copy whose last-use time is not newer than the expiry.
+- Mac break overlay derives countdown from the corrected timebase/remaining duration sent by the main process.
+
+Verification:
+- Brainwire node server/tests/pomodoro_sync_store.test.js: PASS; covers active snapshot just before 90 days, expiry at 90 days, stale snapshot rejection, old client missing use marker rejection, and new-use restore.
+- Isolated production pull-function harness: PASS; expired v2 state prevents a legacy stale-settings fallback.
+- Auto Pomodoro npm run build:local: PASS; prebuild npm run check passed, including 100 wake reliability cases, Windows +93 paired clock aliases, iOS reducer parity, and timer recovery checks.
+- Node syntax checks and scoped git diff --check passed for all changed source files.
+- New signed local candidate: /Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app, version 1.0.40/build 1.0.39, app.asar SHA-256 0af2e6d54e5987e4ded31cf403c0218d74c8e9fd55944953612570fdf972aad6; codesign deep/strict and workflow-control verify-mac passed.
+- Installed app remains /Applications/Auto Pomodoro.app, app.asar SHA-256 82c60956ac07a87ee960e87b0ee1b104d4e15266e2fd6e48c7d54be0797ff02e; exact process still running with focus timer and Auto Mode enabled, so candidate was not installed or launched.
+- Disk capacity: 50.47 GiB free before 3 GiB guarded build; 50.39 GiB free afterward. 20 GiB reserve retained.
+
+Not verified:
+- Production Brainwire deploy/read-after-write and 90-day cloud durability.
+- Candidate installed login roundtrip or post-update timer/session continuity.
+- Windows source, visible UI, and paired timer parity; Windows access is unknown and remote operations were not performed.
+- Current actual wake event: local wake protection setting is enabled for 120 minutes, but the last stored wake cycle is complete; no new wake countdown was fabricated.
+
+Follow-up verification (2026-11-04):
+- Last-use marker is now updated on explicit user settings saves as well as Pomodoro start/resume, using the corrected local timebase.
+- Legacy `/api/cloud-state/pomodoroCloud` GET clears old legacy snapshot copies when V2 has expired; stale/markerless legacy PUT is rejected; a fresh-use legacy PUT is bridged into the V2 canonical snapshot.
+- `pomodoro_sync_store.test.js`, `pomodoro_sync_http.test.js`, and `pomodoro_legacy_retention_http.test.js` all pass. The latter verifies old legacy copy removal, HTTP 410 for stale use, and V2 update after new use.
+- Final candidate after last Mac source change: version 1.0.40/build 1.0.39, app.asar SHA-256 6c9c10b9fc213f5c6dfbe071e6a4616ab897806d9ff9400a2e58052c8879cb63. Deep/strict codesign and `workflow-control verify-mac` pass. Installed app hash remains 82c60956ac07a87ee960e87b0ee1b104d4e15266e2fd6e48c7d54be0797ff02e.
+- After final guarded build, free space is 50.34 GiB, retaining the required 20 GiB reserve.
+
+Live clock/parity readback (2026-11-04 00:33 KST):
+- Read-only authenticated Brainwire diagnostics revision 83587 reports current Mac and Windows clients online, both app build 1.0.40/0.2.9 build 152, no reported sync errors.
+- Server logical timer is focus/running with startsAt=1793752044379 and endsAt=1793752644379. Fresh local Auto Pomodoro status reports the same endsAt=1793752644379. This confirms the shared timer boundary currently matches at the data layer.
+- Historical Mac logs still indicate a race: a remote idle snapshot was accepted, then local Auto Mode began a separate session; cloud snapshots were observed as stale by up to 592956 ms. This points to session arbitration / delayed stale snapshot application rather than a persistent device clock offset. Current Windows visible UI and receiver behavior were not inspected.
+- Production server 90-day retention is not live; this readback verifies current timer parity only and does not satisfy the retention/server delivery gate.
+
+Auto-start race source review (2026-11-04):
+- `evaluatePresenceWithAgentActivity()` invokes `prefetchAndAdoptRemoteRunningSession()` asynchronously, then starts a local focus session if the prefetch reports no running peer. That means a peer that publishes after the prefetch read can race the local Auto Mode start; later reconciliation relies on the shared snapshot arbitration rather than a cross-device start claim.
+- `prefetchAndAdoptRemoteRunningSession()` currently returns `true` after finding an eligible remote running snapshot even if `applyFetchedRemote()` makes no change. It also captures `now` before network awaits; the receiver has a separate stale-running check, but this return value can make the caller believe a remote session was adopted when arbitration left local timer content unchanged. This is a concrete source-level risk to cover with a regression scenario.
+- These relevant `main/main.js` hunks are part of the very large uncommitted canonical diff (1430 status entries / 1330 untracked paths); no exact-path owner/accepted hunk provenance for the relevant auto-start/pre-fetch code was found in current M-Oasis handoff documents. Existing backlog `0f15ca974f6d` explicitly records this ownership ambiguity. No source edit was made to avoid overwriting unresolved work.
+
+409 conflict reconciliation slice (2026-11-04 09:51 KST):
+- `main/main.js` now reconciles a valid V2 conflict snapshot via the existing `applyFetchedRemote(..., 'cloud')` timer arbitration before retrying the current local snapshot. It no longer retries the pre-conflict payload. A missing or malformed conflict snapshot is left as a conflict and is not retried. A winning explicit timer control action is retained on the reconciled retry.
+- New `scripts/cloud-snapshot-conflict-smoke.js` executes the production queue helper and verifies winner retry, no retry for missing/malformed remote state, and explicit action preservation.
+- Passed: new conflict smoke; `scripts/sync-contract-test.js`; `scripts/windows-logical-clock-parity-test.js`; node syntax checks; scoped `git diff --check`.
+- Source hashes: `main/main.js` fb46d08fe3f75c5ad9c4801d29a2c1642bc7e28ddca9774416d88fbea84abe4a; `scripts/cloud-snapshot-conflict-smoke.js` 40fa52f3a01f677a0999862b1bb429446d4f6338f530f4ec41c7197a90ecd147.
+- This source delta is still uncommitted and not built or installed. `queueCloudSnapshotPush()` itself is a larger working-tree-only addition absent from HEAD; its original hunk owner is unresolved, so the whole main.js hunk is not staged or committed. Exact-path lease `2281c2da-a500-4c09-b3fa-b01a5c1755b2` owns only the current focused edit paths. Installed app/timer, production Brainwire state, login flow and Windows visual receiver remain unchanged/unverified by this slice.
+
+Fresh read-only check (2026-11-04 00:53 UTC):
+- Auto Pomodoro MCP reports installed app 1.0.40 on macOS; timer is break/running with stable endsAt=1793753850813. Two reads 21 seconds apart reduced remainingMs from 245115 to 224025, an exact 21090 ms reduction. Mac local timer progression is consistent with elapsed wall time during this observation.
+- Settings readback remains wakeLockEnabled=true, wakeLockMinutes=120, widgetSkin=vintage, widgetFont=editorial, autoMode.enabled=true. Wake state remains phase=complete; there is no fresh wake event/countdown to verify.
+- Windows access is still unknown/remoteActionAllowed=false, so no Windows probe or UI inspection was attempted. The earlier matching server/Mac endsAt proves only data-layer alignment at that earlier time, not current Windows behavior.
+- Most likely mismatch mechanism remains independent Auto Mode starts after a stale remote idle snapshot, followed by delayed snapshot convergence; the latest conflict-retry source slice addresses one stale overwrite path but does not yet resolve or verify the separate dual-start race. Install/login, current server parity, Windows receiver/UI and production 90-day expiry remain open.
+
+Follow-up source fix (2026-11-04 00:54 UTC):
+- In both timer-cloud and authenticated cloud prefetch branches, `prefetchAndAdoptRemoteRunningSession()` now returns adoption only when the current sync snapshot timer matches the fetched running timer after arbitration. A fetched-but-rejected remote timer no longer suppresses the caller's Auto Mode local start while local timer remains idle.
+- Extended `scripts/cloud-snapshot-conflict-smoke.js` to execute the real production prefetch function and assert both the rejected-snapshot and adopted-snapshot results.
+- Passed: focused smoke; `scripts/sync-contract-test.js`; `scripts/windows-logical-clock-parity-test.js`; syntax checks; scoped diff check.
+- New hashes: main/main.js 84c3a115e073ce6295d124e4c9fff62cd2f9ee1492167986d37b44dbb78e390c; scripts/cloud-snapshot-conflict-smoke.js eb3ed42ae6befbcc80282f920066a40507bfe18df5d0de3fa7d67ac3a423a6bf.
+- This corrects a false-adoption path; it does not make cross-device starts atomic and does not verify Windows visual parity. Dirty main.js remains uncommitted and not built/installed because its broader pre-existing hunk provenance is unresolved and the installed timer is live. The delivery gate remains open with server, consumer and durability proof missing.
+
+Mac candidate build after Auto Mode adoption fix (2026-11-04 00:57 UTC):
+- Guarded `npm run build:local` completed from canonical `/Users/rogan/appDev/schedule/pomodoro` at main@898b3c9a929e3df548dd483c10135e438cab1282; full prebuild `npm run check` passed, including wake reliability (100/100), timer-recovery, logical-clock parity, app lifecycle, iOS parity/localizations, and sleep/world integration suites.
+- Candidate: `dist/mac-arm64/Auto Pomodoro.app`, version 1.0.40/build 1.0.39, app.asar SHA-256 d602c9780b8e80082f327329c4ad5cd2981c59a03f19dabb251ec69d51ca99a0. `codesign --verify --deep --strict` passed; `workflow-control verify-mac` reported verified/local_dev/launchAllowed. No launch or install was performed.
+- Storage-guard started with 50.23 GiB free and 3 GiB peak budget; delivery-proof postcheck reports 50.21 GiB free, preserving the 20 GiB reserve.
+- Installed 1.0.40 and its live timer remain untouched. The built candidate does not prove account-login restoration or receiver parity. Production 90-day expiry and paired Windows UI remain unverified.
+
+Post-build installed-process reconciliation (2026-11-04 00:58 UTC):
+- CUA inventory initially listed Auto Pomodoro as not running, but this conflicted with the live MCP timer. Direct process inspection confirmed installed `/Applications/Auto Pomodoro.app` PID 687 and its GPU helper, plus launchctl application job `application.com.rogan.pomodorocage...`. A fresh MCP status showed focus/running with endsAt=1793754453858 and Auto Mode enabled. The CUA app descriptor is therefore treated as stale/inaccurate for process status.
+- Installed build timestamp is Nov 3; candidate timestamp Nov 4. Candidate remains separate from installed app and was not launched or installed. No user-data path was modified.
+- Local source-custody registry JSON validated after recording the newly signed candidate and live installed process evidence.
+- Test-quality refinement after build: the prefetch smoke starts from a local idle timer in both cases, mutates to the peer timer only when the mocked arbiter accepts it, and asserts the production function's result. Focused smoke, syntax and diff checks pass. Final smoke file hash is 63aea555c83fd33d32eea3b3e719c12595460d0b7199634faf542e4e3ee5b42d; production main.js hash remains 84c3a115e073ce6295d124e4c9fff62cd2f9ee1492167986d37b44dbb78e390c, matching the built candidate source.
+
+Live cross-device timer regression and candidate update (2026-11-04 01:18 UTC):
+- Existing installed Mac log at 01:10:30Z received Windows/RESKTOP running break snapshot startsAt=1793754453963, endsAt=1793754753963 and accepted it. 1.47 seconds later it accepted the Mac's own running break snapshot startsAt=1793754454592, endsAt=1793754754592. The end times differed by 629 ms; the later Mac logical transition restored the longer deadline. This is concrete evidence of sender-ID/owner-ID arbitration treating the Mac's own newer start as a fresh winner after adopting the Windows timer. Subsequent log shows Windows idle accepted as passive-stop-rejected at 01:17:39Z, while current installed Mac remained on its focus timer; no Windows live state or UI is inferred.
+- Changed `shorterWinsVerdict()` to compare logical timer owners (`timerLogicalUpdatedBy` with sender fallback) instead of only snapshot `deviceId`. Added a source regression that reproduces same-sender Mac snapshots with Windows timer ownership and confirms the later Mac timer cannot undo the earlier peer deadline. The conflict retry and prefetch adoption safeguards remain in place.
+- Passed: `scripts/sync-contract-test.js`, `scripts/cloud-snapshot-conflict-smoke.js`, `scripts/windows-logical-clock-parity-test.js`, full `npm run check`, syntax and scoped diff checks.
+- Rebuilt candidate: `/Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app`, 1.0.40/build 1.0.39, app.asar SHA-256 `9b122d9f6db8896bf00ae273906d7c1a971c192145dc30cf6d586102acc361fe`. Extracted app.asar confirms the owner-aware convergence helper is present; deep/strict codesign and `workflow-control verify-mac` passed. Build started with 48.86 GiB free; postcheck 48.80 GiB.
+- Current installed app remains 1.0.40 with app.asar `82c60956ac07a87ee960e87b0ee1b104d4e15266e2fd6e48c7d54be0797ff02e`, PID 687. Fresh MCP status shows focus/running, endsAt=1793755356563, Vintage/Editorial, Auto Mode, 120-minute wake setting, account logged in; wake phase is complete. Candidate not installed because the timer remains active and requested restart approval is still pending; installed login restore remains unverified.
+- Final owned source hashes: main/main.js `285eac1e408576a71bb7ed83ff8006afd02a128275176caa4f55bf451c544822`; scripts/cloud-snapshot-conflict-smoke.js `54baaf80a820d28569a81b76bf62e647ed596e21390284fc62be211e5d178d68`. The existing `scripts/sync-contract-test.js` remains outside this task's changed-file set; its original contract suite was run after restoring task edits, and the new production-function regression lives in the owned cloud smoke file.
+
+
+Windows receiver readback (2026-11-04 10:26–10:30 KST):
+- Managed `winpc` read-only job confirmed Vintage Pomodoro 0.2.9+154 running (PID 54792). `bluecloud_runtime.json` safe fields showed loggedIn=true, lastPullAt=01:28:38Z, lastPulledRevision=83805, Mac seen/online, and no sync error. Windows log repeatedly says shared settings were applied while remote timer mirroring was disabled and timer state ignored. Thus account settings sync is active; the live countdown is deliberately not mirrored.
+- Windows time health logged an initial cloud discrepancy of 33.8 seconds, then “resolved via cloud” to 0.6–0.8 seconds; later readings intermittently rose to 18–33 seconds before recovering. This shows clock-offset monitoring/correction but not stable sub-second agreement.
+- Windows source defines `sync.mirrorRemoteEnabled` as a separate explicit opt-in, off by default because remote timer start/stop can drive local timer and lock behavior. Existing task metadata says preserve the mirror opt-out. It was not changed; enabling it would alter live timer behavior and needs explicit user direction.
+- Windows package data has two separate roaming roots: old `AppData/Roaming/com.vintagepomodoro/vintage_pomodoro/vintage_pomodoro.db` last written 2026-10-06, and current `AppData/Roaming/Vintage Pomodoro/Vintage Pomodoro/vintage_pomodoro.db` actively written 2026-11-04. This is a concrete migration/restore risk; no DB was modified or copied.
+- Mac live status at 10:30 KST is Auto Pomodoro 1.0.40, focus/running, 60/10, Vintage/Editorial, Auto Mode enabled, wake protection enabled for 120 minutes; current wake cycle is complete. Candidate remains uninstalled.
+- Windows managed job output confirms process and runtime fields only; Windows visible UI/countdown and the 2-hour post-wake consumer were not verified.
+
+
+Verification update (2026-11-04 11:07:29 KST):
+- Mac installed user data (read-only JSON) confirms focus/running=true, 60-minute duration, endsAt=1793760464448; supported-status IPC timed out but the visible compact widget displayed a 41-minute countdown. Mac settings remain wake protection enabled/120m, Vintage/Editorial, focus 60/break 10. App process is live; candidate was not installed.
+- Windows current runtime is Vintage Pomodoro 0.2.9+155, PID 56100; the app has no visible main window (HWND=0). Read-only active DB confirms autostart_enabled=1, auto_timer_enabled=1, focus=3600s, break=600s, but wake_lock_enabled=0, wake_lock_minutes=60. Wake-settings audit shows cloud-sync changed false/120 to false/60 from a stale remote timestamp. Existing runtime logs still establish timer mirror off and remote timer state ignored. Windows source checkout is main@6af539f, pubspec 0.2.9+152 with dirty main/settings files, so it is not the exact installed +155 source; no edits made.
+- Cross-device settings currently match for focus/break and auto-start/auto-timer, but not for 2h wake protection. Windows ships a VintageTheme; no `widgetSkin`/`widgetFont` preference keys were present in its settings DB, so Mac widget Editorial typography is not shown to be a shared Windows preference.
+- Local Brainwire retention regressions: `pomodoro_sync_store.test.js`, `pomodoro_sync_http.test.js`, and `pomodoro_legacy_retention_http.test.js` all pass. An additional isolated live-HTTP test seeded only a legacy `pomodoroCloud` snapshot older than 90 days, with no V2 snapshot. GET returned HTTP 200 with the stale snapshot still present and stored; V2 state had no expiry tombstone. This proves the current legacy test misses the legacy-only-account path and that the 90-day deletion is incomplete for such accounts. Temporary data was removed in `finally`.
+- Brainwire canonical main remains 1d3b54d with extensive dirty source; the separate active `brainwire-dirty-reconciliation-20261103` checkpoint reports ownership/provenance unresolved. No Brainwire file was edited or staged. Production Render readback still shows live deploy commit 16ba21d (2026-10-30); the 90-day code is not deployed.
+
+
+Cross-device running-timer comparison (2026-11-04 11:09:34 KST):
+- Mac local timer record: focus/running, startsAt 2026-11-04 10:47:44.448 KST, endsAt 11:47:44.448 KST. Compact widget showed a decreasing countdown; no pause/stop action was sent.
+- Windows read-only session table: a distinct focus session is `in_progress`, started 11:03:58.143 KST, planned 3600 seconds; its logical timer owner is local. Difference between the two active start/end boundaries is 16m13.695s. Windows logs say remote mirroring is disabled, so both timers are currently running independently.
+- This is fresh current runtime evidence that the timer mismatch is active; it also means enabling the mirror mid-focus could alter an active local timer. No timer state was changed.
+
+
+Retention subdocument audit (2026-11-04 11:12:47 KST):
+- A second isolated HTTP test seeded a `pomodoroWake` record whose `wakeSettings.updatedAt` was 91 days old, plus a separate wake event. Authenticated GET returned HTTP 200 with the old `wakeSettings` unchanged in both response and storage, while preserving the wake event. The current 90-day bridge applies only to `pomodoroCloud`; the separate wake-settings subdocument has no 90-day expiry.
+- Together, the legacy-only `pomodoroCloud` and stale `pomodoroWake.wakeSettings` HTTP reproductions show the user's 90-day retention requirement is not met for either old-only account snapshots or Windows wake settings. No production or canonical Brainwire source was edited due unresolved dirty-source ownership.
+
+
+Fresh runtime/source provenance update (2026-11-04 11:18:12 KST):
+- After the installed Mac process changed, `pomodoroctl status` and the supported status MCP recovered. Both now read the same active focus timer and endsAt=1793760464448; remaining time decreased normally. The timer is still running; no timer control or replacement was issued. Mac account status is logged in; local prefs remain wake enabled/120, Vintage/Editorial, Auto Mode enabled.
+- Windows installed package has build_info `20261104-083948-d7a18daf`, built 08:41 KST, executable SHA-256 `639E72461AF620AD6A5E415F8E43C31CC0362633272615DFC73FB30060E3A950`. Its source-provenance manifest covers 333 files from the same Windows root; 330 match current tree, while current `lib/main.dart`, `lib/screens/tabs/settings_tab.dart`, and `lib/services/settings_service.dart` differ. Windows source currently has zero `pomodoroLastUsedAt` occurrences; `mirrorRemoteEnabled` exists in settings UI/sync code. This leaves a current-source/install delta in timer/wake/settings behavior.
+
+
+Fresh Windows runtime and Mac state (2026-11-04T11:27:24+09:00):
+- `workflow-control context` and fresh `winpc health` permit read-only access; RESKTOP responds as `delig`. A managed read-only Windows job completed successfully (ID `pomodoro-parity-read-20261104-1123`; SHA-256 `64d3d69bf4b0795106c02906a99f35031177942729f1307b047afc515470cca9`).
+- Windows process is now `vintage_pomodoro.exe` at installed path `VintagePomodoro/versions/0.2.9+156-33ce96416b92`; active DB last-write was 11:24:50 KST. This is newer than the previously inspected +155.
+- Fresh Windows logs at 11:22–11:24 repeatedly say shared settings were applied but remote timer mirroring is disabled and timer state ignored. `sync_auto_diagnosis` repeatedly logs a session-start conflict: the Mac snapshot starts at epoch ms 1793756864448 / ends 1793760464448 while the Windows-local timer starts 1793757838142 / ends 1793761438142 (difference 973,694 ms, about 16m14s). This confirms independently running timers, not simply display refresh lag. No timer or setting was changed.
+- Fresh Mac MCP still reports the installed 1.0.40 focus session running to 11:47:44.448 KST, with about 25m remaining at 11:23 KST; Vintage/Editorial and Auto Mode are enabled. `wakeLockEnabled=true`, `wakeLockMinutes=120`, but the current wake-protection cycle remains `complete`, so there is no active 2-hour countdown now.
+- Current session environment had no `pomodoroctl` executable in `~/.codex/bin`; the supported MCP readback succeeded. Windows DB content beyond prior read-only settings proof was not captured by this bounded job (it refreshed process, DB timestamp and logs only). Windows visible countdown/UI remains unverified.
+- Mac replacement candidate SHA `9b122d9f6db8896bf00ae273906d7c1a971c192145dc30cf6d586102acc361fe` remains signed but uninstalled while the focus timer is active. Brainwire has no active lease, but the separate active reconciliation record still reports ambiguous ownership of extensive overlapping dirty source; the 90-day HTTP defects remain unresolved and production unmodified.
+
+- Follow-up read-only attempt `pomodoro-db-schema-20261104-1127` completed remotely with exit 1 while attempting to enumerate the SQLite schema via Windows Python; it did not write the DB. The payload returned a Python `File "<string>", line 1` syntax error, so +156's settings rows were not verified. No retry was made without a diagnosed command correction.
+
+
+Cross-device mirroring root-cause follow-up (2026-11-04 11:39 KST):
+- Windows canonical feature checkout `C:\Users\delig\Documents\Codex\2026-11-01\new-chat-5\work\ff-full-delta-candidate` is `main@4be0676` (pubspec `0.2.9+152`), clean for all tracked/untracked files. Current installed Vintage Pomodoro is `0.2.9+156-33ce96416b92`; its provenance manifest lists exactly 333 files from that checkout and a full SHA-256 comparison matched all 333. The app source is therefore present/integrated in this Windows checkout; Mac does not automatically receive code changes from that Windows repository because Mac uses a separate Electron source.
+- Canonical Windows source has a user-facing `sync.mirrorRemoteEnabled` preference in `settings_tab.dart`/`settings_service.dart`. Existing Windows runtime logs at 11:22–11:24 KST say shared settings are applied but remote timer state is ignored while mirroring is disabled. Thus its timer is per-device while that preference is off; this is the direct cause of the user-observed timer not advancing here.
+- Other Windows worktrees are dirty in overlapping timer/settings files (`timer1_latest`, `timer-pomodoro-conflict-recovery`, `vintage-pomodoro-recovery-candidate`, `ff-leisure-candidate`). They are separate existing work and remain untouched.
+- Current Windows process has no visible main window (`MainWindowHandle=0`). The repo's documented `pomodoroctl.ps1` GET requires `%LOCALAPPDATA%\VintagePomodoro\agent-control.token`, which is absent, so no authenticated app control/readback is currently available. A read-only REST check therefore stopped at `Agent token missing`; no token or DB content was changed or exposed. A schema probe similarly failed due a command syntax issue and was not retried. Windows setting toggle cannot be verified/changed from the available supported UI/API path while the current session is active.
+
+- Fresh read-only Windows log-tail job at 11:44:54 KST confirmed `vintage_pomodoro.exe` +156 remains running and the current log file is being written. It contains a new `sync_auto_diagnosis` session-start-conflict warning at 11:44:47 KST (revision 84125), so the two runtimes were still in conflict after the prior check. The app-status API probe remains unavailable because the documented agent-control token file was absent; no timer, settings, or database mutation was performed.

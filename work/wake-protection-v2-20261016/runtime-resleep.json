@@ -1,0 +1,45 @@
+{
+  "ok": true,
+  "wakeProtection": {
+    "version": 2,
+    "owner": "delight0517",
+    "cycleId": "wake-1792104261488",
+    "phase": "sleeping",
+    "remainingMs": 7200000,
+    "activityMs": 0,
+    "wakeAt": 1792104261488,
+    "sleepAt": 1792104261488,
+    "lastActivityAt": 1792104261488,
+    "lastEventAt": 1792104261488,
+    "revision": 1792104261488,
+    "enabled": true,
+    "scheduleExempt": false,
+    "reason": "user-confirmed-resleep"
+  },
+  "diagnostics": {
+    "authority": "isComputerBlockedNow",
+    "blockedNow": false,
+    "sources": [
+      "pomodoro-break"
+    ],
+    "activeWindow": null,
+    "activeSchedule": null,
+    "wakeMorningBreak": null,
+    "pomodoroBreak": {
+      "mode": "break",
+      "startedAt": 1792104102065,
+      "endsAt": 1792104402202,
+      "durationMinutes": 10
+    },
+    "duplicateWindowCount": 0,
+    "strictLockMode": true,
+    "timerMode": "break",
+    "timerRunning": true,
+    "enforcement": {
+      "scheduleWindow": false,
+      "pomodoroBreak": true,
+      "classScheduleSuppressed": false
+    },
+    "checkedAt": 1792104261558
+  }
+}

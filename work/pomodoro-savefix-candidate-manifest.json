@@ -1,0 +1,40 @@
+{
+  "task": "pomodoro_four_minute_save_fix_20261101",
+  "sourceCandidate": "/Applications/.Auto Pomodoro.next.app",
+  "sourceCandidateAsarSha256": "8410591e15f16ec3fb6969cea21a7a5e7df71d63182ffe1f3438a77746b0252b",
+  "candidate": "/Applications/Auto Pomodoro.app",
+  "bundleId": "com.rogan.pomodorocage",
+  "candidateVersion": "1.0.40",
+  "appAsarSha256": "1f32cf83b8431c364eef2a884dbbde0b7860be1150c907767b2babe0cd347cb4",
+  "includedChanges": [
+    "Previously verified due-time schedule candidate",
+    "Four-minute save unlock: 45-second request timeout; retry only transient network/timeout and 502/503/504 responses once, reusing the same idempotency commandId; no 429 retry"
+  ],
+  "procedure": "Started from the previous verified due-time app.asar and changed only main/cloudAccount.js. Repacked that one-file change into the correctly Developer ID signed Mac build; re-sealed the outer app signature using build/entitlements.mac.plist and verified allow-jit.",
+  "signature": {
+    "identity": "Developer ID Application: GeunHu Kim (V3J8MR637G)",
+    "bundleId": "com.rogan.pomodorocage",
+    "entitlements": [
+      "com.apple.security.cs.allow-jit",
+      "com.apple.security.cs.allow-unsigned-executable-memory",
+      "com.apple.security.cs.disable-library-validation",
+      "com.apple.security.network.client"
+    ],
+    "strictDeepVerification": true
+  },
+  "installation": {
+    "status": "installed-and-runtime-readback-verified",
+    "appVersion": "1.0.40",
+    "appAsarSha256": "1f32cf83b8431c364eef2a884dbbde0b7860be1150c907767b2babe0cd347cb4",
+    "bundleId": "com.rogan.pomodorocage",
+    "signature": "Developer ID Application; strict deep verification; allow-jit present",
+    "timerBeforeAndAfter": {
+      "mode": "focus",
+      "running": true,
+      "endsAt": 1793525284141
+    },
+    "remainingMsAtReadback": 1282087,
+    "wakeLockEnabled": true,
+    "watchdogEnabled": true
+  }
+}

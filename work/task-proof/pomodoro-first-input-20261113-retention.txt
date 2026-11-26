@@ -1,0 +1,6 @@
+2026-11-13 KST retention receipt
+Installed replacement: /Applications/Auto Pomodoro.app, app.asar SHA-256 b5170b5a2faef1681de8547c01d478c01237bdeee6c399e180b91cc0896f80ce, signed verification passed, app running with focus timer preserved.
+Kept rollback: /Users/rogan/Library/Caches/CodexManagedArtifacts/app-backup-com.rogan.pomodorocage-20261113T073112Z-71103-87e0023e; 118 files; sourceTreeSha256 equals backupTreeSha256 a28a39eef960ef4b870906da599833e13f035f0d060160875183535fa4d60f1a; rollback app.asar SHA-256 c151bb65cf3f89e76494d46896dd53a5cf5476297192300e1c7c8ea10e190e4f.
+Removed task-owned duplicate staged candidate /Applications/.Auto Pomodoro.update-72343.app (same app.asar SHA as verified installed replacement; no open files).
+Removed duplicate internal previous app .local_build/Auto Pomodoro.previous.app (same app.asar SHA as retained full rollback backup; no open files).
+Other independent candidate/rollback copies were preserved.

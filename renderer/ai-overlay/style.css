@@ -1,0 +1,439 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", "Helvetica Neue", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 1. Dune basalt card background (#181512 with subtle translucency) */
+.overlay-card {
+  width: 420px;
+  height: 104px;
+  background: rgba(24, 21, 18, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid #443A30;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  color: #EEE8E0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-app-region: drag;
+  cursor: grab;
+}
+
+.overlay-card:active {
+  cursor: grabbing;
+}
+
+.overlay-card.warning {
+  border-color: #E07A3C;
+  box-shadow: 0 10px 30px rgba(224, 122, 60, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-card.locked {
+  border-color: #DC4646;
+  box-shadow: 0 10px 30px rgba(220, 70, 70, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Normal View Wrapper */
+.normal-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 2. Circular Gauge on the left */
+.ring-col {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-svg {
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg);
+}
+
+.ring-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 4.5;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: #D4884E; /* Spice amber */
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 144.5; /* 2 * PI * 23 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.35s ease, stroke 0.3s ease;
+}
+
+.overlay-card.warning .ring-progress {
+  stroke: #E07A3C;
+}
+
+.overlay-card.locked .ring-progress {
+  stroke: #DC4646;
+}
+
+.ring-percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #E6DED7;
+  letter-spacing: -0.02em;
+}
+
+/* 3. Right side: Clean, intuitive typography and bar */
+.content-col {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+/* Line 1: Header / Category */
+.header-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-title {
+  font-size: 11px;
+  font-weight: 400;
+  color: #B4A89C; /* Warm sand */
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-badge {
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 1.5px 6.5px;
+  border-radius: 999px;
+  background: rgba(212, 136, 78, 0.15);
+  color: #D4884E;
+  border: 1px solid rgba(212, 136, 78, 0.3);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.overlay-card.warning .status-badge {
+  background: rgba(224, 122, 60, 0.2);
+  color: #E07A3C;
+  border-color: rgba(224, 122, 60, 0.4);
+}
+
+.overlay-card.locked .status-badge {
+  background: rgba(220, 70, 70, 0.2);
+  color: #EB7878;
+  border-color: rgba(220, 70, 70, 0.45);
+}
+
+/* Minimalist minimize button */
+.mini-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #B4A89C;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.mini-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFF;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Line 2: Remaining Time (soft linen, sleek regular weight, NOT bold) */
+.time-line {
+  font-size: 16px;
+  font-weight: 400;
+  color: #EEE8E0; /* Soft linen */
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.overlay-card.warning .time-line {
+  color: #E6A050;
+}
+
+.overlay-card.locked .time-line {
+  color: #EB7878;
+}
+
+/* Line 3: Horizontal Progress Bar */
+.bar-line {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 3px 0 1px 0;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: #C37D46;
+  width: 0%;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.overlay-card.warning .bar-fill {
+  background: #D77337;
+}
+
+.overlay-card.locked .bar-fill {
+  background: #DC4646;
+}
+
+/* Line 4: Clean Subtext under bar */
+.sub-line {
+  font-size: 10px;
+  color: #AAA092;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ========================================================================= */
+/* 4. Vintage Matrix Mini Bar Mode (영화 매트릭스 레트로 CRT 그린 모니터 스타일) */
+/* ========================================================================= */
+.overlay-card.matrix-mini {
+  width: 250px;
+  height: 36px;
+  padding: 0 10px;
+  background: rgba(8, 14, 9, 0.92);
+  border: 1px solid rgba(0, 255, 102, 0.55);
+  border-radius: 7px;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.25), inset 0 0 6px rgba(0, 255, 102, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+}
+
+.overlay-card.matrix-mini.locked {
+  background: rgba(20, 8, 8, 0.92);
+  border-color: rgba(255, 68, 68, 0.65);
+  box-shadow: 0 0 12px rgba(255, 68, 68, 0.3), inset 0 0 6px rgba(255, 68, 68, 0.15);
+}
+
+.matrix-mini-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "SF Mono", "Menlo", "Courier New", monospace;
+  font-size: 11px;
+  color: #00FF66;
+  text-shadow: 0 0 5px rgba(0, 255, 102, 0.6);
+  letter-spacing: 0.02em;
+}
+
+.overlay-card.matrix-mini.locked .matrix-mini-view {
+  color: #FF5555;
+  text-shadow: 0 0 5px rgba(255, 85, 85, 0.6);
+}
+
+.matrix-indicator {
+  font-size: 8px;
+  color: #00FF66;
+  animation: matrix-pulse 2s infinite ease-in-out;
+}
+
+.overlay-card.matrix-mini.locked .matrix-indicator {
+  color: #FF5555;
+  animation: matrix-fast-pulse 1s infinite ease-in-out;
+}
+
+@keyframes matrix-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes matrix-fast-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.matrix-app {
+  font-weight: 600;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #66FFAA;
+}
+
+.overlay-card.matrix-mini.locked .matrix-app {
+  color: #FFAAAA;
+}
+
+.matrix-divider {
+  color: rgba(0, 255, 102, 0.3);
+  font-size: 10px;
+}
+
+.overlay-card.matrix-mini.locked .matrix-divider {
+  color: rgba(255, 85, 85, 0.3);
+}
+
+.matrix-center {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5px;
+}
+
+.matrix-time {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+/* Dual Thin Progress Bars in Matrix Bar */
+.matrix-bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  cursor: help;
+  padding: 1px 0;
+}
+
+.matrix-bar-track {
+  width: 100%;
+  height: 2.5px;
+  background: rgba(0, 255, 102, 0.15);
+  border-radius: 1.5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.matrix-bar-track.track-window {
+  height: 2px;
+  opacity: 0.85;
+}
+
+.overlay-card.matrix-mini.locked .matrix-bar-track {
+  background: rgba(255, 85, 85, 0.15);
+}
+
+.matrix-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 1.5px;
+  transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.matrix-bar-fill.fill-daily {
+  background: #00FF66;
+  box-shadow: 0 0 4px rgba(0, 255, 102, 0.8);
+}
+
+.matrix-bar-fill.fill-window {
+  background: #38bdf8;
+  box-shadow: 0 0 3px rgba(56, 189, 248, 0.8);
+}
+
+/* 임박 시 붉은색 또는 주황빛으로 강조 */
+.matrix-bar-fill.bar-warning {
+  background: #ff9900 !important;
+  box-shadow: 0 0 5px rgba(255, 153, 0, 0.9) !important;
+}
+
+.matrix-bar-fill.bar-over {
+  background: #FF3333 !important;
+  box-shadow: 0 0 6px rgba(255, 51, 51, 1) !important;
+}
+
+.matrix-btn {
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.3);
+  color: #00FF66;
+  border-radius: 3px;
+  width: 17px;
+  height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  font-size: 10px;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.matrix-btn:hover {
+  background: rgba(0, 255, 102, 0.25);
+  box-shadow: 0 0 6px rgba(0, 255, 102, 0.5);
+  color: #FFF;
+}
+
+.overlay-card.matrix-mini.locked .matrix-btn {
+  background: rgba(255, 85, 85, 0.15);
+  border-color: rgba(255, 85, 85, 0.4);
+  color: #FF5555;
+}
+
+.overlay-card.matrix-mini.locked .matrix-btn:hover {
+  background: rgba(255, 85, 85, 0.3);
+  box-shadow: 0 0 6px rgba(255, 85, 85, 0.5);
+  color: #FFF;
+}

@@ -1,0 +1,12 @@
+{
+  "relay_id": "REQUEST-20261001-WINDOWS-BIBLE-READING-001",
+  "request_id": "POMODORO-WINDOWS-BIBLE-READING-20261001-001",
+  "task_id": "POMODORO-WINDOWS-BIBLE-READING-20261001-001",
+  "target": "windows",
+  "source_file_id": "1M32vTmu6jXBOZQriDaElvnub4FkaPpGU",
+  "source_sha256": "875a450c17a6a09056b77e6019fc7de2aaeb0ce0ae3c7486a80fcd2daed7a8e8",
+  "created_at": "2026-10-01T10:26:30Z",
+  "build_number": "20261001.2",
+  "status": "queued",
+  "instruction": "Implement and test the Windows side of the shared iPhone Selah-to-computer meditation flow described in the referenced letter. Treat CROSS-DEVICE-BIBLE-001 as the permanent Mac+Windows regression scenario. Read the complete source letter and verify its SHA-256 before work. Work only in the authoritative Windows repository and preserve existing edits. Make Windows Pomodoro receive an authenticated, target-correct, idempotent Selah session and one-shot openOnComputer intent; open the verified Selah URL in the default browser; preserve the current Pomodoro mode and remaining time; suppress Pomodoro break intrusion during focused Selah reading; allow the same session to resume from the computer or by repeating the iPhone Selah request during a fixed 7-minute (420-second) grace window. Use absolute resumeGraceUntil; retries/re-entry must not extend it. At grace expiry end Selah protection and restore the prior Pomodoro state and lock policy. Do not assume a separate Selah desktop app or invent a Bible provider. Do not transmit reflection/prayer/note text or credentials. Test online/offline, expiry, duplicate request, Pomodoro break boundary, both resume paths, and grace expiry with isolated fixtures/fake clock, never an actual two-hour wait or locking the user computer. Run Flutter analyze and relevant tests. If an existing Selah URL or iPhone-to-Windows wire contract is absent, report the exact required decision instead of inventing it. Do not claim Mac/Windows parity complete until the Mac and iPhone paths are also implemented and verified. Write Windows ACK/result to established Drive relay locations and include repository path, changed files, tests, build/install/runtime evidence, and remaining blockers. Do not push or deploy."
+}

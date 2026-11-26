@@ -1,0 +1,32 @@
+{
+  "taskId": "chat-open-items-autopomodoro-detox-ff-20261114",
+  "preparedAt": "2026-11-14 Asia/Seoul",
+  "retentionReview": "2027-11-14 Asia/Seoul; retain until receiver ACK and verification",
+  "files": [
+    {
+      "file": "PACKET.md",
+      "bytes": 10232,
+      "sha256": "4e8f6c3889b207024483e2430f899e8080d2acb7bd58e1a8d88120d9274e46d6"
+    },
+    {
+      "file": "WINDOWS_START.md",
+      "bytes": 1808,
+      "sha256": "7032bfca6d2415784c7cd92c2c113ed918a142815427659cf0ee39537cdaed64"
+    },
+    {
+      "file": "RESLEEP_LOCATION_ADDENDUM.md",
+      "bytes": 4309,
+      "sha256": "32824ae28f5e50d09d0055d882fb50207e871ec2e0efa5dc43df810846183a32"
+    },
+    {
+      "file": "WINDOWS_IMPLEMENTATION_BRIEF_UPDATED.md",
+      "bytes": 16059,
+      "sha256": "05f46050c2fa98fa5133d828c6b3ded2303e9e7ef0e4c8f202911e234d3efc17"
+    }
+  ],
+  "windowsSourcePatch": {
+    "status": "not provided",
+    "reason": "Windows canonical checkout/lease not freshly inspected; Mac/iOS changes are not a safe Windows patch."
+  },
+  "updatedAt": "2026-11-14 13:54 Asia/Seoul"
+}

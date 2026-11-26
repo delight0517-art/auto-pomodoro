@@ -1,0 +1,31 @@
+{
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "info",
+      "apps",
+      "--device",
+      "FF688590-6923-5264-8C92-DEA3F99775A5",
+      "--json-output",
+      "work/ios-usage-budgets-20261018/installed-apps.json"
+    ],
+    "commandType" : "devicectl.device.info.apps",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "success",
+    "version" : "651.13.5"
+  },
+  "result" : {
+    "apps" : [
+
+    ],
+    "defaultAppsIncluded" : false,
+    "deviceIdentifier" : "FF688590-6923-5264-8C92-DEA3F99775A5",
+    "hiddenAppsIncluded" : false,
+    "internalAppsIncluded" : false,
+    "removableAppsIncluded" : true
+  }
+}

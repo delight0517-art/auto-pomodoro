@@ -1,0 +1,8 @@
+Task: pomodoro-login-settings-hydration-20261103
+Command: /Users/rogan/bin/storage-guard run --task pomodoro-login-settings-hydration-20261103 --peak-gib 5 --target /Users/rogan/appDev/schedule/pomodoro -- npm run build:local
+Result: exit 0; prebuild npm run check and input-guard passed on final source.
+Artifact: /Users/rogan/appDev/schedule/pomodoro/dist/mac-arm64/Auto Pomodoro.app
+Bundle/version/build: com.rogan.pomodorocage / 1.0.40 / 1.0.39, ARM64.
+app.asar SHA-256: 973f881ee803f09db308266960082cf0b717377ef1a867ed1ce89fabdd25a193
+Signature: codesign --verify --deep --strict passed; workflow-control verify-mac state=verified, launchAllowed=true, mode=local_dev.
+Embedded-source check found the failed-read guard. Installation remains pending because the installed app is in an active focus session.

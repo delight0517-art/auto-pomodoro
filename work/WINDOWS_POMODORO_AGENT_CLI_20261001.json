@@ -1,0 +1,12 @@
+{
+  "relay_id": "20261001-pomodoro-agent-cli-windows-001",
+  "request_id": "POMODORO-WINDOWS-AGENT-CLI-20261001",
+  "task_id": "POMODORO-WINDOWS-AGENT-CLI-20261001",
+  "target": "windows",
+  "source_file_id": "1aa1qZ9FEkZ77RaqnPPLQCaKcLgG7R_If",
+  "source_sha256": "610ec167ac342114c100563c0cb6384bfec794d7a4ef79209bea6ed20d3dbe1e",
+  "created_at": "2026-10-01T10:46:57Z",
+  "build_number": "20261001.2",
+  "status": "queued",
+  "instruction": "Read the entire referenced task specification and verify its SHA-256 before work. Implement/test in the authoritative Windows repository only. Follow the relay protocol: atomically claim into claimed/windows, write ACK immediately, then continue. If unavailable, write a failed result with exact blocker. Preserve existing edits. Do not commit, push, install, or deploy. Write result JSON and Markdown and Drive-readback them; queued is not ACK or completion proof."
+}

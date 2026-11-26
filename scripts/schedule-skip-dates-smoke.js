@@ -1,0 +1,33 @@
+'use strict';
+const assert = require('assert');
+const fs = require('fs');
+const vm = require('vm');
+const { normalizeSkipDates, skipsLocalDate, lockScheduleToRules } = require('../main/scheduleSkipDates');
+const { scheduledBreakRulesToLockSchedule } = require('../main/durationOverrides');
+assert.deepEqual(normalizeSkipDates(['2026-10-26', '2026-10-26', '2026-02-30', 'bad']), ['2026-10-26']);
+const windows = { id: 'nightly_safe_mode_v1', startMinute: 0, durationMin: 420,
+  enabled: true, days: [0, 1, 2, 3, 4, 5, 6], strictLock: true, syncToSixVpn: true,
+  source: 'windows', skipDates: ['2026-10-26'] };
+const [imported] = scheduledBreakRulesToLockSchedule({ updatedAt: 123, rules: [windows] });
+assert.deepEqual(imported.skipDates, windows.skipDates);
+const main = fs.readFileSync(require.resolve('../main/main.js'), 'utf8');
+const context = vm.createContext({ skipsLocalDate, normalizeSkipDates, MAX_LOCK_WINDOW_MS: 7 * 3600000, console });
+vm.runInContext(main.slice(main.indexOf('function sanitizeLockScheduleEntry('), main.indexOf('function minutesToSeconds(')), context);
+vm.runInContext(main.slice(main.indexOf('function isWithinLockScheduleEntry('), main.indexOf('function activeLockScheduleEntry(')), context);
+const entry = context.sanitizeLockScheduleEntry(imported);
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 26, 0, 1), entry), false);
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 26, 6, 59), entry), false);
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 27, 0, 1), entry), true);
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 27, 7), entry), false);
+const overnight = { ...entry, startMin: 1425, endMin: 405 };
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 26, 1), overnight), false);
+assert.equal(context.isWithinLockScheduleEntry(new Date(2026, 9, 27, 1), overnight), true);
+const wire = lockScheduleToRules([entry, entry], 123);
+assert.equal(wire.rules.length, 1);
+assert.deepEqual(wire.rules[0].skipDates, ['2026-10-26']);
+assert.equal(wire.rules[0].enabled, true);
+assert.equal(wire.rules[0].durationMin, 420);
+assert.equal(wire.rules[0].strictLock, true);
+assert.equal(wire.rules[0].syncToSixVpn, true);
+assert.equal(wire.updatedAt, 123);
+console.log('PASS Windows skipDates import, sanitizer, local-date and overnight evaluator, next recurrence and outbound wire');

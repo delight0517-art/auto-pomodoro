@@ -1,0 +1,8 @@
+{
+  "command": "codesign --force --sign Developer ID Application --identifier com.rogan.pomodorocage --timestamp=none task-owned sign-probe",
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-20261104/sign-probe: replacing existing signature\n/Users/rogan/appDev/schedule/pomodoro/work/mac-focus-ring-final-seventh-20261104/sign-probe: errSecInternalComponent\n",
+  "elapsedSeconds": 0.14,
+  "candidateExecuted": false
+}

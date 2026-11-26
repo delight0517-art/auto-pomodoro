@@ -1,0 +1,1 @@
+$ErrorActionPreference='Stop';$repo='C:\Users\delig\Documents\Codex\2026-11-01\new-chat-5\work\ff-full-delta-candidate';Write-Output ('user.name='+(git -C $repo config user.name));Write-Output ('user.email='+(git -C $repo config user.email));git -C $repo log -1 --format='lastAuthor=%an <%ae>%nlastSubject=%s';git -C $repo status --short

@@ -1,0 +1,2 @@
+$ErrorActionPreference='Stop';$repo='C:\Users\delig\Documents\Codex\2026-11-01\new-chat-5\work\ff-full-delta-candidate'
+foreach($spec in @(@('lib\services\pomodoro_schedule_sync_service.dart',1,220),@('lib\models\pomodoro_schedule.dart',130,310),@('lib\services\cloud_account_service.dart',1935,1965))){$f=Join-Path $repo $spec[0];$l=Get-Content -LiteralPath $f;Write-Output ('--- '+$spec[0]+' '+$spec[1]+'-'+$spec[2]+' ---');for($i=$spec[1]-1;$i -lt [Math]::Min($l.Count,$spec[2]);$i++){Write-Output (($i+1).ToString()+':'+$l[$i])}}

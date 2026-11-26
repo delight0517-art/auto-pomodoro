@@ -1,0 +1,35 @@
+{
+  "error" : {
+    "code" : 4000,
+    "domain" : "com.apple.dt.CoreDeviceError",
+    "userInfo" : {
+      "DeviceIdentifier" : {
+        "string" : "FF688590-6923-5264-8C92-DEA3F99775A5"
+      },
+      "NSLocalizedDescription" : {
+        "string" : "The device disconnected immediately after connecting."
+      }
+    }
+  },
+  "errorSignature" : "(com.apple.dt.CoreDeviceError 4000)",
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "info",
+      "apps",
+      "--device",
+      "FF688590-6923-5264-8C92-DEA3F99775A5",
+      "--include-all-apps",
+      "--json-output",
+      "work/ios-usage-budgets-20261018/all-apps.json"
+    ],
+    "commandType" : "devicectl.device.info.apps",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "failed",
+    "version" : "651.13.5"
+  }
+}

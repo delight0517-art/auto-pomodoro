@@ -1,0 +1,22 @@
+--- a/main/main.js
++++ b/main/main.js
+@@ -2199,7 +2199,19 @@
+   };
+ }
+ 
++function updateWidgetOpacity() {
++  if (!widgetWindow || widgetWindow.isDestroyed()) return;
++  const { x, y, width, height } = widgetWindow.getBounds();
++  const cursor = screen.getCursorScreenPoint();
++  const hovered = cursor.x >= x && cursor.x < x + width && cursor.y >= y && cursor.y < y + height;
++  const settings = getSettings();
++  const value = hovered ? settings.widgetOpacityHover : settings.widgetOpacityIdle;
++  const opacity = Number.isFinite(value) ? Math.min(1, Math.max(0.1, value)) : (hovered ? 0.92 : 0.2);
++  if (widgetWindow.getOpacity() !== opacity) widgetWindow.setOpacity(opacity);
++}
++
+ function broadcast() {
++  updateWidgetOpacity();
+   if (!appIsQuitting && shouldKeepWidgetAlive() && (!widgetWindow || widgetWindow.isDestroyed())) {
+     createWidgetWindow();
+   }

@@ -1,0 +1,13 @@
+Task: pomodoro-login-settings-hydration-20261103
+Repository: /Users/rogan/appDev/schedule/pomodoro
+Base HEAD: 898b3c9a929e3df548dd483c10135e438cab1282
+
+Changed source hashes:
+5aa4c41c37c0a90b71cc0db5e656e19f5656c586998703d465914e6224ab8d1f  main/cloudAccount.js
+ff53c58d3cbafc13ebafe16d3fd962c13476248ad087e382e13fbe58f9ff6d1a  main/main.js
+365243b47e09904e9fa77e6f35f71e366dbb5a8f9991f3609c5670b64b579ab9  renderer/dashboard/renderer.js
+
+Syntax checks: node --check main/cloudAccount.js; node --check main/main.js; node --check renderer/dashboard/renderer.js — passed
+Focused check: scripts/i18n-locale-smoke.js passed after preserving its language-refresh assertion.
+Whitespace: git diff --check passed
+Status: uncommitted canonical main; unrelated dirty source preserved

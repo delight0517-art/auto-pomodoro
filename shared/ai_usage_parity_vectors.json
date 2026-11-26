@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "surfaceCases": [
+    {
+      "id": "chatgpt-desktop",
+      "mac": { "name": "ChatGPT", "bundleId": "com.openai.codex", "windowTitle": "ChatGPT" },
+      "windows": { "exeName": "chatgpt.exe", "exePath": "C:\\Program Files\\ChatGPT\\ChatGPT.exe", "windowTitle": "ChatGPT" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "chatgpt" }
+    },
+    {
+      "id": "claude-desktop",
+      "mac": { "name": "Claude", "bundleId": "com.anthropic.claudefordesktop", "windowTitle": "Claude" },
+      "windows": { "exeName": "claude.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\claude\\claude.exe", "windowTitle": "Claude" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "claude" }
+    },
+    {
+      "id": "antigravity-desktop",
+      "mac": { "name": "Antigravity", "bundleId": "com.google.antigravity", "windowTitle": "FocusFence" },
+      "windows": { "exeName": "Antigravity.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\antigravity\\Antigravity.exe", "windowTitle": "Antigravity" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "antigravity" }
+    },
+    {
+      "id": "cursor-desktop",
+      "mac": { "name": "Cursor", "bundleId": "com.todesktop.230313mzl4wfeai", "windowTitle": "Cursor" },
+      "windows": { "exeName": "cursor.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\cursor\\Cursor.exe", "windowTitle": "Cursor" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "cursor" }
+    },
+    {
+      "id": "windsurf-desktop",
+      "mac": { "name": "Windsurf", "bundleId": "com.exafunction.windsurf", "windowTitle": "Windsurf" },
+      "windows": { "exeName": "windsurf.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\windsurf\\Windsurf.exe", "windowTitle": "Windsurf" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "windsurf" }
+    },
+    {
+      "id": "onlychat-desktop",
+      "mac": { "name": "Only Chat", "bundleId": "com.rogan.onlychat", "windowTitle": "Only Chat" },
+      "windows": { "exeName": "Only Chat.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\OnlyChat\\Only Chat.exe", "windowTitle": "Only Chat" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "onlychat" }
+    },
+    {
+      "id": "aside-desktop",
+      "mac": { "name": "Aside", "bundleId": "at.studio.AsideBrowser", "windowTitle": "Aside" },
+      "windows": { "exeName": "aside.exe", "exePath": "C:\\Program Files\\Aside\\aside.exe", "windowTitle": "Aside" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": false, "surfaceId": "aside" }
+    },
+    {
+      "id": "for-ai-desktop",
+      "mac": { "name": "Delete Fix", "bundleId": "dev.rogan.deletefix", "windowTitle": "1 for AI" },
+      "windows": { "exeName": "for_ai.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\For_AI\\app\\for_ai.exe", "windowTitle": "1 for AI" },
+      "expected": { "isTracked": true, "isForAi": true, "isBrowser": false, "surfaceId": "for_ai" }
+    },
+    {
+      "id": "browser-chatgpt-positive",
+      "mac": { "name": "Google Chrome", "bundleId": "com.google.Chrome", "windowTitle": "ChatGPT - GPT-5" },
+      "windows": { "exeName": "chrome.exe", "exePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "windowTitle": "ChatGPT - Google Chrome" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "browser-gemini-positive",
+      "mac": { "name": "3F Browser", "bundleId": "com.rogan.threef.browser", "windowTitle": "Google Gemini" },
+      "windows": { "exeName": "3F.Browser.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\3F\\3F.Browser.exe", "windowTitle": "Google Gemini - 3F Browser" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "browser-claude-positive",
+      "mac": { "name": "Safari", "bundleId": "com.apple.Safari", "windowTitle": "Claude — claude.ai" },
+      "windows": { "exeName": "msedge.exe", "exePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "windowTitle": "Claude - Edge" },
+      "expected": { "isTracked": true, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "browser-youtube-excluded",
+      "mac": { "name": "Safari", "bundleId": "com.apple.Safari", "windowTitle": "ChatGPT 5 Review - YouTube" },
+      "windows": { "exeName": "chrome.exe", "exePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "windowTitle": "Claude Tutorial - YouTube - Google Chrome" },
+      "expected": { "isTracked": false, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "browser-github-excluded",
+      "mac": { "name": "Google Chrome", "bundleId": "com.google.Chrome", "windowTitle": "openai/codex - GitHub" },
+      "windows": { "exeName": "msedge.exe", "exePath": "C:\\Program Files\\Edge\\msedge.exe", "windowTitle": "anthropics/claude-code - GitHub" },
+      "expected": { "isTracked": false, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "browser-plain-news",
+      "mac": { "name": "Google Chrome", "bundleId": "com.google.Chrome", "windowTitle": "Hacker News" },
+      "windows": { "exeName": "chrome.exe", "exePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "windowTitle": "Hacker News" },
+      "expected": { "isTracked": false, "isForAi": false, "isBrowser": true }
+    },
+    {
+      "id": "self-app-excluded",
+      "mac": { "name": "Auto Pomodoro", "bundleId": "com.rogan.pomodorocage", "windowTitle": "ChatGPT · AI" },
+      "windows": { "exeName": "FocusFense.exe", "exePath": "C:\\Users\\delig\\AppData\\Local\\Programs\\FocusFense\\FocusFense.exe", "windowTitle": "FocusFence AI" },
+      "expected": { "isTracked": false, "isForAi": false, "isBrowser": false }
+    }
+  ],
+  "classExemptionCases": [
+    { "isoTime": "2026-11-20T09:00:00+09:00", "dynamicExempt": false, "expected": true },
+    { "isoTime": "2026-11-20T15:59:59+09:00", "dynamicExempt": false, "expected": true },
+    { "isoTime": "2026-11-20T16:00:00+09:00", "dynamicExempt": false, "expected": false },
+    { "isoTime": "2026-11-22T13:30:00+09:00", "dynamicExempt": false, "expected": false },
+    { "isoTime": "2026-11-22T13:30:00+09:00", "dynamicExempt": true, "expected": true }
+  ],
+  "bucketAndCooldownCases": [
+    {
+      "id": "overlap-minute-capped-at-60",
+      "nowMs": 1795326000000,
+      "localBuckets": { "29922098": 40, "29922099": 30 },
+      "remoteBuckets": { "29922098": 45, "29922097": 20 },
+      "expected": { "localWindowSec": 70, "remoteWindowSec": 65, "combinedWindowSec": 110, "isBurstOverLimit": false }
+    },
+    {
+      "id": "stale-buckets-pruned-after-120m",
+      "nowMs": 1795326000000,
+      "localBuckets": { "29921979": 60, "29921980": 60, "29922050": 500 },
+      "remoteBuckets": { "29921970": 60, "29922040": 60 },
+      "expected": { "localWindowSec": 60, "remoteWindowSec": 60, "combinedWindowSec": 120, "isBurstOverLimit": false }
+    },
+    {
+      "id": "burst-limit-reached-and-cooldown",
+      "nowMs": 1795326000000,
+      "localBuckets": { "29921985": 60, "29921986": 60, "29921987": 60, "29921988": 60, "29921989": 60, "29921990": 60, "29921991": 60, "29921992": 60, "29921993": 60, "29921994": 60 },
+      "remoteBuckets": { "29922000": 60, "29922001": 60, "29922002": 60, "29922003": 60, "29922004": 60, "29922005": 60, "29922006": 60, "29922007": 60, "29922008": 60, "29922009": 60 },
+      "expected": { "localWindowSec": 600, "remoteWindowSec": 600, "combinedWindowSec": 1200, "isBurstOverLimit": true, "cooldownSeconds": 300, "cooldownMinutes": 5 }
+    }
+  ],
+  "forAiSlowdownCases": [
+    { "id": "pure-typing-5s", "isForAi": true, "elapsedSec": 5, "idleSec": 5, "sinceOtherAiSec": 300, "initialRemainder": 0, "expectedAppliedSec": 1, "expectedRemainder": 0 },
+    { "id": "frantic-switch-5s", "isForAi": true, "elapsedSec": 5, "idleSec": 5, "sinceOtherAiSec": 60, "initialRemainder": 0, "expectedAppliedSec": 5, "expectedRemainder": 0 },
+    { "id": "reading-5s", "isForAi": true, "elapsedSec": 5, "idleSec": 45, "sinceOtherAiSec": 300, "initialRemainder": 0, "expectedAppliedSec": 5, "expectedRemainder": 0 },
+    { "id": "idle-cutoff-180s", "isForAi": true, "elapsedSec": 5, "idleSec": 180, "sinceOtherAiSec": 300, "initialRemainder": 0, "expectedAppliedSec": 0, "expectedRemainder": 0 }
+  ]
+}

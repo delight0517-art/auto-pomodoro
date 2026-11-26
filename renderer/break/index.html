@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" data-i18n-title="window.title.break">
+<head>
+<meta charset="UTF-8" />
+<title>Auto Pomodoro — 쉬는 시간</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div class="shell">
+      <div class="ornament">☙ ❦ ❧</div>
+      <div id="breakTitle" class="title" data-i18n="break.title">쉬 는 시 간</div>
+      <div id="clock" class="clock">05:00</div>
+      <div id="wakeSyncBanner" class="wake-sync-banner" style="display: none;">
+        <div class="wake-sync-spinner"></div>
+        <div class="wake-sync-text">
+          <span class="wake-sync-title" data-i18n="break.wakeSync.title">기기 간 기상 동기화 확인 중…</span>
+          <span class="wake-sync-desc" data-i18n="break.wakeSync.desc">다른 기기(iPhone·Windows)의 더 이른 기상 기록을 조회하고 있습니다. 확인되는 즉시 잠금 시간이 조정됩니다.</span>
+        </div>
+      </div>
+      <div id="subtitle" class="subtitle" data-i18n="break.subtitle.default">잠시 눈을 감고 숨을 고르세요</div>
+      <div id="lockState" class="lock-state" data-i18n="break.lockState.placeholder">지금은 컴퓨터를 쓸 수 없어요</div>
+      <div id="lockDetail" class="lock-detail" data-i18n="break.lockDetail.placeholder">남은 시간과 해제 시각이 여기에 표시돼요</div>
+      <div id="hint" class="hint" data-i18n="break.hint">마우스를 움직이면 화면이 부드럽게 옅어져요.</div>
+      <div class="actions">
+        <button id="saveBtn" class="ghost-btn accent" data-i18n="break.btn.save">2분만 더 (파일 저장)</button>
+        <button id="cancelBtn" class="ghost-btn strong" data-i18n="break.btn.skip">건너뛰기</button>
+        <button id="sleepBtn" class="ghost-btn danger" data-i18n="break.btn.sleep">절전 모드</button>
+        <button id="shutdownBtn" class="ghost-btn danger" data-i18n="break.btn.shutdown">전원 끄기</button>
+        <button id="restartBtn" class="ghost-btn danger" data-i18n="break.btn.restart">재시작</button>
+      </div>
+      <div id="saveQuota" class="lock-detail" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+  <script src="../shared/i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

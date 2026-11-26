@@ -1,0 +1,10 @@
+Task: pomodoro-local-wake-input-source-20261113
+Date: 2026-11-13 KST
+
+Build/install: scripts/local_build_update.sh completed from the canonical dirty checkout. The installer requested normal macOS quit, replaced /Applications/Auto Pomodoro.app, and reopened it. Installed and dist app.asar SHA-256 match: 615722720d55623a9a456e96c4d2c63ff001759384978b7c847593d28079cf80. Current installed app is 1.0.42 and passes workflow-control verify-mac.
+
+Preserved rollback: .local_build/Auto Pomodoro.previous.app (1.0.42, immediately preceding install). Also preserved .local_build/Auto Pomodoro.rollback-prior-20261022.app (1.0.36) because the still-open pomodoro-chat-night-skip-uninstaller-20261112 delivery-proof and retention record reference it; lsof showed no open handles. Do not remove either until the referenced task closes and current install remains verified.
+
+Application state: focus timer endsAt remained 1794547790095 through quit/reinstall/reopen; wakeLockEnabled=true, wakeLockMinutes=120, timezone=Asia/Seoul. No local settings/history were deleted. The explicit uninstall command was smoke-tested but not run because it deletes local settings/history.
+
+Storage: scripts/mac_build_storage.py prune reported retained_timestamped_backups=1, removed=[], skipped=[]. `delivery-proof capacity --after` records post-operation headroom separately.

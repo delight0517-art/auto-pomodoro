@@ -1,0 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=EB+Garamond:wght@400;600&display=swap');
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: 'EB Garamond', Georgia, 'Nanum Myeongjo', serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  color: #fff2ea;
+  opacity: 0.6;
+  transition: opacity 220ms ease, filter 220ms ease, transform 220ms ease;
+}
+
+.overlay.is-active {
+  opacity: 0.3;
+  filter: saturate(0.95) brightness(1.03);
+}
+
+.overlay.is-snoozed {
+  opacity: 0.08;
+  animation: none;
+}
+
+/* Strict locks must hide the media behind the overlay, including while active. */
+.overlay.is-strict,
+.overlay.is-strict.is-active,
+.overlay.is-strict.is-snoozed {
+  opacity: 1;
+  filter: none;
+  background: #211714;
+}
+
+.overlay.is-imminent,
+.overlay.is-imminent.is-active,
+.overlay.is-imminent.is-snoozed {
+  opacity: 1;
+  filter: none;
+  background: rgba(112, 0, 0, 0.88);
+}
+
+.overlay.is-imminent .shell {
+  background: linear-gradient(180deg, rgba(255, 44, 44, 0.96), rgba(112, 0, 0, 0.96));
+  border-color: rgba(255, 235, 235, 0.72);
+}
+
+.shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 214, 191, 0.36), rgba(255, 114, 84, 0.18) 34%, rgba(153, 26, 20, 0.06) 65%),
+    linear-gradient(180deg, rgba(255, 112, 86, 0.66), rgba(166, 22, 20, 0.44));
+  border: 16px solid rgba(255, 205, 182, 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.14),
+    inset 0 0 120px rgba(255, 208, 176, 0.08),
+    0 0 0 1px rgba(120, 10, 10, 0.14);
+  backdrop-filter: blur(16px) saturate(1.05);
+  pointer-events: auto;
+}
+
+.shell::before {
+  content: '';
+  position: absolute;
+  inset: 26px;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 235, 226, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.ornament {
+  font-size: 22px;
+  letter-spacing: 0.42em;
+  color: rgba(255, 243, 236, 0.76);
+  text-shadow: 0 4px 18px rgba(0,0,0,0.18);
+}
+
+.title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(44px, 5vw, 66px);
+  letter-spacing: 0.16em;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.24);
+}
+
+.clock {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(86px, 9vw, 134px);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-shadow: 0 6px 24px rgba(0,0,0,0.24);
+}
+
+.wake-sync-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 680px;
+  padding: 10px 22px;
+  margin: 6px 0;
+  border-radius: 999px;
+  background: rgba(255, 235, 225, 0.12);
+  border: 1px solid rgba(255, 220, 205, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 0 12px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  animation: wakeSyncFadeIn 300ms ease-out;
+}
+
+@keyframes wakeSyncFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.wake-sync-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 235, 225, 0.25);
+  border-top-color: #ffd8c4;
+  border-right-color: #ffd8c4;
+  border-radius: 50%;
+  animation: wakeSpinnerSpin 900ms cubic-bezier(0.4, 0.1, 0.2, 1) infinite;
+  flex-shrink: 0;
+}
+
+@keyframes wakeSpinnerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.wake-sync-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
+}
+
+.wake-sync-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff8f4;
+  letter-spacing: 0.02em;
+}
+
+.wake-sync-desc {
+  font-size: 13px;
+  color: rgba(255, 240, 230, 0.85);
+  line-height: 1.35;
+}
+
+.subtitle {
+  font-size: 19px;
+  color: rgba(255, 247, 241, 0.9);
+  font-style: italic;
+}
+
+.lock-state {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 243, 236, 0.95);
+  text-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+
+.lock-detail {
+  max-width: 820px;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255, 240, 234, 0.14);
+  color: rgba(255, 242, 235, 0.9);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.hint {
+  max-width: 720px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 240, 234, 0.18);
+  color: rgba(255, 244, 239, 0.86);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 8px;
+  pointer-events: auto;
+}
+
+.ghost-btn {
+  -webkit-app-region: no-drag;
+  border: 1px solid rgba(255, 236, 228, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff5ef;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.ghost-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255, 236, 228, 0.42);
+}
+
+.ghost-btn.strong {
+  background: rgba(255, 196, 182, 0.18);
+}
+
+.ghost-btn.accent {
+  background: rgba(255, 231, 220, 0.2);
+}
+
+.ghost-btn.danger {
+  border-color: rgba(255, 221, 214, 0.28);
+  background: rgba(106, 19, 18, 0.2);
+}
+
+/* Mini timer for the 3-minute pre-lock warning (replaces the full-screen "SAVE YOUR WORK NOW").
+   The window is click-through during the warning (main.js setIgnoreMouseEvents), so nothing here
+   asks for input — it only shows the countdown in a corner. The real lock screen is unchanged. */
+.overlay.is-imminent,
+.overlay.is-imminent.is-active,
+.overlay.is-imminent.is-snoozed {
+  inset: auto;
+  top: 18px;
+  right: 18px;
+  width: 190px;
+  height: auto;
+  background: transparent;
+  pointer-events: none;
+}
+.overlay.is-imminent .shell {
+  height: auto;
+  padding: 10px 16px 12px;
+  gap: 2px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 235, 235, 0.55);
+  background: linear-gradient(180deg, rgba(220, 38, 38, 0.94), rgba(120, 8, 8, 0.94));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.overlay.is-imminent .ornament,
+.overlay.is-imminent .title,
+.overlay.is-imminent .lock-state,
+.overlay.is-imminent .lock-detail,
+.overlay.is-imminent .hint,
+.overlay.is-imminent .actions,
+.overlay.is-imminent .wake-sync-banner { display: none !important; }
+.overlay.is-imminent .clock {
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: 1px;
+  margin: 0;
+}
+.overlay.is-imminent .subtitle {
+  font-size: 12px;
+  line-height: 1.25;
+  margin: 0;
+  opacity: 0.92;
+}

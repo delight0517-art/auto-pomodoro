@@ -1,0 +1,16 @@
+# Scheduled app sleep warning (2026-10-25)
+
+- iOS Pomodoro scheduled app rules now request a DeviceActivity warning three minutes before the unchanged interval start. The Screen Time extension sends a silent local notification for enabled scheduled app rules; the existing interval start remains responsible for applying the selected-app shield. No app force quit, arbitrary save-only mode, wire schema, or persisted setting was added.
+- Added a focused schedule assertion in `ios/PomodoroCageTests/AppLimitRuleTests.swift`.
+- Source checks: `xcrun swiftc -parse` on the changed Swift source and test files passed; scoped `git diff --check` passed. The XCTest assertion has not been executed.
+- Build attempt: guarded Xcode build was declined. Storage guard reported 27.35 GiB free, 4 GiB estimated task peak, 20 GiB reserve, and 6 GiB reserved by other operations (30 GiB required). No build output was created.
+- Windows source readback: SSH to `192.168.1.106:22` returned `Connection refused`; no stale Windows copy was edited.
+- Not verified: Mac desktop behavior, Windows parity, iPhone notification/shield behavior, app build, install/readback, or physical-device runtime. This capability remains `pending` in `CROSS_PLATFORM_PARITY.md`.
+
+## 2026-10-25 KST desktop foreground warning follow-up
+
+- Mac source: `main/scheduledLockWarning.js` finds a scheduled whole-computer lock up to three minutes ahead. The break window is raised at screen-saver level even when the mini timer/agent overlay had hidden it; the warning is red, click-through so work remains possible, and requests a repeating app-level WebAudio alarm every five seconds. The actual scheduled lock policy remains unchanged. `npm run check`, including 100/100 wake reliability cases, scheduled-warning boundary, timer recovery, agent-lock, locale checks and source gates, passed. `git diff --check` passed. No Mac build, install, live window or audible-device test was run.
+- Windows canonical source `C:\Users\delig\Documents\Codex\2026-10-11\new-chat\work\timer1_latest\timer1.pomodoro-wake-sync`: warning threshold changed from 120 to 180 seconds; the state update path restores/minimizes and keeps the warning topmost using an inactive show so it does not steal focus. Four changed-file SHA-256 values were read back from the Windows machine. Existing process was not restarted.
+- Windows `scripts/build_install_safe.ps1` refused before analyzer/tests/build/install: SpaceKeeper reported used 75.467%, projected 75.956%, target 50%, and recovery reclaimed 0 bytes. The one-time override was not used. Windows runtime is not verified.
+- Absolute visibility/audio cannot be guaranteed above OS secure login, disabled permissions, mute, or exclusive full-screen surfaces. The desktop-to-iPhone authenticated push and phone cancel/five-minute extension actions are still absent. The iOS signed build/install remains behind the existing Apple passkey QR and Widget App Group provisioning wait. Keep this capability `pending` until those paths and actual installed runtime are proven.
+- Drive master status was appended and read back at revision `AHj4eMS945BRqoaIGWykV3uyWgNC7gF_Z-w1d1TKT8zk9QP7qIENcmAZ4PHar0Eb5wP63PedEa0JOFdfw1k_yPF9kLoDDlMdmvp6Hof2JAw`. This is status receipt only; no Windows receiver/runtime ACK exists.

@@ -1,0 +1,407 @@
+# Mac / Windows 기능 동등성 운영 기준
+
+> 2026-11-03 source-custody checkpoint: this previously untracked canonical ledger is now versioned. Existing rules and dated pending evidence below are preserved as historical records; their installed versions and device observations are not current telemetry. This checkpoint verifies only the standalone schedule engine source described at the end. Other capabilities remain pending under their existing gates.
+
+
+2026-09-16 사용자 요청: 박새로이가 향후 수정·새 기능에서도 설정, 스킵 정책, 기능, 타이머 차이를 예방하고 양쪽을 끝까지 검증한다.
+
+## 작업 대상
+- Mac 원본: /Users/rogan/appDev/schedule/pomodoro (Electron)
+- Windows 원본: C:\Users\delig\Desktop\app dev\timer1 (Flutter desktop)
+- 현재 확인된 설치: Mac 1.0.19 / Windows 0.2.5+11. Windows는 이번 턴에 앱 바이너리를 재빌드하지 않고 소스 analyze/test와 기존 실행본만 재검증했다.
+- Windows 연결: /Users/rogan/.local/bin/winpc health 후 관리된 ssh winpc. PowerShell 작업은 UTF-8 파일 + winpc run의 고유 작업 ID를 사용하고 unknown은 status로 확인한다.
+
+## 매 작업의 변경 명세
+TODO.md에 아래 항목을 추가한다. 해당하지 않으면 이유를 쓴다.
+- 사용자 요구와 양쪽에서 기대하는 동일한 동작
+- Mac/Windows 구현 파일 및 실제 UI 진입점
+- 공통 설정: 의미, 키, 타입, 단위, 기본값, 유효 범위, 삭제 의미
+- wire 계약: 버전, 구버전 호환, 변경 시각/충돌 우선순위, 재전송·중복 처리
+- 장치 전용 값: 인증정보, 로컬 경로, 화면 좌표 등 공유 제외 이유
+- 테스트와 실행 증거: 날짜, 양쪽 버전, 결과, 보류 사유
+
+## 기능 추가·수정·삭제 공통 gate
+
+모든 사용자 기능에 안정된 capability ID를 부여하고, 새 기능뿐 아니라 숨김·축소·설정 제거·이름 변경·기본값 변경에도 같은 검토를 적용한다. Mac의 UI만 지워졌어도 Windows에 설정 화면, 위젯, 단축 명령, 자동화, 이전 설정의 효과가 남아 있으면 기능 제거가 끝난 것이 아니다.
+
+각 변경의 ledger 항목은 다음을 기록한다.
+
+| 필드 | 필수 내용 |
+| --- | --- |
+| Capability ID | 플랫폼/파일명과 독립적인 고정 ID |
+| 기대 동작 | 사용자 관점의 입력, 결과, 예외 정책 |
+| Mac | UI 진입점, 상태/저장 경로, 관련 검증 |
+| Windows | UI 진입점, 상태/저장 경로, 관련 검증 |
+| 공유 계약 | 설정 키·타입·기본값·삭제 의미·동기화 방향·충돌 규칙 |
+| 수명 주기 | `active`, `pending`, `intentional-difference`, `retired` 중 하나 |
+| 삭제 증거 | 양쪽 진입점/저장/명령 제거, 마이그레이션, 구버전 수신 동작 |
+
+변경 gate:
+
+1. 시작 전에 최신 Mac/Windows 소스와 설치 버전을 읽고 같은 capability의 실제 진입점과 저장·수신 경로를 찾는다. 오래된 로컬 사본은 현재 Windows 구현 증거로 쓰지 않는다.
+2. 한 플랫폼만 작업할 수 있으면 ledger를 `pending`으로 만들고 누락 플랫폼을 명시한다. 이 상태에서는 공통 기능 완료, 기능 제거 완료, 패리티 통과, 공개 출시를 선언하지 않는다.
+3. 제거 PR은 양쪽 사용자 진입점(UI/명령/자동화), 저장 키와 캐시, 동기화 수신, 기존 사용자 데이터 마이그레이션을 점검한다. 상대 플랫폼에 남길 예외는 근거·소유자·재검토 조건을 기록한다.
+4. 관련 회귀 검사는 양쪽 앱에서 기능의 정상 사용과 제거 후 구버전/오래된 설정의 동작을 확인한다. Mac→Windows와 Windows→Mac 변경, 재시작 후 유지, 오프라인 복귀를 해당 기능에 맞춰 검증한다.
+5. 실제 Windows 소스·실행 증거가 없으면 `pending` 그대로 둔다. 업로드 ACK, 빌드 성공, 설정 JSON 왕복은 UI/행동 동등성 증거가 아니다.
+
+### 현재 추적 중인 기능
+
+| Capability ID | 기대 동작 | Mac | Windows | 상태 |
+| --- | --- | --- | --- | --- |
+| `scheduled_app_sleep_slowdown_warning` | 예약된 대상 앱 차단 3분 전에 저장 경고를 알리고 예정 시각에 기존 제한을 적용한다. 앱을 강제 종료하거나 임의 앱에 save-only 입력 모드를 만들지 않는다. | Mac: lockSchedule/activeWindows 컴퓨터 차단 3분 전 screen-saver 레벨 빨간 경고를 띄우고, 클릭 입력을 아래 작업 앱에 전달하며 5초 간격 앱 알람을 재생하도록 소스 추가. 경계 smoke와 잠금·agent-overlay·wake 회귀, 로케일 검사는 통과. 현재 Mac 기능은 전체 컴퓨터 스케줄 잠금에 한정되고 대상 앱별 정책은 없음. | Windows: 기존 Pomodoro 휴식 전 미니 경고 기준을 120초에서 180초로 늘리고 매 타이머 틱마다 창을 topmost 비활성 표시하도록 소스 수정. 빌드 안전 게이트가 Space Keeper projected 75.956%/target 50%에서 차단, 복구 삭제 0 bytes; Windows 테스트·빌드·설치·실행은 미확인. 이 경로는 Pomodoro 휴식 경고이고 대상 앱별 sleep slowdown 정책은 아님. | `pending` — iOS 대상 앱 경고와 데스크톱 대상 앱 차단을 잇는 정책/수신 경로, Windows 실행본, Mac 전체 앱 실행 검증, 휴대폰 원격 경고와 OS 잠금/권한 상황의 보장은 미검증. |
+| `account_shared_save_unlock_quota` | ‘바로 저장 허용’은 BlueCloud 계정 기준 KST 하루 3회로 Mac·Windows가 같은 사용량을 예약하고 조회한다. 휴식 스킵 횟수와 별개다. | `main.js`가 저장 허용 전에 `cloudAccount.consumeSaveUnlock(ensureDeviceId())` 호출; `lock:saveUnlockQuota` IPC로 계정 사용량을 제공하고 break renderer가 1분마다 및 허용 요청 직후 새로고침. 2026-11-01: cold-start 8초 실패를 45초 제한 및 동일 commandId 기반 transient 1회 재시도로 수정. Source/candidate retry regression 통과; Mac 1.0.40 설치와 Developer ID/JIT 서명 검증 통과, 정상 재시작 뒤 focus endsAt 보존. 첫 서명 누락 후보는 시작 직후 JIT 오류로 종료되어 백업 복원 후 올바른 entitlements로 재빌드·재설치. 현재 `npm run check`는 별도 iOS FocusTabView localization 6건에서 실패해 이번 turn 전체 check 증거는 없음. | `CloudAccountService`가 같은 status/consume API 사용; 저장 버튼이 break 화면에서 1분마다 quota 갱신, 예약 성공 후에만 키보드 해제. 이전 Flutter analyze 오류 없음(기존 warning/info만), Windows Release 후보 빌드 성공. 이번 Mac 수정의 Windows source/runtime은 새로 확인하지 않음. | `pending` — Mac 설치/타이머 보존은 확인했으나 break 화면 버튼 소비자 경로와 실 계정 quota durability, Windows 새 소스·실행본 및 양방향 사용량은 미검증; Windows 접근은 unknown. |
+| `time_of_day_pomodoro_durations` | 요일·시간대별 집중/휴식 분을 설정하고, 해당 구간에 시작한 다음 회차부터 적용한다. 기존 진행 중 회차는 유지한다. | `renderer/dashboard/renderer.js`의 `timeOverrides.slots` 및 `main/durationOverrides.js` 수신·계산 경로가 있음. 2026-10-22 Mac은 Windows 규칙의 독립 수정 시각을 전체 설정 충돌 판정과 분리하고, 소수점 밀리초를 정수 ms로 내보내도록 수정; 집중/휴식 단계의 설치본 적용은 미검증. | iOS 편집 화면은 요일별 00–24시 규칙 막대, 규칙 없는 구간을 채우는 기본 집중/휴식 분 설정, 화면 진입 시 BlueCloud 규칙 새로고침을 추가했다. iOS 시뮬레이터 `DurationOverridesTests` 13/13, localization 569키/4언어 및 앱 빌드 통과. 실서버 재조회, iPhone 설치/readback, Mac·Windows 양방향 수렴은 미검증. | `pending` |
+| `ai_chat_pomodoro_schedule` | 자연어로 1회 또는 주간 포모도로 시작 일정을 초안 작성하고, 이름·기기 현지 시간대·반복 요일·시각·집중/휴식 값을 확인받은 뒤 승인 시 저장한다. 예약 시 실행 중인 타이머를 덮어쓰지 않고, idle일 때만 일정 값으로 포커스를 시작한다. | 2026-10-27 Mac source: `main/aiAssistant.js`, `main/agentSchedules.js`, `main/main.js`, `main/preload.js`, `renderer/dashboard/renderer.js`, `renderer/dashboard/index.html`. 승인 전 저장 금지, 승인/삭제 시 기존 타이머 보존. `scheduledDurations`는 Mac 로컬 타이머에만 두고 공유 snapshot에서 제외. Source-only change; no build/runtime proof. | 사용자의 명시적 지시로 이 작업에서 Windows 소스·원격 PC를 건드리지 않음. 현 동작은 미확인. | Mac 로컬 `agentSchedules`; 주간 반복 days Sunday=0…Saturday=6, local `HH:mm`, 1회는 ISO 8601; duration minutes focus 1–180 / break 1–15 / long break 1–120. 일정 정의의 계정 동기화/API/schema 및 Windows 수신은 미구현. | `pending` — Windows 구현 및 같은 계정 양방향 일정 정의 동기화 미완료. |
+| `ios_home_pomodoro_widget` | iOS Home Screen에서 집중/휴식, 실제 차단 상태, 현재 단계 종료까지 남은 시간과 활성 기상 후 차단의 시작·종료·남은 시간을 보여주며 사용자가 위젯을 추가/제거할 수 있다. | WidgetKit extension은 App Group 타이머 스냅샷과 wake-protection 데이터에서 표시값을 읽는다. 소스 및 프로젝트 타깃을 추가했으며 빌드·실기기 표시는 미검증. | 데스크톱의 기존 미니 타이머는 iOS Home Screen 위젯과 별도 표면이다. 이번 작업에서 Windows/Mac 최신 소스 및 동작 비교는 하지 않았다. | App Group 로컬 표시 상태만 추가; 공용 wire/settings 변경 없음. | `pending` — iOS runtime, 저장 지속성, desktop parity review 미완료. |
+| `ios_timer_cold_start_and_background_alerts` | 앱을 열자마자 마지막 저장 타이머의 단계와 절대 종료시각을 표시하고, 서버 동기화가 느려도 로컬 타이머를 먼저 진행한다. 로컬 기록이 없으면 `00:00` 대신 확인 중을 표시한다. 백그라운드 중 집중 종료/휴식 종료 알림과 홈 위젯 상태를 예약한다. | 로컬 TimerCloud 캐시보다 최신인 App Group 단계 스냅샷을 첫 표시 상태로 복구한다. bootstrap 네트워크 대기 전에 만료 단계·위젯·알림 일정을 갱신하고, 집중 중에는 집중 종료와 다음 휴식 종료를 모두 예약한다. Swift parse와 저장 스냅샷 회귀 추가, `npm run check` 통과; XCTest, 서명 빌드, 설치, 알림 수신 및 위젯 실기기 표시 미검증. | 최신 Windows 타이머 앱의 재시작 표시와 백그라운드 알림 경로는 이 작업에서 조사하지 않았다. | 기존 절대 `endsAt` 및 기기 로컬 설정만 사용; wire/settings 변경 없음. | `pending` — iOS 빌드·물리 UI/알림 proof와 Windows 대응 동작 검토 필요. |
+| `class_schedule_pomodoro_block` | Class Reminder에서 각 과목별로 Pomodoro 잠금을 켜고 끈다. 청강은 기본 켬. 선택 과목의 resolved interval만 Pomodoro 차단에 쓰며, 수업 중 focus start/resume/skip/snooze를 막고 running focus를 pause한다. 종료 시 자동 재개하지 않는다. | Per-course setting/export 및 interval consumer 구현. 2026-10-21 `npm test` 통과(소스/회귀 증거); 앱 빌드·설치·iPhone UI/readback은 미검증. | Drive 상태 문서의 +95 staged Debug candidate는 선택 과목 interval 및 break skip/snooze guard를 포함. 2026-10-21 Windows 원격 정본에서 관련 3 test files를 직접 실행해 17/17 통과; installed +94 프로세스는 그대로 실행 중. Mac signed candidate 1.0.36 verify-mac/deep codesign 통과(app.asar SHA256 711f03a67a4209341de7e1280004fe8756b2cc86c16625dc109b13d56432d962), 그러나 설치본도 1.0.36이고 parser가 없어 적용 안 됨. 이후 발견한 `/tmp/apom-501` unlink로 CLI socket이 사라지는 원인을 고쳐 source endpoint를 Application Support로 이전하고 focused smoke를 통과했지만, 이 때문에 기존 후보는 stale. Rebuild/install/runtime and paired Mac/Windows test remain pending. | `pending` |
+| `class_schedule_break_lock_lead_time` | BlueCloud 연결 및 최근 14일 내 Pomodoro 사용이 확인되는 사용자에게만 일정별로 일반 쉬는시간 잠금 예외를 켜고 10/20/30분 전부터 수업 종료까지 적용한다. 수업 중 Pomodoro 차단 스위치와는 독립이며, 별도 예약 잠금·강제 기상 잠금은 그대로 우선한다. | Class Reminder `Course.pomodoroBreakLockExemptionEnabled`/`pomodoroLockLeadMinutes` 저장·편집과 `pomodoroBreakLockExemptionIntervals` export; Mac parser가 explicit intervals를 우선 사용하도록 소스 수정. 14일 만료는 iOS export eligibility와 Mac local setting TTL에 반영. Build/install/runtime 미검증. | Windows 0.2.9+104 now parses, persists and consumes `pomodoroBreakLockExemptionIntervals`, honors explicit-empty precedence, retains legacy fallback, and reevaluates interval boundaries. Focused tests 23/23 pass; active +102 was preserved and lacks the new field. Build/runtime and paired acceptance remain pending.| `pending` ||
+| `mini_timer_skins` | 미니 타이머의 스킨 프리셋, 글꼴, 14개 색 항목을 설정·저장하고 같은 결과를 표시한다. 공유 키는 `widgetSkin`/`widgetFont`/`widgetColors`; 기본값은 `system`/`editorial`/`null`. 사용자 지정 색은 6자리 hex이며 미지정은 프리셋 기본색을 쓴다. | 설정 UI와 classic/compact 렌더러에 구현, 소스·정적 검사 통과; 설치 화면 검증 미완료 | 최신 소스 접근 및 구현 미완료 | `pending` |
+| `start_without_study_prompt` | 대기 상태에서 집중 시작을 누르면 공부 내용/태그 선택창 없이 즉시 집중을 시작한다. 기존 태그 편집과 기록은 유지하며 설정/wire 변경은 없다. | 위젯 직접 시작과 설치본 동작 확인 완료; 상세는 TODO.md 2026-10-02 후속 기록 | `lib/screens/tabs/timer_tab.dart`의 두 주 시작 경로에서 `startFocus()` 직접 호출. Windows `flutter test` 83개 통과; `flutter analyze`는 수정 파일 외 기존 22건으로 실패. 실행 앱에 일시정지된 집중 세션이 있어 재시작/설치/UI 확인은 보류 | `pending` |
+| `feedback_review_sla_bluecloud_event` | 제출 뒤 감사 인사를 보여주고, 서버 접수 완료(접수 ID 포함)와 기기 보관·전송 대기 상태를 명확히 구분한다. 서버 접수 후 3일 이내 피드백을 검토하고 개선 가능 여부와 다음 단계를 안내하며 BlueCloud Premium 감사 이벤트를 예고한다. 실제 수정 완료를 3일 이내로 보장하지 않는다. | Electron 접수 화면은 ID를 표시함. 감사 인사/대기 상태 카피 동등성 확인 대기 | `timer1` 별도 코드베이스; 반영 및 UI 검증 대기 | `pending` |
+| `feedback_clipboard_attachment` | 피드백 입력란은 ⌘V/Ctrl+V 텍스트 붙여넣기를 유지하고, 클립보드 이미지는 사용자가 동의한 뒤 보낼 수 있도록 크기를 줄여 큰 미리보기로 보여준다. | `renderer/dashboard/renderer.js` handles clipboard image items/files and native Electron fallback; JPEG/preview harness passes. Updated signed install and real OS image paste remain unverified. | Separate Flutter source at `C:\Users\delig\Desktop\app dev\timer1`; Windows is user-reported offline through 2026-10-07 KST, so source and UI remain unverified. | `pending` |
+| `mac_focus_survives_inactivity` | 선택한 참여 기기의 활동 보고가 모두 최신이고 설정 시간보다 오래됐을 때만 focus 세션을 초기화한다. 누락·오래됨·미래·잘못된 상태는 unknown이며 reset을 막는다. heartbeat는 활동이 아니다. | Mac roster UI/정규화와 `activityPresence` 전송, 5분 freshness, fail-closed policy, server roster 판정 및 `lastAbsenceResetAt` 적용. iOS에 roster 설정 UI·동기화 및 동일한 fail-closed evaluator 추가; authenticated sync state의 `activityReports`를 수신하도록 연결. Windows 구형 physical-input payload를 fresh `generatedAt` + 실제 `lastHumanInputAt`으로 정규화하는 서버 호환 경로 추가. 2026-10-13 Drive 대조 후 `candidateWins`를 공통 sync helper로 이동하고 legacy Windows/iOS 슬롯을 같은 winner 규칙으로 비교하도록 수정. `node scripts/sync-contract-test.js`, `npm run check` 통과. | Windows 최신 후보는 비정본 임시 사본이며 버전 `0.2.9+61`; 26개 Windows 테스트는 2기기 정책 테스트다. Mac 오프라인 합성 3기기 permutation/explicit pause/strict-lock/active·unknown presence contract 통과. 정본 Windows source/SHA, semantic server command, provider deploy/readback, 설치본과 실제 3기기 입력 왕복은 미검증. | `pending` |
+| `shared_block_targets` | 한 계정의 차단 시간표와 차단 대상이 변경 전까지 공통 정책으로 유지되고, 각 기기는 적용 성공·불가를 보고한다. | `lockSchedule`은 Mac 정책으로 수신한다. `screenTimeSelectionEncoded`는 보존·재전송하도록 연결. Mac은 현재 해당 Screen Time 토큰을 해석하지 않으며, 시간표 활성 시 컴퓨터 잠금 정책을 실행한다. | iOS가 break/focus FamilyControls 선택을 인코딩해 BlueCloud에 올리고, 별도 변경 시각·기기 ID로 충돌을 판정해 최신 선택을 적용한다. Apple 문서상 선택 토큰은 불투명하며 같은 Family Sharing 그룹 기기 간 사용이 지원된다. | `C:\Users\delig\Desktop\app dev\timer1`의 최신 Windows 소스와 실행 증거는 현재 확인하지 못했다. Windows는 Apple 토큰을 해석할 수 없으므로 공통 target ID↔Windows app ID 매핑/실행기를 추가해야 한다. 정확한 앱별 차단 동등성, 운영 서버 저장·재수신, iPhone Family Sharing·Screen Time 실제 차단은 아직 검증하지 않았다. | `pending` |
+| `wake_lock_target_setup_guidance` | 기상 후 차단을 켰는데 이 기기의 앱·카테고리·웹사이트 선택이 비어 있으면 즉시 설정 안내를 보여주고, 저장 readback이 실패하면 실패와 재선택 동작을 알려 차단이 설정된 것처럼 보이지 않게 한다. | iOS Settings에서 켜는 즉시 선택 안내 팝업과 지속 경고/선택 바로가기를 표시한다. FamilyActivitySelection은 App Group에 저장하고 byte readback 및 디코드/대상 수를 대조하며 실패 상태를 표시한다. 소스 diff 검사만 수행; 빌드·실기기 화면·OS 저장/차단 검증은 미완료. | 데스크톱은 iOS FamilyControls picker를 사용하지 않으므로 해당 없음. 같은 wake-lock 설정 흐름에서 대상 누락/저장 실패 안내를 제공하는지 현재 소스와 실행 UI 확인 전. | `pending` |
+| `risesync_wake_signal_consumers` | RiseSync가 판정한 기상·재수면 신호를 Pomodoro와 Detox가 같은 BlueCloud 계정에서 받아 각 앱 로컬 설정에 따라 잠그고, 재수면 신호로 해제한다. 기상 판단·Health 데이터 수집은 RiseSync가 소유한다. | iOS Pomodoro의 앱 자체 수면/HealthKit 기록 경로를 제거하고 RiseSync 신호만 받도록 수정; `pomodoro-activity`는 더 이상 기상 판정으로 허용하지 않는다. iOS 시뮬레이터 13/13과 wake protection smoke 통과. iPhone 설치, BlueCloud/APNs 실수신, Screen Time 선택·차단은 미검증. | Detox는 기존 BlueCloud 재개 수신 경로로 30/120분 만료를 적용하고 같은 이벤트 재전송이 잠금을 늘리지 않게 수정. 내부 기본 SNS 대상은 기본 차단, 외부 앱 차단은 사용자가 iOS Screen Time 선택을 별도로 해야 한다. Flutter 테스트 11/11. 실기기·서버 readback 미검증. | `pending` |
+| `ios_onboarding_cloud_restore` | 앱 업데이트·재설치 뒤 완료된 온보딩을 반복하지 않고, 보관된 BlueCloud 세션으로 서버 동기화 데이터를 다시 불러온다. | Onboarding 완료 표식을 Keychain에 보존하고 BlueCloud 세션이 있으면 탭 앱에서 `bootstrap()`으로 서버 상태를 읽는다. 1.0+19 설치와 첫 실행을 확인했다. 뒤이은 process inventory에서는 앱이 보이지 않았고 원인(백그라운드 종료/크래시)은 확인 불가. Mirroring paused 상태라 UI, 실제 BlueCloud readback, 재설치 후 Keychain 지속성 검증은 대기 중. | 별도 Flutter 앱의 설치 후 온보딩/보안 저장 경로는 이번 작업에서 수정·검증하지 않았다. | `pending` |
+| `active_ai_work_lock_bypass` | Codex/Claude 등 실제 AI 작업이 감지되면 일반 예약 차단과 휴식 오버레이를 일시 억제하고 활동 종료 후 복원한다. 사용자가 확인한 기상 제한은 예외 없이 우선하며, 35Closer 단일 절전은 별도 정책이다. | `main/main.js`: 일반 AI 활동은 입력 가드/오버레이를 억제하되 확인된 기상 제한 중에는 입력 가드와 잠금 창을 유지한다. 회귀 스모크 통과. 설치본 1.0.36의 현재 API 상태에서 09:00 KST 확인 기상 → 11:00 KST 종료가 계산되지만 `guardReady=false`; 수정 소스 재빌드·실제 입력 차단 검증은 남음. | 별도 Flutter 정본과 실행본은 현재 접근 불가; 동일 우선순위 정책과 실기기 검증 대기. | `pending` |
+| `codex_work_activity_auto_start` | 신선한 Codex 작업 활동은 사용자 입력으로 동기화하지 않으면서, idle Pomodoro를 자동 시작하고 휴식 뒤 명시 시작 장벽만 해제한다. 수업 차단과 이미 실행 중인 타이머는 우선한다. | `main/codexTimerActivity.js` freshness/start-reason 판단과 `main/main.js` presence consumer; 2026-10-23 focused smoke passes. Signed build and installed runtime verification pending. | Codex-local activity signal is not shared. Windows/iOS auto-start parity has not been inspected in this task; no shared settings or wire contract changed. | `pending` |
+| `unified_user_sleep_state` | 여러 기기의 사건 기록으로 수면/기상 상태와 지난 24시간 확인·추정 수면량을 구분한다. 확인된 첫 기상부터 30/120분 제한을 계산하고, 확인된 재수면 중 남은 시간을 멈췄다가 재기상 때 재개한다. 수업 예외는 잠금만 끄며 종료 시각은 옮기지 않는다. 중복/늦은 사건은 현재 기상 주기를 덮어쓰지 않는다. | `main/userSleepState.js`, `main/userSleepJournal.js`, `main/wakeProtection.js`: 사건 reducer, 계정별 저널/정정, Mac 대시보드 요약이 있음. 09:00 사용자 확인 사건을 설치 앱에 적용해 11:00 deadline/`shouldLock=true`를 읽었으나 물리 입력 가드는 AI 작업 억제로 시작되지 않았음. 수정 소스의 관련 스모크는 통과, 재설치 후 입력 차단은 미확인. | 최신 Flutter 정본/설치본 접근 상태가 만료되어 확인하지 않음. 동일 사건 계약·잠금 동작 및 실기기 입력 근거 대기. | `pending` |
+| `companion_app_launch` | 35Closer Timer가 설치된 경우 포모도로 대시보드에서 바로 열 수 있고, 없으면 버튼을 표시하지 않는다. 기기 로컬 앱 실행이며 설정·동기화 wire 변경은 없다. | `main/classSchedule.js`가 `/Applications` 및 `~/Applications`의 35Closer Timer 앱 번들을 확인하고 bundle ID를 검사한다. 대시보드 버튼과 전용 IPC를 구현해 1.0.36 signed local build로 설치; 앱 API가 응답하고 설치 `app.asar`가 빌드 산출물과 일치한다. 재시작 뒤 00:00–07:00 예약 잠금 화면이 다시 표시되고 실행 중 포커스 `endsAt`도 유지됨. 예약 잠금이 활성화되어 대시보드 버튼 가시성/클릭은 아직 UI 확인하지 못함. | Windows 설치 경로·정본 UI는 확인하지 않았고 구현도 하지 않았다. | `pending` |
+| `wake_protection_focus_state_visibility` | 기상 제한 화면과 포모도로 단계를 별도로 표시한다. 기상 제한 중 focus가 실행 중이면 남은 시간/종료 시각을 보여 주고, 키보드·마우스 가드가 준비되지 않았으면 실제 차단 불가 원인을 표시한다. | `renderer/break/renderer.js`와 `main/main.js`에 표시용 상태를 추가. `wake-countdown-smoke.js`, `lock-safety-smoke.js`, i18n 검증 통과. 빌드 gate에서 중단되어 설치/실행 검증 전. | 현재 접근 가능한 최신 정본 및 실행 화면 확인 안 됨. | `pending` |
+
+이 표는 알려진 미완료 기능의 목록이지 전체 기능 카탈로그가 아니다. 새 기능·삭제 검토 때마다 항목을 추가하거나 기존 ID를 갱신하며, `TODO.md`에는 해당 변경과 양쪽 증거를 기록한다.
+
+## 구현 원칙
+1. 양쪽 설정 전체를 무조건 덮어쓰지 않는다. 누락 필드와 명시적 삭제를 구분하고 기록을 빈 배열로 지우지 않는다.
+2. 타이머는 동일한 논리적 시작/종료 시각과 보정된 시계 기준을 사용한다. 전송 시각을 사용자 변경 시각으로 사용하지 않는다.
+3. strict lock/스킵/일시정지 정책은 실제 명령 처리에서도 강제한다. 버튼 숨김만으로 구현을 끝내지 않는다.
+4. 새 공유 기능은 양쪽 구현, 마이그레이션, 회귀 테스트가 준비돼야 공통 출시 대상으로 표시한다.
+5. 네이티브 차이는 adapter로 처리한다. 플랫폼 제약으로 동일 기능을 제공하지 못하면 차이를 기록하고 해결 전 동등성 완료로 표시하지 않는다.
+
+## 출시 전 확인
+- 소스: 양쪽 기존 변경 보존, 정적 검사·관련 테스트 성공. Mac npm test, Windows flutter analyze 및 관련 flutter test를 각 원본에서 실행.
+- 계약: 중첩/평면 snapshot, 누락/구버전 필드, 오래된 변경 거부, 동시 수정, 빈 기록 보존, 재전송 테스트.
+- 실사용: Mac→Windows와 Windows→Mac 설정 변경/재시작 후 유지. strict 상태 스킵 거부와 허용 상태의 동작 확인.
+- 시간: 시작·일시정지·재개·다음 세션·재시작에서 endsAt 일치, 실제 표시 차이 1초 이내를 목표로 측정한다. heartbeat 일치만으로 화면 일치라 하지 않는다.
+- 복구: 한쪽 오프라인 변경 후 재접속, sleep/wake, 서버 일시 장애에서 수렴하고 세션/기록이 중복되거나 사라지지 않는지 확인.
+- 제품: 추가/변경한 기능의 UI·동작·저장·전송·수신을 양쪽에서 확인. 기록/통계도 동일 입력에서 동일 결과인지 확인.
+- 배포: 자체 리빌더 → 설치된 버전 → 실제 실행 → 실사용을 따로 기록. 서명/공증/공개 배포 역시 별도 상태로 기록.
+
+## 상시 회귀 시나리오
+- `test-plans/CROSS-DEVICE-BIBLE-001.md`의 **iPhone Selah → 컴퓨터에서 묵상하기** 흐름은 Mac과 Windows 공통 필수 회귀 테스트다. 집중 읽기 중 Pomodoro 휴식 억제, 이탈 뒤 7분 복귀 유예, 재진입과 iPhone 재요청 복구를 포함한다.
+- Pomodoro 잠금/원격 명령, Selah `meditationSession`/`openOnComputer` 연동, 데스크톱 브라우저 라우팅 변경 때마다 양쪽 OS에서 실행하고, 정기 동등성 점검에도 포함한다.
+- 테스트는 실제 사용자 컴퓨터에 2시간 차단을 설정하지 않는다. 격리된 테스트 계정/기기와 해제 가능한 테스트용 차단 상태를 사용하고, 각 플랫폼의 버전·결과·미검증 단계를 기록한다.
+- Mac 또는 Windows 한쪽만 통과해도 시나리오 통과로 표시하지 않는다. 구현되지 않은 단계와 연결 장애는 실패/보류로 남기고 완료로 간주하지 않는다.
+
+검증 실패나 Windows 연결 불가는 증거가 없는 상태다. 로컬 수정은 계속하되 전체 완료로 표시하지 않는다. 이 문서는 자동 CI 강제 장치가 아니며, 향후 양쪽 실행 가능한 CI를 연결할 때도 실제 기기 검증을 대체하지 않는다.
+
+## 현재 남은 차이 (아직 미완료)
+- 2026-10-08: 90초 자동 일시정지도 세 기기 explicit roster의 유효 활동 보고를 요구하도록 Mac 서명 설치본에 반영. 로컬 유휴 343초 집중 실행 확인. Windows 원본과 Release EXE가 현재 경로에 없고 iPhone 실기기 보고 미확인이라 3기기 동기화 완료는 보류.
+- 2026-10-08 23:29 KST: 누락된 참여기기 보고 때문에 기존 `auto-away` 정지가 유지되는 경로도 수정해 Mac 공증 설치본에서 코드와 실행 중인 집중 상태를 확인했다. Windows/iPhone 송신 및 실제 세 기기 왕복 검증은 보류.
+- 전체 공통 설정의 양방향 UI 조작 및 실제 표시 시간 측정
+- 네트워크 단절·재접속 및 sleep/wake 시험
+- 게임 보상/차단 앱 연동, 앱 사용 추적의 양쪽 adapter·실제 블로커 동작 검증
+- 태그 목표·음악 소스별 실제 파일/외부 재생과 양방향 왕복 검증
+- 기록/통계 공유, 긴 휴식·일시정지·예외 스케줄 정책 대조
+- Windows 저장소에도 이 규칙 반영 (연결 복구 후 기존 AGENTS.md를 보존하며 병합)
+
+
+## 2026-10-04 compact_timer_idle_collapse — pending
+- 원 클릭으로 펼친 뒤 3초 동안 조작하지 않으면 DOM과 native 창을 원 크기로 접는다. 드래그/누른 동안 접힘 보류; 상태 방송은 활동으로 보지 않는다. 숨은 drawer inert 처리.
+- 공용 Electron renderer 구현 (Mac/Windows 공통). 별도 저장/동기화 키 없음. Windows 설치 실행 검증 미완료.
+
+### 2026-10-04 wake_event_legacy_compat — pending
+
+Authenticated older RiseSync `risesync-nap-awake` events with both evidence fields absent are accepted by Mac. Partial or weak evidence remains rejected; Pomodoro activity still requires 300 seconds and two samples. Existing duplicate, future, class and expiry rules remain. Mac 8-case regression passed; signed installation pending. Windows current source/runtime unavailable; compatibility and receipt remain pending. Live incident event contained only id/source/wakeAt; rate-limit 429 observed separately.
+
+2026-10-04 09:32 KST 검증: Mac 1.0.33 Developer ID 서명 및 Apple 공증 Accepted, 설치 완료. 설치 app.asar legacy patch 확인. 오늘 운영 이벤트 E98FE88E 수신 및 morning break window applied 로그, CUA 실제 강제 휴식 화면 09:05 기상/120분 설정/10:29 시간표 경계 해제/57분 countdown 확인. 물리 키보드 차단 직접 입력 검증 및 Windows는 미확인. 서버 429는 별도 잔여 위험.
+
+### 2026-10-05 ios_ipad_adaptation — pending
+
+- 기대 동작: Auto Pomodoro iOS 앱과 Screen Time extension을 iPad에 설치할 수 있고, 타이머 주요 화면은 넓은 화면에서도 읽기 쉽고 조작 폭이 제한된다.
+- iOS 구현: `ios/project.yml`에서 앱과 extension의 `TARGETED_DEVICE_FAMILY`를 `1,2`로 설정하고 전체 화면 전용을 해제. `FocusTabView` 본문 최대 너비 640pt.
+- Mac/Windows 데스크톱: 해당 없는 기기 전용 표시 변경이며 공통 타이머/동기화 계약 변경 없음.
+- 증거: Xcode 생성 프로젝트 앱/extension family `1,2` 확인, diff 검사 통과. iPad 시뮬레이터 빌드/실행과 화면 검증은 Mac 잠금 및 60GB 여유 공간 하한에 근접해 보류. 상태는 `pending`.
+
+| `wake_lock_anchor_and_countdown` | 첫 관측 기상 시각을 유지하고 30/120분 절대 종료, IPC 지연 중에도 UI 카운트다운; 사용자 정정 우선 | Mac/RiseSync 소스 및 회귀 통과; 서명 설치 검증 진행 | 최신 Flutter/실행 접근 unknown; 정정 수신 및 UI 미확인 | `pending` |
+
+### 2026-10-07 update — `mac_focus_survives_inactivity` (pending)
+- 기대 동작: 참여 기기 전체의 최신 신뢰 활동이 `breakMin`보다 오래된 경우에만 reset한다. 오래된 Mac `away-long` 단독 상태, heartbeat, 유실 신호로 reset하지 않는다.
+- Mac/server: 기존 per-device 활동 합산에 roster-aware fail-closed 결정과 monotonic report merge를 추가했다. Brainwire v2 pull의 `state.activityReports`를 타이머 snapshot에 연결해 Mac의 per-device 저장소로 전달한다. Brainwire은 snapshot의 `activityPresence`를 계약 네 필드로 정규화하고 클라이언트가 보낸 `activityReports` 맵은 버린다. 반환 맵은 검증된 기기 보고로 서버가 생성한다. Mac 설정은 `settings.absenceParticipantDeviceIds`; Mac heartbeat는 `activityPresence={version:1,source,observedAt,lastActivityAt}`를 사용하며 UI contract와 정책은 [ABSENCE_PRESENCE_CONTRACT.md](ABSENCE_PRESENCE_CONTRACT.md)에 기록했다.
+- iPhone/server: iOS Settings에서 opaque 기기 ID roster를 선택하고 Mac과 같은 `settingsUpdatedAt` 후 `settingsUpdatedBy` 순서로 동기화한다. 선택 목록에는 현재 iPhone ID도 보고가 오기 전부터 포함되어 다시 참여시킬 수 있으며, 보고가 없으면 `unknown`으로 reset을 막는다. 타이머 snapshot이 다른 기기 소유일 때 iPhone 활동 보고는 요청의 top-level `activityPresence`로 따로 보내고 Brainwire은 게시 기기 ID에 연결한다. Background 복귀 시 shared timer를 먼저 merge하고 reset 직전 Brainwire `/api/pomodoro-sync/state`에서 shared `activityReports`를 새로 받아 검증된 per-device 보고를 평가한다. 별도 Timer Cloud 타이머 payload에 보고 맵이 없더라도 Brainwire pull이 실패하면 reset하지 않는다. 로컬 App Group의 Screen Time 값은 서버 보고보다 새 시각일 때만 병합해 high-water timestamp를 되돌리지 않는다. 네트워크 오류·누락·오래된 보고는 reset을 막는다. Screen Time extension은 threshold event만 보고하고 사용하지 않았다는 주기적 신호는 주지 않는다. 현재 두 timestamp가 같은 이벤트 시각이므로 5분 휴식은 freshness 경계에서만 통과하며 더 긴 휴식은 stale로 막힌다.
+- Windows: 별도 작업 체크아웃에 미커밋 변경과 실행 중 프로세스가 있어 아직 파일을 읽거나 수정하지 않았다. parity와 최신 owner 상태 대조가 남았다.
+- 공유 설정/계약: explicit roster의 누락/빈 목록은 reset 불가. 모든 선택 기기는 5분 안의 `observedAt`, 유효한 `lastActivityAt` 보고가 있어야 한다. stale/offline/unknown은 reset을 막는다. 서버 새 필드에는 기기명, 앱명, Screen Time token을 넣지 않는다.
+- 증거/보류: `node scripts/absence-policy-smoke.js`, 변경 JS `--check`, 로케일 JSON parse, Swift frontend parse, Brainwire `pomodoro_sync_store.test.js`, iOS 정책 함수 10개 standalone Swift case, scoped `git diff --check` 통과. iOS 회귀 테스트에는 Brainwire unified-state 보고 맵 추출 케이스를 추가했으나 XCTest는 simulator 자원 소유 충돌과 14GB 여유 공간으로 보류. 설치본, Windows sender/runtime, server deploy/readback, Mac↔iPhone↔Windows 실제 조합은 미검증. 전체 상태는 `pending`.
+
+## 2026-10-05 pomodoro_sync_shared_ip_429 — pending
+
+- 기대 동작: Mac과 Windows가 같은 BlueCloud 계정의 timer snapshot을 서로 갱신한다. 다른 Brainwire 앱 트래픽이 같은 공인 IP에서 발생해도 Pomodoro sync가 전역 per-IP quota를 소진해 끊기지 않는다.
+- Mac: `main/main.js` 안전망 pull 주기를 `SYNC_POLL_MS`(45초)로 낮추고 `/changes` fast path는 유지한다. Selah safety poll은 별도 5초 간격으로 유지한다. 소스 수정 및 JS 구문 검사는 통과; 새 signed install 및 실제 화면 왕복은 대기.
+- Windows: source `0.2.8+39`, 실행본 `0.2.8+37`; 실행본 Flutter `app.so`에 V2/legacy endpoint 흔적은 있음. 계정/실제 상태 적용은 재검증 대기.
+- 공유 서버: Brainwire global 100/min per-IP에서 `/api/pomodoro-sync` 제외; 해당 router에서 per-IP 300/min과 authenticated cloud-account 120/min 적용. 로컬 소스 수정/구문 확인만 완료, 운영 배포와 provider readback 대기.
+- 상태: `pending`. 관측 근거는 Mac 로그의 774 pull 429 및 670 push 429(2026-10-05 11:03–14:49 KST). 미실행: 자동 테스트, 서버 배포, 서명 설치, Mac→Windows 및 Windows→Mac의 실제 수렴/재시작/오프라인 복귀.
+
+## 2026-10-05 사용자 제보 — 디버깅 중 Pomodoro 자리비움 정지
+- 사용자 정정: 사용자가 Mac에서 입력하지 않는 것은 사실이지만 Windows에서 같은 사용자가 작업 중인 상황은 Mac 자리비움으로 취급하면 안 된다. ChatGPT/AI 주입 이벤트와 앱 heartbeat도 사람 입력으로 간주하면 안 된다. 이 항목의 이전 `pauseWhenAway=false` 기본값 설명은 본 정정으로 대체한다.
+- 공유 동작: Mac 자리 판정은 로컬 유휴시간과 연결된 기기의 최근 실제 입력 중 더 최근 활동을 사용한다. Windows만 `HumanInputPresenceService`가 주입 이벤트를 제외해 하드웨어 키보드/마우스 시각을 제공한다. 일반 heartbeat는 이 시각을 갱신하지 않는다.
+- wire 계약: 기존 schema v1의 선택적 `computerPresence.source='physical-input'`, `lastHumanInputAt`를 사용한다. Mac은 자체 기기 echo와 30초 초과 미래시각을 거절한다. 서버는 timestamp가 이전 값보다 새롭고 현재 기준 30초 초과 미래가 아닐 때만 `devices[deviceId].humanInputAt` 및 `humanInputSource`를 갱신하며, 이후 heartbeat/ping도 이를 덮지 않는다. 구버전은 필드가 없어 기존 로컬 판정을 유지한다.
+- 검증: Mac `npm test` 전체 통과; Windows 전체 `flutter test --no-pub` 85개 및 신규 `human_input_presence_snapshot_test.dart` 2개 통과; Windows `git diff --check` 통과. 현재 Mac 설치 앱은 1.0.33에서 focus 실행 중(약 34분 남음), Windows PID 49672는 변경 전 실행본으로 계속 실행 중이다. 디스크 여유는 13GB로 60GB 기준 미달이고 별도 App Store 출시 스레드가 같은 저장소를 편집 중이므로 서명 빌드/설치와 실행본 교체는 대기한다.
+- 원인 증거: Mac 로그의 `pause-auto-away`와 Windows `remoteMirrored=true` 상태가 함께 관측됐다. Mac 설정은 `autoMode.enabled=true`, `awayIdleSec=90`이었다. 타이머 상태 변경 자체는 컴퓨터 입력이 90초간 없었던 뒤 Mac에서 발생했다.
+- 초기 Mac 전용 정책 실험은 기본값을 false로 설정했으나 사용자 의도와 달라 폐기했다. 실제 기본값은 이전과 같은 자리비움 정책 유지(true)이며, 다른 연결 기기의 실제 입력을 포함해 모든 기기가 비활성일 때 일시정지/초기화를 적용한다.
+- 2026-10-05 11:12Z 추가 확인: Mac MCP는 설치본 1.0.33, focus `running=false`, `pausedReason=auto-away`, 약 194,886ms 남음, `autoMode.enabled=true`, `awayIdleSec=90`을 반환했다. Windows Release PID 42840의 `pomodoroctl status`는 `focusRunning`, `paused=true`, `idlePaused=false`, 약 193초 남음, 동일 session ID `58a600ec-bf5f-4cfd-b75e-cdaa0b4f130a`, `remoteMirrored=true`를 반환했다. Windows `diagnose`는 11:12:13Z에 `timerParity=true`, 서버 revision 13930 / Windows pulled 13923 및 동기화 단계를 정상으로 보고했지만, 구현은 mode/running/startsAt/endsAt만 비교하며 물리 입력 시각이나 Windows `isPaused`를 판정하지 않는다. 그러므로 이 결과는 실입력 기반 정책 성공을 증명하지 않는다. 최신 `node scripts/absence-policy-smoke.js`는 `absence policy ok`; 물리 입력 왕복과 Mac 수정본 런타임은 아직 미검증이다.
+### 2026-10-08 — `mac_focus_survives_inactivity` 추가 진단 (`pending`)
+
+Mac의 90초 자동 일시정지가 참여 기기 활동 합산을 거치지 않는 경로를 발견해 Mac 소스에서 동일한 참여 기기 보고 판정을 적용했다. 참여 기기 목록 또는 신선한 보고가 없으면 공유 타이머를 일시정지하지 않는다. 현재 설치본과 Windows/iPhone 송신·수신, 실제 세 기기 UI 수렴은 미검증이므로 `pending`을 유지한다.
+
+
+## 2026-10-10 — `daily_save_quota_rollover` (pending parity)
+Local calendar midnight resets `lockMode.dailySaveUnlocks` before displaying state and persists it once. Same-day usage and the per-break/active four-minute allowance remain unchanged. No new settings/wire fields; stale records received from sync are normalized at the existing boundary. Mac production-function rollover/restart tests pass; notarized 1.0.33 install on 2026-10-10 shows persisted/live count=0 for 2026-10-10 with limit=3; installed asar matches source and focus endsAt is preserved. Full suite is blocked by existing RiseSync standalone fixture compile errors. Windows latest source and installed runtime are unverified because current access is unknown; no remote work attempted.
+
+## 2026-10-10 — earlier_companion_wake_merge (pending current-day correction / Windows parity)
+
+- User: phone apps indicated wake 30–40 minutes before Mac activity; do not restart the morning window when Mac opens.
+- Cause found in source: Mac/iOS rejected earlier delivered timestamps; RiseSync suppressed any same-day remote wake instead of comparing observation times. Today's shared event is 08:47:01 KST (Mac); phone wake-sync preferences have an 08:54 candidate and iOS receiver previously retained yesterday's event. Today's RiseSync sleep record has no actualWakeTime. Exact earlier time cannot be reconstructed from inspected records.
+- Changes: accept earlier authenticated same-day wake, retain earliest anchor for later duplicates, protect explicit corrections, persist latest confirmed sleep to reject older cycles. RiseSync republishes an earlier phone event and reconciles a previously superseded local event on repeat wake evidence. Wire fields/settings unchanged; sleep markers and correction timestamps are local receiver metadata.
+- Mac 1.0.33 signed/notarized/installed 2026-10-10 09:14 KST; notary 6411936e-b4bf-428a-8ff4-d3f19678a94a Accepted. codesign/spctl pass; installed main/main.js exactly matches source. Existing focus timer retained (Selah pause, 800670 ms after install).
+- RiseSync 0.2.4 (112): signed build, data-preserving devicectl install and launch succeeded. iOS Pomodoro: unsigned and signed generic iOS builds passed after Xcode refreshed existing development profiles for Push Notifications; installed and launched. Receiver readback now contains today's Mac event and lastEventSource=pomodoro-activity. Physical screen / next natural wake journey not verified.
+- No new tests added or run for this request; canonical Mac packaging ran its required preflight checks. Gemini optional read-only review job b1d365db-9d46-4064-8425-ae8d99caee6c remains queued; no review result claimed.
+- Remaining: obtain user's exact current-day wake HH:MM, apply existing wake.confirm through local agent socket, read back Mac/cloud/iOS timestamps without altering focus timer. Windows access unknown; no remote probe/install, common behavior pending.
+
+### SELAH-ALL-SURFACES-FOREGROUND-REST revision 1 — pending
+Mac receiver consumes independently merged readingPresence entries and keeps the timer held while any entry has a running heartbeat newer than 45 seconds. Native Mac and iOS lifecycle, Safari/Firefox focused visible pages are senders. All entries ended/expired restores the timer and break lock. Mac source integrated, installed runtime pending; Windows receiver and runtime pending. Legacy clients without readingPresence retain the existing computerReadingSession contract.
+- Mac runtime revision: active Selah blocks all showBreakWindow callers, including forced wake paths. Browser sender samples real focus at each heartbeat to recover missed focus events. Windows equivalent remains pending.
+
+## 2026-10-10 WAKE-EVENT-HISTORY revision 1
+- User scope: retain original wake observations, confirmed wake and resleep timestamps; late delivery remains visible as evidence even if wake-lock policy rejects it.
+- Wire: additive pomodoroWake.wakeHistory array, deduplicated source@eventAt historyID; recordedAt/receivedAt distinct from wakeAt/sleepAt. No retrospective guessed wake time.
+- RiseSync local account-scoped history and offline merge sender implemented. iOS BluecloudClient and Mac main/main.js archive received history before policy filtering; existing locks/settings/timer policy preserved.
+- Mac/iOS signed builds and data-preserving installs pending evidence below. Windows receiver parity pending: access unknown; no remote probe performed.
+- Final evidence 2026-10-10: iOS signed build/install/launch passed and received history persisted on phone. Mac 1.0.33 notarization Accepted 80cf77c8-5466-410c-8b05-6a923c58d426; installed 00:56:24 UTC via existing installer, codesign/spctl passed, installed main/main.js exactly matches source, account-scoped received history read back (two source records). Timer currently focus/running. New natural wake and offline replay runtime unverified; Windows remains pending.
+
+### 2026-10-10 `bounded_background_activity_reads` — Mac installed; Windows pending
+- Request: reduce current Auto Pomodoro energy use without losing the live timer or wake protection.
+- Cause: `conf` reloaded/parsed the complete history file on each `get`; the 15-second agent monitor recursively scanned all of `~/.codex` (including plugins) and Codex browser application data, with no in-flight guard.
+- Fix: `main/storeReadCache.js` caches returned values only while inode/size/nanosecond timestamps match and clones results. Local writes, atomic external replacements, missing defaults and corrupt-file errors remain observable. Agent scans now use activity-log directories and `.log`/`.jsonl` files; concurrent calls share one scan. No timer/lock policy or cloud poll interval changed.
+- Checks: `store-read-cache-smoke.js`, `claude-activity-scan-smoke.js`, and `npm run check` pass. Settings read benchmark: 311 to 54 ms per 1,000 reads. Activity scan CPU: 1,858 to 89 ms in standalone matched code-path runs. Existing broader harness failures: wake-countdown missing retainWakeHistory, timer-recovery missing lastSuspendedAt; these are unmodified harness/context failures and are not reported as passes.
+- Mac 1.0.33 installed through `scripts/local_build_update.sh`; Developer ID signing, Apple notarization Accepted (24598888-5ae6-4e83-9ee6-42b2857da522), stapling and Gatekeeper checks passed. Installed store/cache/monitor bytes match source. CUA displayed loaded settings UI; focus remains running with exact endsAt 1791619550867; wakeLockMinutes remains 120.
+- Runtime evidence: main-process CPU averaged 25.59% before and 15.34% after over separate 20-second active-focus windows. This measures short-window CPU, not watts or battery life. Windows current access/source/runtime remain unverified; full platform parity stays pending.
+- Settled runtime confirmation: second 20-second active-focus sample used 0.93 CPU seconds (4.65% average), same installed PID 35770. Initial post-install window was 15.34%; short-window CPU varies with startup/sync work.
+
+### 2026-10-10 coherent_store_snapshot_and_single_tick — Mac installed; Windows pending
+
+- User scope: further optimize Auto Pomodoro and verify the installed app.
+- One validated Conf snapshot now serves all keys until file inode/size/mtime/ctime changes; native dotted-key semantics and isolated returned objects remain intact. Reuses Conf `_get` with a snapshot receiver; focused regression must accompany dependency upgrades.
+- Removed the extra five-second tick loop; the existing one-second timer/lock enforcement remains. `publicState` reuses one settings read.
+- Synthetic 100 writes followed by 20 distinct reads: previous per-key cache 3,307.87ms / 2,100 total parses; new snapshot 469.86ms / 200 parses (includes writes), about 86% lower elapsed time. This is a storage-path benchmark, not whole-app energy.
+- PASS: store cache (cross-key single parse, isolation, local/external replacement, defaults, deletion, corruption), bounded activity scan, npm check, lock safety, Selah reading, wake countdown (two-hour absolute deadline versus paused fifteen-minute break), timer recovery, single one-second tick. Updated obsolete wake/timer test fixtures to include production dependencies.
+- `morning-wake-smoke` did not complete: its RiseSync Swift fixtures lack current `wakeSyncBlockMinutes` / `RiseLog.trace` members. No full-suite green claim; separate RiseSync/iOS runtime remains unverified.
+- Developer ID signed, Apple notarization Accepted 317efa25-cdfd-4ca1-a9a3-188e3e66a969, stapler/Gatekeeper accepted; installed 2026-10-10T07:52:09Z. Installed app.asar main/main.js and main/storeReadCache.js exactly match source.
+- Focus timer running/mode/endsAt 1791619675939 preserved across install; installed wakeLockMinutes=120.
+- Main-process live CPU before: 5.75% / 20s. After restart: 6.90% and 9.40% / 20s; settled: 5.40% / 30s. These short windows show no substantial additional whole-app CPU reduction; battery power/watts and Windows runtime were not measured.
+
+2026-10-10 `feedback_clipboard_attachment`: installed Mac1.0.33 native paste attempt produced no text; canonical main now restores macOS Edit menu at startup/after strict break and keeps strict menu empty. Focused menu/feedback/lock regression checks pass. No signed package/install of this change below 60GB reserve, no Windows access/probe, and no actual image paste proof. Capability remains pending.
+
+### 2026-10-11 agent_compatible_break_overlay — Mac installed; Windows pending
+
+- 2026-10-18 follow-up: Mac source now polls the existing Codex/Claude activity monitor only while a strict break lock and native input guard are active. Fresh activity hides the red overlay; the overlay returns when activity ends, becomes stale, or the guard is unavailable. The physical-input lock remains active. `scripts/agent-break-policy-smoke.js` passed; Mac package/install and Windows parity remain pending.
+
+- During detected AI execution, hide only the red overlay while the native physical-input guard remains active. Physical desktop clicks and keyboard remain blocked; menu-bar pointer access and visible Pomodoro buttons are preserved. Restore red overlay when activity/lease expires or native guard becomes unavailable.
+- Recognizes StarNet, Codex, Claude, Antigravity, Aside, Cursor and ChatGPT executable roots plus live children. Other local same-user executors can call `node bin/pomodoroctl.js agent prepare --pid <stable executor PID>` before computer use (90-second visual lease; renew before expiry). A new child is checked by live ancestry and process birth, avoiding PID reuse. This is a local app capability, not automatic configuration of unrelated agents.
+- PASS: npm check, lock-safety, bounded activity scan, wake countdown, new agent-break-policy smoke (native callback: desktop/key block, menu/button access, trusted synthetic HID events, fresh child, reused PID rejection; no OS input posted). Timer-recovery fixture currently fails on missing resumeSelahPausedBreakIfNeeded; no full-suite claim.
+- Developer ID signed and Apple notarized Accepted b1a3388e-a330-4eca-b022-768cf486da8a; installed 2026-10-11T11:54:46Z. Deep/strict codesign and Gatekeeper pass; installed main/monitor bytes match source; installed settings UI visible. Running focus endsAt=1791721707356 and wakeLockMinutes=120 preserved.
+- Current focus was not interrupted to create a real break. Live physical human input during hidden red overlay and Windows native/runtime parity remain pending. Existing OS login/security locks are unaffected.
+
+### 2026-10-11 shared_cycle_settings_v3 — iOS source/build/test fixed; device install and Windows gaps pending
+
+- User screenshot contract: base focus 60 min, short break 10 min, long break 15 min, long break every 4 sessions, strict break lock, commitment level 2 (last 1/7 focus stop restriction).
+- Live BlueCloud GET /api/pomodoro-sync/state HTTP200 revision23738 confirmed all six Mac settings. Windows same-account runtime revision23744 had no sync error; read-only SQLite confirmed focus_duration_sec3600, break_duration_sec600, break_strict_lock_enabled1 and shared_settings_updated_at1791618860191. The basic Windows settings are applied.
+- Windows active PID42812 uses 0.2.9+61-93a20a1c5dd1 while safe-install-state points to newer 0.2.9+61-d5af0e414275. Current staged source is C:\Users\delig\Documents\Codex\2026-10-11\new-chat\work\timer1_latest\timer1.pomodoro-wake-sync (old Desktop timer1 has no lib/pubspec). mac_sync_service.dart1864-1868 explicitly hardcodes longBreakMin15/session4 without implementing cycle; no pomodoroCommitmentLevel mapping found. Preserve active Windows owner/build/timer; integration-backlog61c3c32d7dfb tracks pending implementation.
+- iOS BluecloudClient now prefers baseFocusMin/baseBreakMin over time-slot effective values and reads/writes longBreakMin/sessionsUntilLongBreak/pomodoroCommitmentLevel. Model persists/applies settings without overwriting running timer endsAt, implements fourth-focus long break, final-seventh stop guard and matching disabled stop UI. Foreground/background phase state retains completedFocusCount, and timer sync carries count across devices. Settings UI exposes long duration/cycle and synced restriction level in four locales.
+- Final focused iOS simulator run: 23 tests, 0 failures, /tmp/pomodoro-sync-test/Logs/Test/Test-PomodoroCage-2026.10.11_21-12-02-+0900.xcresult. Final generic-iOS signed Debug build PASS, /tmp/pomodoro-settings-sync-build/Build/Products/Debug-iphoneos/PomodoroCage.app; deep/strict signature verification PASS. Not installed yet.
+- Device readback: physical iPhone com.rogan.pomodorocage 1.0 build10 currently installed. Fresh mirrored screen is Harugirok being used by active MOA QA chat01a12a96-8445-7700-b4bd-6deee2fd71a1; no competing phone interaction/installation performed. Actual iPhone received-settings UI and Screen Time shielding remain unverified. No overall parity-complete claim.
+### 2026-10-14 — brief awakening must not consume wake lock
+
+- Mac source now requires 10 minutes of continued human input before generating a `pomodoro-activity` wake; iOS applies the same source-specific 600-second gate. RiseSync-confirmed wake remains at 300 seconds; manual confirmation remains immediate.
+- Mac live readback after applying the reported 08:22:53 KST wake: `blockedNow=true`, source `wake-morning-break`, deadline 10:22:53; active focus timer `endsAt` preserved.
+- Focus is not an exemption. Only class/important schedule beginning within 30 minutes is excluded by the current Mac receiver.
+- Windows source/runtime parity and physical iPhone installation/Screen Time application remain pending; do not claim all-platform completion.
+
+
+### 2026-10-16 wake_protection_activity_budget_v2 — pending
+
+- User policy: first real wake evidence immediately applies a provisional restriction. Ten minutes of observed human activity confirms awake status; only intervals bounded by fresh real input spend the configured 30/120-minute budget. A heartbeat, unknown/offline gap, restart or time asleep never spends that budget. Ten minutes without further provisional activity invalidates the candidate; RiseSync sleep confirmation or explicit `wake.sleep` cancels wake shielding and saves the remainder for the next wake. Computer suspend pauses only when companion input is not fresh. Schedule/class exceptions and independent Pomodoro/schedule locks remain separate.
+- Mac: `main/wakeProtection.js` owns account-scoped persisted state and revisioned scoped-cloud outbox/readback. `main/main.js` input/sleep/API adapters use it. `pomodoroctl wake sleep` reflects an explicit user declaration without system sleep. Targeted wake, legacy, countdown, conflict/account and lock-safety regressions pass; `npm run check` passes. Local update is built from the verified installed app, applying only wake-related edits because the canonical checkout contains unrelated dirty changes. Installation/runtime evidence is recorded in work/wake-protection-v2-20261016.
+- iOS: v2 snapshots preserve the saved remainder on resleep and keep an active ManagedSettings wake shield until a newer explicit state releases it. No wall-clock end timer is allowed to spend offline sleep. Late callbacks from old DeviceActivity deadlines do not clear the new active shield. Updated binary installation and two-device physical Screen Time behavior are pending while the user is asleep.
+- Backend: new provisional/awake v2 events require APNs eligibility support; legacy sleep cancellation already uses an eligible source. Background delivery of new v2 wake events remains pending until the corresponding server change is deployed and verified.
+- Windows: source/runtime access remains unknown; no Windows parity or cross-device-complete claim. The RiseSync signal-fixture compile still fails on missing fixture `AppSettings.wakeSyncBlockMinutes` and `RiseLog.trace`; the standalone Swift policy check passes.
+
+- Runtime follow-up: signed targeted Mac bundle installed and running; authenticated `wake.sleep` returned `sleeping`, 7,200,000 ms saved and no active wake lock. A later status retained 120 minutes and `wakeProtectionCloudPending=false`; the controller clears that flag only after exact event/phase/budget server readback. Installed controller SHA256 matches canonical source. Old process stopped responding after TERM and was terminated by exact executable/PID before the verified bundle replacement. Ordinary timer state progressed naturally; no timer start/stop command was issued.
+- iOS follow-up: development-signed Release com.rogan.pomodorocage 1.0(15) compiled and deep signature verification passed with ScreenTime extension embedded. The development provisioning profile expires 2027-10-10; the earlier 2026-expiry handoff was a reading error and its wait/alert were closed. No device installation or interaction while the user is asleep.
+- Brainwire source: `server/services/wakeProtectionPushPolicy.js` and the scoped-state route now prepare validated v2 transition pushes. Repeated budget observations do not flood background pushes. Policy regression passed; server deployment and APNs delivery remain pending.
+
+### 2026-10-16 wake_deadline_through_class — pending platform/runtime parity
+
+- Corrected user policy: the restriction clock runs from observed wake time through the 30-minute pre-class and in-class exemption; those intervals suppress shielding only. Human activity confirmation also accumulates during class. Confirmed resleep pauses the remainder. Computer suspend alone is not proof the person slept.
+- Mac controller stores an absolute countdownEndsAt, advances without continuous input, and migrates old input-only budgets using recorded same-cycle wake history after the last genuine sleep. Machine-suspend/inferred-idle records cannot move the migration anchor to class end. Installed baseline is patched only for controller and suspend callback; unrelated dirty source is excluded.
+- iOS source consumes the same absolute deadline and schedules end monitoring; extension no longer re-applies an expired snapshot. iOS rebuild/install and physical validation pending; Windows access unknown. Existing input-budget smoke expectations are obsolete and were not run or rewritten in this fix (no testing requested).
+
+### 2026-10-16 unified_user_sleep_state_v1 — platform integration pending
+
+- One pure reducer runs on desktop Node and iOS JavaScriptCore from identical bytes. Immutable account-scoped sleepStateEvent rows extend wakeHistory; valid events are ordered by occurrence, corrections replay their target, duplicate/overlapping intervals are unioned, confirmed and estimated 24-hour durations stay separate. Manual and existing RiseSync fusion >=0.72 with >=2 distinct grounds can confirm sleep; legacy unqualified sleep and suspend records remain candidates. Candidate expiry becomes unknown without confirmed sleep time.
+- Wake restrictions use elapsed time through classes, pause only confirmed resleep, and resume saved remainder. Native Mac HID source/process filtering excludes injected AI events and mouse movement; iOS samples actual in-app gestures, not foreground/heartbeat. No new permissions are requested. Existing accessibility permission is required for physical Mac evidence; missing evidence remains unknown.
+- Mac/iOS summary and correction UI plus durable local journals and scoped GET/merge/PUT/readback with conflict retention implemented. Tests: reducer overlap/order/activity/fusion/corrections/account cases; controller 20min+2h resleep=>100min; snapshot migration; cloud conflict and exact ID readback; same JS in JavaScriptCore; lock safety and syntax/localization checks. Signed iOS Release build16 and bundled JS byte check pass. Real iOS two-device Screen Time and Windows remain unverified.
+- RiseSync canonical task-worktree creation rejected existing dirty .deletefix/agent_live_context.md and runtime/logs/iphone_last_install.json. Neither file was edited. Prepared integration patch and source subset under work/unified-sleep-state-20261016/risesync-prepared: existing sleep/nap summaries, exact permitted HealthKit sleep intervals, strong fusion/manual events, shared-state Home display, cancelReArm only (preserves manual nap/chat alarms). Patch apply-check and Swift parse pass; canonical integration, full typecheck and device proof pending guard reconciliation. Backlog 28f1744d6913 retains this required integration.
+- No production backend deployment or Windows probe performed. Current backend push policy does not yet guarantee delivery of history-only events; offline journals remain durable and existing app polls reconcile on execution. This is not all-platform completion.
+- Final installed runtime: same focus endsAt preserved; new journal/summary responds through authenticated local socket, remaining wake budget0 and scoped cloud pending=false. Dashboard actual AX inspection showed summary, first wake/re-sleep/24h totals/deadline and correction controls. Final core marks missing observation coverage as unknown without inferred sleep accumulation; active prior wake deadlines continue. Native helper returned ACCESSIBILITY_PERMISSION_REQUIRED, so real physical-input classification/enforcement is not verified. Explicit user OS permission step remains required; no automatic permission bypass/retry.
+- Signed iOS build16 rebuilt after final receipt/coverage changes; JS bytes match installed Mac source and deep signature verification passes. devicectl reports physical iPhone unavailable; no phone installation or UI proof. The RiseSync patch still apply-checks and canonical tracked changes remain the original two metadata files only. No temporary verification directories remain.
+
+### 2026-10-18 wake_candidate_deadline_retention — Mac applied; parity pending
+
+- Fixed two inactivity paths that cleared a provisional wake deadline after 10 minutes or restarted it on the next input. An unconfirmed wake now retains its first activity timestamp/deadline; confirmed resleep still pauses the remainder. Class exemptions only suppress enforcement.
+- PASS: user-sleep-state-smoke, user-sleep-journal-smoke, wake-countdown-smoke, syntax check and git diff --check. Regression cases cover inactivity, returning input, original deadline expiry, class exemption, and 20-minute wake + 2-hour resleep -> 100 minutes remaining.
+- Installed local Developer ID build 1.0.36, reducer SHA256 22f48eed8043703cbe9cedabc6fc8fa84e65a402c06f58dcf7d4c1c65fd30448. New process 84938; installed reducer matches source. Live state restored 07:43:50 wake -> 09:43:50 deadline, shouldLock=true. Focus endsAt 1792280882577 survived restart unchanged. Fresh CUA screenshot shows the red wake restriction screen, 1:19:32 remaining and 09:43 unlock.
+- Remaining Mac limitation: native input guard reports ACCESSIBILITY_PERMISSION_REQUIRED; guardReady/physicalInputLocked=false. Screen display does not prove full click/key suppression. System Settings was inspected and deep links/reopen attempted, but its Privacy pane did not render the access list. No permission granted or security setting bypassed.
+- Windows availability/source/runtime unknown; no remote probes. iOS two-device installation/enforcement is unverified. Overall capability remains pending. Evidence: work/wake-retention-20261018/build.json and runtime.json.
+
+### 2026-10-18 ios_local_wake_selection / shared_daily_usage_budgets_v1 — pending
+
+- iOS wake app selection is now device-local and independent from break/focus shared selections; host and extension use the same local App Group key. One-time migration preserves existing break choices. The bundled wake reducer now matches the desktop inactivity/deadline fix.
+- Daily app-limit rules now start at midnight and include past day activity on iOS 17.4+. Optional named groups share budget metadata and cumulative OS-threshold lower bounds, keeping raw app tokens/report data local. Same-device receipts merge by max, distinct devices sum; account caches/CAS/readback/offline status are explicit. Foreground and existing discretionary background refresh attempt delivery.
+- Mac 1.0.36: locally signed receiver installed and running; native widget menu + authenticated usage status/sync API added. Real account sync readback succeeded with no fabricated usage. Active focus and wake deadlines survived application restart. Desktop's own SNS/Focus Fence measurement producers are not wired by this receiver.
+- PASS: Swift ledger harness, JavaScript merge/sync regressions, user sleep/journal regressions, syntax/diff checks and iOS simulator build. Generic signed archive succeeds after existing ASC-key-managed profile refresh; physical installation/UI/threshold receipt proof is tracked separately in work/ios-usage-budgets-20261018.
+- Windows Flutter implementation/runtime, Focus Fence source mapping, two-iPhone enforcement, cross-time-zone account day policy and offline strict global quota remain unverified/pending. Contract/limitations: docs/SHARED_USAGE_BUDGETS.md.
+
+### 2026-10-18 next-device wake/alarm measurement — pending
+
+- Source regressions now cover confirmed resleep pausing the wake restriction and resuming the saved remainder (`20 min awake → 2 h resleep → 100 min remaining`), stale wake events, duplicate/overlapping sleep records, 30-minute RiseSync observation boundaries, and alarm lifecycle paths. Source tests do not prove OS shielding, physical alarm delivery, or cross-device convergence.
+- Latest live Mac API read: Auto Pomodoro `1.0.36`, focus timer running; wake state `phase=complete`, `remainingMs=0`, `shouldLock=false`; native input `guardReady=false`, `physicalInputLocked=false`. Measure again during an active next wake restriction; record cycle/event IDs, occurrence/receipt times, deadline/remainder, and native guard state, then verify real keyboard and pointer blocking without interrupting focus.
+- iPhone Mirroring currently shows RiseSync's ChatGPT account chooser. After the owner completes OAuth, compare the installed app/build before installing RiseSync `0.2.4+119`; read back OS alarm IDs/status/fire times, observe actual primary/nap delivery and linked rearm behavior, and compare the 30-minute evidence summary against the same event IDs.
+- For iOS Auto Pomodoro, measure the 20-minute wake + 2-hour confirmed resleep + re-wake journey, the 100-minute resumed remainder, event/revision sync, and actual selected-app Screen Time shielding.
+- Windows device/source/runtime access is unknown. Only after fresh availability is reported, compare its installed build, account/device and cycle/event IDs, deadline/remainder, enforcement state, and BlueCloud revision against Mac/iOS at the same time.
+- Do not mark platform parity complete until these device-level observations are captured. Current evidence has no physical iPhone alarm/shield result, no verified Mac HID guard, and no Windows runtime measurement.
+
+### 2026-10-18 Mac away-pause miss — cause identified, policy repair pending
+
+- User reported a roughly 15-minute absence. Mac Auto Pomodoro `1.0.36` had `pauseWhenAway=true` and `awayIdleSec=90`, but a selected iPhone report was stale (`lastActivityAt=19:09:04 KST`; freshness limit 5 minutes). The presence evaluator returned `unknown`, and the current shared-timer rule lets Mac idle alone neither pause nor reset while any selected participant is unknown.
+- At `22:21:14 KST`, the focus timer reached its existing `endsAt` and transitioned to a 10-minute break. At `22:26:09 KST`, the break had 5:12 remaining. The Mac's recorded last activity was `22:14:37`; the logs establish the transition time, not the user's exact return time.
+- Fix policy before implementation: separate Mac-local auto-away pause from server-wide session reset. Only fresh positive activity on a companion should block local away handling; stale/unknown must not be called active. Keep server-wide reset fail-closed unless every selected participant has fresh inactive evidence. Define whether local pause is shared and how a fresh remote session reconciles before implementing.
+- Regression journey: fresh Mac input → focus starts; Mac idle >90s with companion report stale → expected local pause and no break transition; companion fresh active → shared focus preserved; all participants fresh inactive beyond reset threshold → reset once; return → resume remaining time without changing another active timer. Current Mac runtime behavior and Windows parity remain unverified.
+# 2026-10-19 shared_timer_latest_change — Mac source fixed; Windows parity pending
+
+- Expected behavior: one timer timeline; when either desktop publishes a newer focus/break/long-break transition, the other device applies that transition and republishes the resolved state. A delayed heartbeat must never resurrect an older phase.
+- Mac: `main/syncContract.js` now selects the newest logical timer change for two concurrently running snapshots before considering session start time. `scripts/sync-contract-test.js` covers Windows break superseding older Mac focus, reverse stale echo rejection, and heartbeat timestamps not overriding the timer's own `updatedAt`.
+- Incident evidence: on 2026-10-19, Windows `RESKTOP` published `break` at 07:04:26 KST while Mac still had `focus`; Mac logged `accepted=false` and scheduled `local timer beat remote snapshot`. Mac's separate wake restriction was 07:04:08–09:04:08; the Windows timer snapshot contains no matching wake-cycle/deadline fields.
+- 2026-11-04 Mac-log follow-up: Mac accepted Windows `RESKTOP` idle snapshots at 22:49:45Z and 22:57:16Z; in each case a separate Mac Auto Mode/Codex activity event started focus within seconds. Cloud snapshot age reached 592956ms. At 22:57:24Z Windows accepted a Mac focus snapshot with matching `startsAt`/`endsAt`, showing one later convergence point. This supports independent auto-starts plus delayed cloud snapshots as the likely source of divergence. Mac reports a healthy ~733ms local clock check, while no Windows `clockCheck` is present; Windows clock skew cannot be ruled out. Historical log evidence only; current Windows runtime remains unverified.
+- Windows Flutter source and runtime are not available in this workspace; Windows availability is unknown. Its winner policy, wake-cycle propagation, and whether it accepts the Mac's newer state remain unverified. Keep this capability `pending` until Windows implements the same logical-update winner contract and a Mac→Windows and Windows→Mac runtime round trip is observed.
+- Limitation: the current wire uses client `timer.updatedAt` timestamps; concurrent equal timestamps fall back to deterministic device ID ordering. It does not yet provide server-sequenced commands/CAS, so large device clock skew and duplicate concurrent user commands require later central revision support.
+
+## 2026-10-20 Notion feedback — persisted timer logical clock (Mac implemented; parity pending)
+
+- Contract: `timerLogicalUpdatedAtMs` and `timerLogicalUpdatedBy` represent the last logical timer transition, not snapshot arrival or heartbeat time. Mac commits the local transition clock to persistent timer/sync state before scheduling the cloud write. Snapshots carry both fields; old snapshots migrate from legacy timer update fields without treating `generatedAt` alone as a timer edit.
+- Arbitration: newer logical transition wins, including an explicit remote Stop; an older break/longBreak/idle/heartbeat is rejected. Equal timestamps resolve deterministically by logical author and device ID. Existing timer payload fields remain for old-client compatibility.
+- Mac implementation: `main/main.js`, `main/syncContract.js`; tests in `scripts/sync-contract-test.js` cover local persist-before-sync, metadata-only edits, restart persistence, old remote rejection despite newer packet time, newer explicit Stop, equal-time deterministic tie, and legacy snapshots. Outbound root and nested legacy fields (`timerUpdatedAt/By`, `timer.updatedAt/By`) now mirror the logical clock for older Windows readers; `generatedAt` alone is not a timer transition.
+- Source verification: focused sync contract test passed; `npm run check` passed. Full `npm test` remains red in the existing `scripts/timer-recovery-smoke.js` `checkDailySaveRollover` assertion (`actual 1`, expected 0), after the focused sync tests passed. No Mac build/install/runtime test was run; disk free space was 18 GiB, below the required 20 GiB post-operation reserve.
+- Windows handoff +93 was received and inspected on 2026-10-20: package hash `fc0dccd5aa976e972c0a74b9a49d991c78815641a5b1e8bd45ee84f716a5f74e`; it contains focused Dart changes/tests and a staged `0.2.9+93-50806ec5bcaa` candidate. Its report says 32 focused tests passed, but does not establish installation or live runtime. Windows host access is unknown, so do not probe it or claim parity. The Mac wire compatibility fix is source-tested only; paired Mac→Windows and Windows→Mac BlueCloud readback, restart persistence and explicit Stop remain pending.
+- Status: `pending` until canonical Windows source, runtime build and bidirectional paired-device proof are available. The Mac source change is not evidence that BlueCloud production serialization or Windows consumption is deployed.
+
+### 2026-10-27 recheck
+
+- Current Mac source checks: `node scripts/sync-contract-test.js`, `node scripts/windows-logical-clock-parity-test.js`, `node --check main/main.js`, and `git diff --check -- main/main.js` pass. The +93 parity test covers paired aliases, malformed-field fallback, deterministic arbitration, Mac receiver helpers and disk roundtrip. No active edit lease remains.
+- Follow-up for the historical `npm test` report: `node scripts/timer-recovery-smoke.js` now passes all 14 scenarios, including local-midnight/year rollover, persistence, restart and active-pass preservation. The recorded old failure (`actual 1`, expected `0`) has no assertion stack, and the current smoke test is untracked while `main/main.js` is dirty; this proves the current working-tree pair passes, but does not identify which prior revision failed or explain that historical result. No test/source correction was made.
+- App-specific follow-up: `node scripts/windows-logical-clock-parity-test.js` also passes for aliases, malformed-field fallback, deterministic arbitration, Mac receiver helpers, and disk roundtrip. Both focused checks pass on the current dirty working tree; broad edits in `main/main.js` predate/extend this request, so no change is attributed to the Windows handoff itself. `git diff --check` passes on the app documentation paths. No build/install was needed; Windows +120 Mac/iPhone consumption and physical receiver ACK remain pending.
+- `main/main.js` has changed since the original four-file handoff receipt, and the logical-clock source/test files remain dirty or untracked in the canonical checkout. No build or install was made because the resulting artifact would include source beyond this handoff and could not be attributed to this feature alone.
+- The user reports Windows online; one read-only SSH attempt returned `Host is down`. Current Windows install and paired Mac↔Windows runtime are therefore unknown. Keep parity `pending` until both directions and restart persistence are read back.
+
+## 2026-10-22 wake restriction silence guard and provenance — source verified, delivery pending
+
+- Root cause: installed Mac Auto Pomodoro 1.0.36 still expires a provisional wake after 10 minutes without follow-up input. The 09:43:19 input → 09:53:20 `sleeping` transition matches that rule. Canonical dirty source already removes the timeout; lack of input, connectivity or a companion signal is not proof of resleep.
+- Regression evidence: `scripts/sleep-sandbox-test.js` passes 17 scenarios, 80 hypotheses, 50 duplicate/order permutations and rejects three deliberate bad-policy mutations, including the 10-minute expiry. `scripts/user-sleep-journal-smoke.js`, `scripts/wake-protection-smoke.js`, `scripts/wake-countdown-smoke.js`, and `scripts/lock-safety-smoke.js` pass. Cloud traces retain event ID and stage for receive, revision conflict, write/readback, and network error; an error never clears the pending state.
+- Diagnostics: Mac lock diagnostics now distinguish keyboard/mouse guard requested, ready, physically locked, and failed, with an error reason; dashboard locale strings are present in Korean, English, Japanese and Chinese. The claim `physicalInputLocked=true` is produced only after native guard readiness.
+- iOS: canonical and bundled JavaScript sleep reducers are byte-identical. `PomodoroAppModel` adds privacy-limited OSLog consumer receive/apply decisions keyed by event ID. App/category/site wake selection already exists in Settings and Block tabs, stored locally because Screen Time tokens are device-specific. Swift parse and the existing source checks pass; no new signed app was built or installed.
+- Delivery remains pending: installed Mac 1.0.36 and iPhone 1.0+19 still need the updated source. The source-linked gate passes Pomodoro reducer parity, RiseSync policy ownership/context and simulator inputs, then fails compiling the adjacent RiseSync alarm-lifecycle fixture because its test stubs omit current `DecisionLogEntry` properties/helpers. Physical iPhone Mirroring is not running; `df-deploy doctor` reported 59 MB free RAM. No production test event was written. Windows runtime/source remains unverified and unavailable status is unknown.
+- Status: `pending` until the stale RiseSync fixture and resource pressure are resolved, exact signed builds are installed without disturbing active timers or user data, physical iPhone Shield/selection behavior is observed, and server/provider readback plus Mac/Windows receiver evidence are separately recorded. Source and simulation passes are not a recurrence guarantee.
+
+
+### break_completion_requires_explicit_focus — pending (2026-10-22)
+After short/long rest completes, remain idle until a direct focus start. Persist a device-local restart barrier; do not export it as a shared preference. iOS foreground/background source and Mac presence source corrected; iOS transition regressions 31/31 pass. Windows +103 already implements the same policy but +102 still runs. Installed iPhone currently1.0(19); build20 update pending. Mac full check is blocked by independent RiseSync policy ownership gate. Physical same-account acceptance remains pending.
+
+2026-10-22 13:20 update: iOS41/41 transition/shield tests pass. Idle shield fallthrough and legacy-peer focus relock are also guarded. Physical update build20 failed at extension CodeSign errSecInternalComponent, before install; phone1.0(19), Windows+102, Mac1.0.36 remain old runtimes. Pending status retained.
+
+## 2026-10-23 — no_lock_schedule_break_lock_parity (pending runtime installation)
+
+- Expected behavior: a shared weekly noLockSchedule.slots interval keeps the Pomodoro break, timer and visible break overlay running, while suppressing the physical input guard for an ordinary break. A forced scheduled computer block keeps precedence. Use local weekday/minute boundaries; start is inclusive, end is exclusive; overnight slots continue into the next day.
+- Wire contract is unchanged: noLockSchedule={updatedAt,slots:[{id,day,startMinute,endMinute}]}, Monday=0 through Sunday=6. Mac sync already receives the setting; Windows reads the same stored schedule. No account, device or timer fields changed.
+- Mac source finding: installed 1.0.36 bundled schedule data but shouldLockPhysicalInput() did not consult it. Added main/noLockSchedule.js and connected the predicate after forced-lock precedence. Candidate is not installed yet.
+- Windows source/runtime: +106 already calls NoLockScheduleService.isNoLockNow() before installing the normal strict break lock. Its 2026-10-23 17:56 KST shared break log says strictLockInstalled=false; the break timer continued. Targeted no_lock_schedule_test.dart and break_lock_policy_test.dart passed 15/15.
+- Mac regressions: scripts/no-lock-schedule-smoke.js passed 16 assertions (weekly/overnight/end boundaries, normal break, forced-lock precedence and live source wiring); scripts/lock-safety-smoke.js passed; JS syntax checks passed. npm run check passed after adding the missing four-language iOS settings.durationRules.saveHint catalog entry needed by the repository prebuild gate.
+- Runtime limitation: at the Mac readback near the same break end, status reported physicalInputLockRequested=false, physicalInputLocked=false, and guardError=ACCESSIBILITY_PERMISSION_REQUIRED; this does not prove that a physical input lock occurred during the user's separate observation. The app's visible break overlay can remain while input is not locked.
+- Deployment remains pending. npm run build:local reached electron-builder signing but failed with errSecInternalComponent. security find-identity listed valid Developer ID identities; security show-keychain-info returned User interaction is not allowed. No signature downgrade, keychain ACL change, force-kill, install or restart was attempted. Installed Mac 1.0.36/PID 2077 stayed running; source fix and tests are staged in the canonical tree pending an interactive keychain authorization and then install/runtime readback.
+
+
+## 2026-10-24 shared-confirmed-wake-authority — pending installed Mac acceptance
+- Direct user correction: a late-used Windows device is not a new user wake. Work/away presence never confirms wake or replaces an account confirmation. Receive RiseSync-qualified/manual original data; keep original event ID, device and event time across relays.
+- Mac source: main/userSleepState.js exposes confirmed-only production reduction; journal uses it, controller ignores activity-only projections, accepts delayed earlier confirmations by event chronology, and publishes only confirmed journal events. main/main.js no longer relabels remote presence as Mac physical wake input. Canonical reducer copied byte-identically into iOS resource; resource inclusion is not iPhone installation.
+- Regression: wake-authority, wake-protection, user-sleep-journal, legacy-compat, countdown, computer-wake, morning-wake, user-sleep-state checks pass. New authority replay is mandatory in npm check. Original dirty changes preserved.
+- Windows installed +108 already rejects activity/provisional projections; +109 adds qualified relayed RiseSync proof support while rejecting changed occurrence time or missing samples. 45 focused Windows tests pass; safe build/activation evidence follows.
+- Mac build gate: before AND after this patch, sleep-world source gate/npm check fail on the same10 RiseSync alarm-adapter ownership fingerprints. Do not mark them reviewed or bypass the gate. Installed Mac1.0.36 remains unchanged; paired runtime acceptance and iPhone install remain pending.
+
+## Capability `wake-reliability-100` — pending installed acceptance / 2026-10-24
+Expected: preserve original confirmed wake occurrence/account/ID; never infer wake from boot/input/heartbeat; accept genuine delayed confirmation and confirmed same-day rewake; preserve temporary expiry and existing timer state. Shared catalog SHA19f2710e34bac6bd496e5108359a5547d9c219aab3cdfea2421e4d172a7b76cf, both100/100after real failing baselines. Mac production JS/controller; Windows production persisted consumer. No wire-setting synchronization expansion. New persisted Windows resleep boundary is device-local; conflict marker is durable journal metadata, not a fresh wake. Sources1.0.37/113 candidates, installed1.0.36/108 still pending. Shared data/limits: tools/sleep-sandbox/RELIABILITY100.md and runtime/reliability100/latest.json. Lifecycle remains `pending` until actual updated consumers and device behavior are verified.
+
+## 2026-10-24 — save-grace versus break-skip source audit
+
+- The apparent three-use allowance belongs to Mac desktop's BlueCloud save-unlock reservation (`grantOneTimeSaveUnlock`): at most three grants per day, one grant in the current break, with a 4-minute default. The break window is hidden during that allowance. `skipBreak()` has class/strict-lock guards and no three-use counter.
+- Windows source +113 has a separate device-local save grace: two-minute default, at most once per rolling hour. Its break-skip path has class/strict-lock guards and no three-use counter. The two save policies therefore do not share one quota contract today.
+- Windows +114 source work makes the existing grace countdown visible in compact mode, avoids full-screen animated radial repaint, prevents lock-policy reconciliation during the grace, and checks actual native hook-release results before reporting success. Source/build evidence does not establish paired live acceptance; Mac installed1.0.36 and Windows installed0.2.9+108 remain distinct from candidates.
+
+
+## 2026-10-25 WAKE-FIRST-DEVICE-ANCHOR — pending
+Windows-first20minutes → Mac-later must retain the original confirmed wake event/deadline (120-minute window →100minutes remaining); reverse order has the same contract. New confirmed sleep/re-wake creates a distinct cycle. Current Mac receiver synthetic check passes; installed Mac1.0.36 still uses activity-derived provisional wake and differs from source. Current Windows wake producer/transport and paired installed runtime proof remain unverified. Evidence and acceptance: work/late-windows-wake-20261024.md; canonical outstanding item: TODO.md WAKE-FIRST-DEVICE-ANCHOR; integration-backlog97d51e6a9e48 remains open.
+
+### scheduled_lock_warning_mouse_grace — pending Windows parity
+During the three-minute scheduled-lock warning, let physical input through so the user can save work even when a Pomodoro break overlaps the warning. Reapply scheduled blocking at its actual start. Mac source and focused regression are in `main/main.js` and `scripts/scheduled-lock-warning-smoke.js`; installed Mac1.0.40 is verified. Windows source/runtime parity remains unverified.
+
+### 2026-10-25 WAKE-FIRST-DEVICE-ANCHOR consumer follow-up — pending
+Windows task pomodoro-risesync-first-use-20261025 +118 report received; server readback confirms build118 registered, not currently online. Production state revision58072 lacks activityReports; canonical backend has uncommitted projection/persistence but legacy heartbeat computerPresence compatibility remains missing. Shared wake settings false/60 differ from running Mac true/120; no settings changed. Same-account wake event/deadline/lock application remains pending across all consumers. Evidence: work/windows-risesync-receipt-20261025.md.
+
+
+### 2026-10-25 WAKE-FIRST-DEVICE-ANCHOR recurrence guard — pending physical parity
+
+Mac1.0.38 installed and running: account-validated provisional first-use receipt requires repeated successful reads30seconds apart, stable event/device/cycle/deadline and post-rollout active cycle. First Mac boot20minutes later and durable reopen retain40/100minutes for60/120-minute settings; general input remains non-authoritative. Earlier canonical anchor changes now republish even if maximum recordedAt is unchanged; CAS409 retries once and delivery ACK compares full cycle/start/deadline.60 remains60 across shared reducer and iOS encode/import/policy/UI. iOS source validates finite cycle/deadline and persists a shorter same-cycle cap; signed iOS candidate remains blocked by existing Widget signing/auth gate. Windows120 source is separately owned/ACKed; no Windows runtime or settings changed here. Full npm test passed, all48 regression entrypoints registered; native Swift policy checks passed. Installed Mac focus deadline1792900135691 preserved across137→138. Physical Windows→Mac→iPhone consumer proof remains open; no historical input or wake manufactured. Receipt work/wake-recurrence-20261025.md.
+
+### 2026-10-26 — `dated_scheduled_lock_skip` (pending)
+Windows +130 Drive handoff defines additive per-rule skipDates=[YYYY-MM-DD], using the local calendar date, including overnight tails. Mac preserves the field and strictLock/syncToSixVpn through the Windows converter, sanitizer and outbound scheduledBreakRules; evaluates the skip before occurrence/day matching, leaving recurring enabled/days/time unchanged. Schedule-rule updatedAt is merged independently from broad settings. CLI supports schedule skip-date, skip-dates, remove-skip-date with validation/readback. Focused import/sanitizer/overnight/next-day/wire and CLI checks pass; signed Mac update, server readback and independently installed Windows/6VPN consumer acceptance remain pending. No shared parity or both-device cancellation claimed.
+
+### 2026-10-29 — `manual_pause_resists_unmarked_resume_heartbeat` (pending)
+Expected: once a user manually pauses a Pomodoro session on one device, a peer's passive `running:true` heartbeat cannot undo that choice; a deliberately initiated remote start/resume marked `controlAction=true` remains applicable. No settings or wire fields changed. Mac receiver: `main/main.js` rejects only unmarked remote running snapshots while the local timer has `pausedReason=manual`; `scripts/sync-contract-test.js` covers both rejected passive heartbeat and accepted explicit remote resume. Source regression passes. Windows source, installed consumer, BlueCloud server read-after-write, Mac installed runtime, restart durability and cross-device round trip are unverified; keep lifecycle `pending` until both platform consumers and server behavior are checked.
+
+## 2026-11-03 — local_agent_schedule_engine (pending)
+
+- Capability ID: `local_agent_schedule_engine`; one-time/local daily and weekday commands, five-minute late cutoff, stored outcomes, cancellation/reschedule protection and same-process overlap guard. No account/credential/device identity is shared by this module.
+- Mac source producer: `main/agentSchedules.js`; existing 16-assertion smoke plus eleven regression scenarios pass. Six pre-fix failures were reproduced. This does not enable a new app runtime: dispatcher/CLI/native policy and startup/resume hooks remain uncommitted.
+- Windows/iOS: current canonical implementation and receiver/runtime evidence are unverified; no remote/device operation occurred. Common command/policy and persistence semantics still require adapter parity and actual cross-device acceptance.
+- Status: `pending`. Store-result failure after successful command remains an exactly-once recovery gap. Source receipts: `docs/SCHEDULE_ENGINE_INTEGRATION_20261103.md`; backlog `7c313a2b8884` remains open.
+
+## 2026-11-03 — local_agent_control_transport (pending receiver integration)
+
+- Capability ID: `local_agent_control_transport`. The contract is one newline-delimited JSON object per connection, single dispatch, UTF-8 byte-counted request/response bounds, explicit readiness, safe stop and no automatic mutation retry.
+- Mac source producer: `main/agentControl.js`; focused tests cover 11 isolated socket/lease/client scenarios, and `scripts/agent-control-epipe-smoke.js` covers disconnect during dispatch. All fixtures use temporary endpoints; the installed socket was not contacted.
+- The Mac transport producer and checks are integrated only. Main dispatcher, CLI/MCP allowlist, app startup/resume hooks and native policy enforcement remain pending; source integration alone does not enable commands.
+- Windows named-pipe source, ownership, installed consumer and runtime behavior are unverified. iOS does not use this local desktop transport. No cross-platform parity or app delivery is claimed.
+- Status: `pending` until the owned Mac consumers are integrated and reviewed, Windows transport/consumer behavior is independently reconciled, and requested runtime acceptance is observed. Receipt: `docs/AGENT_CONTROL_INTEGRATION_20261103.md`.
+
+## 2026-11-04 — `pomodoro_account_settings_retention_v1` / `cross_device_absolute_countdown_v1` (pending)
+
+- Capability IDs: `pomodoro_account_settings_retention_v1`; `cross_device_absolute_countdown_v1`.
+- Expected behavior: the same BlueCloud account restores the latest Vintage Pomodoro settings after login/reinstall, retains them through at most 90 days since last Pomodoro use, deletes the settings snapshot after that interval, and rejects stale offline copies. Mac and Windows show the same absolute timer deadline and countdown. Confirmed wake starts the configured 120-minute protection interval.
+- Mac implementation: account snapshot carries `pomodoroLastUsedAt`; V2 login pull recognizes `snapshotExpiredAt`, blocks the legacy stale fallback, and does not republish a local snapshot whose last use predates expiry. Break overlay uses the corrected clock and main-process remaining duration. Source and signed candidate are in the canonical Mac checkout.
+- Windows implementation/source: current canonical `C:\Users\delig\Desktop\app dev\timer1` and installed UI have not been inspected this turn; do not treat prior heartbeat telemetry as visible runtime proof.
+- Shared contract: use account `cloudUserId`; timestamps are epoch milliseconds for `pomodoroLastUsedAt` and ISO-8601 for `snapshotExpiredAt`; reject missing/old use markers after expiry; a new explicit Pomodoro use permits a new snapshot. Expired settings are removed while diagnostics event retention remains three days.
+- Lifecycle: `pending` until Brainwire production deploy/read-after-write, Mac signed candidate installation and login restore, offline/restart durability, and Windows-source/installed-receiver bidirectional timer and settings parity are verified. The local wake setting reads enabled at 120 minutes, but current wake state is complete, so live wake behavior remains pending.
+- Evidence: `work/task-proof/pomodoro-settings-retention-parity-20261104.txt`; server boundary tests pass, Mac full source check/build/signature pass; no production deploy, Mac install/login journey, or Windows UI journey yet.
+
+### 2026-11-04 follow-up — legacy bridge and actual use marker
+
+Mac records the corrected `pomodoroLastUsedAt` when a user saves timer settings as well as when they start/resume a timer. The Brainwire legacy `/api/cloud-state/pomodoroCloud` route clears legacy snapshot copies when V2 expires, rejects stale/missing-use writes, and bridges a post-expiry fresh-use legacy snapshot into canonical V2. Store, V2 HTTP and legacy HTTP boundary tests pass. Windows must ship a client that records and sends the use marker; its current source/installed behavior remains unverified, so capability status stays `pending`.
